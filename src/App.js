@@ -7,11 +7,12 @@ import './App.css';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import LoardDataModal from './components/LoardDataModal/LoardDataModal';
+import { addMarkTag } from './helpers/helpers';
 
 const App = () => {
     const [show, setShow] = useState(false);
     const [textArea, setTextArea] = useState(
-        'In my opinion, this patient have cold and .....'
+        `In my opinion, this patient have cold and .....`
     );
     const [loardedData, setLoardedData] = useState([]);
     const [cmdRecommendedWords, setCmdRecommendedWords] = useState([
@@ -48,6 +49,10 @@ const App = () => {
         handleShow();
     };
 
+    const handleOnChangeTextArea = (text) => {
+        setTextArea(addMarkTag(text, ['cold', 'patient']));
+    }
+
     // This map object can be used for not sending request to server
     // if user used to send a request with that marked word.
     const mapUserWordsToCmdRecommendedWords = new Map();
@@ -73,7 +78,7 @@ const App = () => {
                             </Col>
                         </Row>
                         <Row className='flex-grow-1'>
-                            <TextArea html={textArea} />
+                            <TextArea html={textArea} onChange={handleOnChangeTextArea} onBlur={handleOnChangeTextArea}/>
                         </Row>
                     </Col>
                     <Col md={4} className='border border-primary'>

@@ -9,13 +9,16 @@ const TextArea = ({html,  onChange, onBlur}) => {
         setText(html);
     }, [html])
 
-    const handleChange = (evt) => {
+    const handleOnChange = (evt) => {
         setText(evt.target.value);
         console.log(contentEditable.current.innerHTML); // Correct value
+        console.log(contentEditable.current); // Correct value
+        onChange(contentEditable.current.innerHTML);
     };
 
-    const handleBlur = () => {
+    const handleOnBlur = () => {
         console.log(contentEditable.current.innerHTML); // Correct value
+        onBlur(contentEditable.current.innerHTML);
     };
 
     return (
@@ -24,8 +27,8 @@ const TextArea = ({html,  onChange, onBlur}) => {
             data-ph='Please input your text.'
             innerRef={contentEditable}
             html={text}
-            onBlur={handleBlur}
-            onChange={handleChange}
+            onBlur={handleOnBlur}
+            onChange={handleOnChange}
         />
     );
 };
