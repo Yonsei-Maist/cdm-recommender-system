@@ -8,8 +8,16 @@ import configureStore from './store';
 
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { loadUserData } from './actions/loadUserDataAction';
 
 const store = configureStore();
+
+export const METHOD_NAME_ONCLICK_MARKED_WORD = 'handleOnClickMarkedWord';
+global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord) => {
+    alert(markedWord);
+    // TODO: dispatch fetch CDM recommended words
+    store.dispatch(loadUserData());
+};
 
 ReactDOM.render(
     <React.StrictMode>

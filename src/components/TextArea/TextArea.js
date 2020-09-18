@@ -4,17 +4,19 @@ import {
     getCaretPosition,
     setCaretPosition,
     removeMarkTag,
-    addMarkTag,
+    addMarkTagWithOnClickHandler,
 } from '../../helpers/helpers';
+import {METHOD_NAME_ONCLICK_MARKED_WORD} from '../../index';
 
 const TextArea = ({ html, onChange, onBlur }) => {
     const MEDICAL_KEYWORDS = ['cold', 'patient'];
     const [text, setText] = useState(html);
     const contentEditable = useRef();
     const [currentCarretPos, setCurrentCarretPos] = useState();
+    const handleOnClickMarkedWordFuncName = METHOD_NAME_ONCLICK_MARKED_WORD;
 
     React.useEffect(() => {
-        const markedText = addMarkTag(html, MEDICAL_KEYWORDS);
+        const markedText = addMarkTagWithOnClickHandler(html, MEDICAL_KEYWORDS, handleOnClickMarkedWordFuncName);
         setText(markedText);
     }, [html, MEDICAL_KEYWORDS]);
 
@@ -31,7 +33,8 @@ const TextArea = ({ html, onChange, onBlur }) => {
         const markedText = generateMarkedText(
             contentEditable,
             setCurrentCarretPos,
-            MEDICAL_KEYWORDS
+            MEDICAL_KEYWORDS,
+            handleOnClickMarkedWordFuncName
         );
 
         // set markedText
@@ -45,7 +48,8 @@ const TextArea = ({ html, onChange, onBlur }) => {
         const markedText = generateMarkedText(
             contentEditable,
             setCurrentCarretPos,
-            MEDICAL_KEYWORDS
+            MEDICAL_KEYWORDS,
+            handleOnClickMarkedWordFuncName
         );
         onBlur(markedText);
     };
@@ -67,13 +71,14 @@ export default TextArea;
 function generateMarkedText(
     contentEditable,
     setCurrentCarretPos,
-    MEDICAL_KEYWORDS
+    MEDICAL_KEYWORDS,
+    handleOnClickMarkedWordFuncName
 ) {
     // remove all mark tags
     const modifiedText = removeMarkTag(contentEditable.current.innerHTML);
     // get the current carret position
     setCurrentCarretPos(getCaretPosition(contentEditable.current));
     // find the markedText: text with mark tags
-    const markedText = addMarkTag(modifiedText, MEDICAL_KEYWORDS);
+    const markedText = addMarkTagWithOnClickHandler(modifiedText, MEDICAL_KEYWORDS, handleOnClickMarkedWordFuncName);
     return markedText;
 }
