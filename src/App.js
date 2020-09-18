@@ -7,7 +7,7 @@ import './App.css';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import LoardDataModal from './components/LoardDataModal/LoardDataModal';
-import { addMarkTag } from './helpers/helpers';
+
 
 const App = () => {
     const [show, setShow] = useState(false);
@@ -37,7 +37,7 @@ const App = () => {
             {
                 id: '1',
                 title: 'title 1',
-                data: 'data 1',
+                data: 'In my opinion, this patient have cold and .....',
             },
             {
                 id: '2',
@@ -49,9 +49,12 @@ const App = () => {
         handleShow();
     };
 
-    const handleOnChangeTextArea = (text) => {
-        setTextArea(addMarkTag(text, ['cold', 'patient']));
-    }
+    const handleOnChangeTextArea = (markedText) => {
+        setTextArea(markedText);
+    };
+    const handleOnBlurTextArea = (markedText) => {
+        setTextArea(markedText);
+    };
 
     // This map object can be used for not sending request to server
     // if user used to send a request with that marked word.
@@ -78,7 +81,11 @@ const App = () => {
                             </Col>
                         </Row>
                         <Row className='flex-grow-1'>
-                            <TextArea html={textArea} onChange={handleOnChangeTextArea} onBlur={handleOnChangeTextArea}/>
+                            <TextArea
+                                html={textArea}
+                                onChange={handleOnChangeTextArea}
+                                onBlur={handleOnBlurTextArea}
+                            />
                         </Row>
                     </Col>
                     <Col md={4} className='border border-primary'>
