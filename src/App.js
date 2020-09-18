@@ -6,7 +6,7 @@ import CdmWordList from './components/CdmWordList/CdmWordList';
 import './App.css';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
-import LoardDataModal from './components/LoardDataModal/LoardDataModal';
+import LoadDataModal from './components/LoadDataModal/LoadDataModal';
 
 
 const App = () => {
@@ -97,10 +97,9 @@ const App = () => {
             </Container>
             <Footer />
 
-            <LoardDataModal
+            <LoadDataModal
                 show={show}
                 onHide={handleClose}
-                data={loardedData}
                 handleOnDoubleCLick={handleOnDoubleCLickLoardDataItem}
             />
         </div>
