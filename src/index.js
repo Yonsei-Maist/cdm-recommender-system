@@ -8,15 +8,13 @@ import configureStore from './store';
 
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { loadUserData } from './actions/loadUserDataAction';
+import { loadCdmWords } from './actions/loadCdmWordsAction';
 
 const store = configureStore();
 
 export const METHOD_NAME_ONCLICK_MARKED_WORD = 'handleOnClickMarkedWord';
 global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord) => {
-    alert(markedWord);
-    // TODO: dispatch fetch CDM recommended words
-    store.dispatch(loadUserData());
+    store.dispatch(loadCdmWords(markedWord));
 };
 
 ReactDOM.render(

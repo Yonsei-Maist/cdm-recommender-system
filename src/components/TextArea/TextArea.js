@@ -13,10 +13,9 @@ const TextArea = ({ html, onChange, onBlur }) => {
     const [text, setText] = useState(html);
     const contentEditable = useRef();
     const [currentCarretPos, setCurrentCarretPos] = useState();
-    const handleOnClickMarkedWordFuncName = METHOD_NAME_ONCLICK_MARKED_WORD;
 
     React.useEffect(() => {
-        const markedText = addMarkTagWithOnClickHandler(html, MEDICAL_KEYWORDS, handleOnClickMarkedWordFuncName);
+        const markedText = addMarkTagWithOnClickHandler(html, MEDICAL_KEYWORDS, METHOD_NAME_ONCLICK_MARKED_WORD);
         setText(markedText);
     }, [html, MEDICAL_KEYWORDS]);
 
@@ -34,7 +33,7 @@ const TextArea = ({ html, onChange, onBlur }) => {
             contentEditable,
             setCurrentCarretPos,
             MEDICAL_KEYWORDS,
-            handleOnClickMarkedWordFuncName
+            METHOD_NAME_ONCLICK_MARKED_WORD
         );
 
         // set markedText
@@ -49,7 +48,7 @@ const TextArea = ({ html, onChange, onBlur }) => {
             contentEditable,
             setCurrentCarretPos,
             MEDICAL_KEYWORDS,
-            handleOnClickMarkedWordFuncName
+            METHOD_NAME_ONCLICK_MARKED_WORD
         );
         onBlur(markedText);
     };

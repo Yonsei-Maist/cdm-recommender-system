@@ -11,7 +11,7 @@ function* handleLoardUserData() {
         const loadData = yield call(fetchUserData);
         yield put(setLoadUserDataSuccess(loadData));
     } catch (error) {
-        yield put(setLoadUserDataError(error.message));
+        yield put(setLoadUserDataError(error.toString()));
     }
 }
 

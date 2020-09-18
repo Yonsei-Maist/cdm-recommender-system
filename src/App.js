@@ -8,16 +8,9 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import LoadDataModal from './components/LoadDataModal/LoadDataModal';
 
-
 const App = () => {
     const [show, setShow] = useState(false);
-    const [textArea, setTextArea] = useState(
-        `In my opinion, this patient have cold and .....`
-    );
-    const [cmdRecommendedWords, setCmdRecommendedWords] = useState([
-        'Common cold – 92%',
-        'Coryza – 4%​ Flu – 2%',
-    ]);
+    const [textArea, setTextArea] = useState('');
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -36,11 +29,6 @@ const App = () => {
     const handleOnBlurTextArea = (markedText) => {
         setTextArea(markedText);
     };
-
-    // This map object can be used for not sending request to server
-    // if user used to send a request with that marked word.
-    const mapUserWordsToCmdRecommendedWords = new Map();
-    mapUserWordsToCmdRecommendedWords.set('cold', cmdRecommendedWords);
 
     return (
         <div className='mx-auto mt-5 d-flex flex-column vh-90'>
@@ -70,9 +58,7 @@ const App = () => {
                         </Row>
                     </Col>
                     <Col md={4} className='border border-primary'>
-                        <CdmWordList
-                            cmdRecommendedWords={cmdRecommendedWords}
-                        />
+                        <CdmWordList />
                     </Col>
                 </Row>
             </Container>

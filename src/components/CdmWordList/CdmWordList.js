@@ -1,22 +1,38 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { ListGroup } from 'react-bootstrap';
+import { connect } from 'react-redux';
 
-const CdmWordList = ({ cmdRecommendedWords }) => {
-    return (
-        <div>
-            <h5 className='text-center py-2'>Recommended CDM word list</h5>
-            <hr className='mt-0' />
-            <ListGroup>
-                {cmdRecommendedWords.map((value, index) => {
-                    return (
-                        <ListGroup.Item action key={index}>
-                            {value}
-                        </ListGroup.Item>
-                    );
-                })}
-            </ListGroup>
-        </div>
-    );
-};
+class CdmWordList extends Component {
+    render() {
+        const { data, isLoading, error } = this.props;
+        return (
+            <div>
+                <h5 className='text-center py-2'>Recommended CDM word list</h5>
+                <hr className='mt-0' />
+                {isLoading && <div>Loading...</div>}
+                {error && (
+                    <div style={{ color: 'red' }}>
+                        ERROR: {this.props.error}
+                    </div>
+                )}
+                {!isLoading && !error && (
+                    <ListGroup>
+                        {data.map(({ id, data }) => {
+                            return (
+                                <ListGroup.Item action key={id}>
+                                    {data}
+                                </ListGroup.Item>
+                            );
+                        })}
+                    </ListGroup>
+                )}
+            </div>
+        );
+    }
+}
 
-export default CdmWordList;
+const mapStateToProps = ({ cdmWords }) => ({
+    ...cdmWords,
+});
+
+export default connect(mapStateToProps)(CdmWordList);
