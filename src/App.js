@@ -14,7 +14,6 @@ const App = () => {
     const [textArea, setTextArea] = useState(
         `In my opinion, this patient have cold and .....`
     );
-    const [loardedData, setLoardedData] = useState([]);
     const [cmdRecommendedWords, setCmdRecommendedWords] = useState([
         'Common cold – 92%',
         'Coryza – 4%​ Flu – 2%',
@@ -22,30 +21,12 @@ const App = () => {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const handleOnDoubleCLickLoardDataItem = (id) => {
-        const selectLoardedData = loardedData.find((data) => {
-            return data.id === id;
-        });
-
-        setTextArea(selectLoardedData.data);
+    const handleOnDoubleCLickLoardDataItem = (data) => {
+        setTextArea(data);
         handleClose();
     };
 
     const handleOnClickLoardButton = () => {
-        // fetching loardedData
-        setLoardedData([
-            {
-                id: '1',
-                title: 'title 1',
-                data: 'In my opinion, this patient have cold and .....',
-            },
-            {
-                id: '2',
-                title: 'title 2',
-                data: 'data 2',
-            },
-        ]);
-
         handleShow();
     };
 

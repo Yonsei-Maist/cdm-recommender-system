@@ -36,12 +36,12 @@ class LoadDataModal extends Component {
                         <ListGroup>
                             {data &&
                                 data.length &&
-                                data.map(({ id, title }) => {
+                                data.map(({ id, title, data }) => {
                                     return (
                                         <ListGroup.Item
                                             action
                                             onDoubleClick={() =>
-                                                handleOnDoubleCLick(id)
+                                                handleOnDoubleCLick(data)
                                             }
                                             key={id}
                                         >
