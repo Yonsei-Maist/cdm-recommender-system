@@ -10,7 +10,6 @@ describe('test method addMarkTag', () => {
         const keywords = ['cold', 'patient'];
         const text = 'In my opinion, this patient have cold and .....';
         const markedText = addMarkTag(text, keywords);
-        console.log(markedText);
         const expectMarkedText = `In my opinion, this <mark onclick="alert('patient')">patient</mark> have <mark onclick="alert('cold')">cold</mark> and .....`;
         expect(markedText).toBe(expectMarkedText);
     });
@@ -25,7 +24,6 @@ describe('test method addMarkTagWithOnClickHandler', () => {
             keywords,
             'alert'
         );
-        console.log(markedText);
         const expectMarkedText = `In my opinion, this <mark onclick="alert('patient')">patient</mark> have <mark onclick="alert('cold')">cold</mark> and .....`;
         expect(markedText).toBe(expectMarkedText);
     });
@@ -35,7 +33,6 @@ describe('test method removeMarkTag', () => {
     it('should remove mark tag with the given list of keywords ', () => {
         const text = `In my opinion, this <mark onclick="alert('patient')">patient</mark> have <mark onclick="alert('cold')">cold</mark> and .....`;
         const removeMarkTagText = removeMarkTag(text);
-        console.log(removeMarkTagText);
         const expectRemoveMarkTagText =
             'In my opinion, this patient have cold and .....';
         expect(removeMarkTagText).toBe(expectRemoveMarkTagText);
@@ -46,7 +43,6 @@ describe('test method removeLastMarkTag', () => {
     it('should remove mark tag with the given list of keywords ', () => {
         const text = `In my opinion, this <mark onclick="alert('patient')">patient</mark> have <mark onclick="alert('cold')">cold</mark> and .....`;
         const removeMarkTagText = removeLastMarkTag(text);
-        console.log(removeMarkTagText);
         const expectRemoveMarkTagText = `In my opinion, this <mark onclick="alert('patient')">patient</mark> have cold and .....`;
         expect(removeMarkTagText).toBe(expectRemoveMarkTagText);
     });
