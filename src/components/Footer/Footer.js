@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 const Footer = () => {
     return (
         <Container className='text-center mt-5'>
-            @Medical Artificial Intelligence Service Team - MAIST
+            @Medical Artificial Intelligence Solution Team - MAIST
         </Container>
     );
 };
