@@ -5,11 +5,14 @@ import {
     setLoadCdmWordsSuccess,
     setLoadCdmWordsError,
 } from '../actions/cdmWordsAction';
+import { setKeywordsMaptoCdmWords } from '../actions/keywordsMaptoCdmWordsAction';
 
 function* handleLoardCdmWords(action) {
     try {
-        const loadData = yield call(fetchCdmWords, action.markedWord);
-        yield put(setLoadCdmWordsSuccess(loadData));
+        const keyword = action.markedWord;
+        const cdmWords = yield call(fetchCdmWords, keyword);
+        yield put(setLoadCdmWordsSuccess(cdmWords));
+        yield put(setKeywordsMaptoCdmWords({ keyword, cdmWords }));
     } catch (error) {
         yield put(setLoadCdmWordsError(error.toString()));
     }

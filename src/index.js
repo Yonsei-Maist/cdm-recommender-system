@@ -8,13 +8,21 @@ import configureStore from './store';
 
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { loadCdmWords } from './actions/cdmWordsAction';
+import { loadCdmWords, setLoadCdmWordsSuccess } from './actions/cdmWordsAction';
 
 const store = configureStore();
 
 export const METHOD_NAME_ONCLICK_MARKED_WORD = 'handleOnClickMarkedWord';
 global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord) => {
-    store.dispatch(loadCdmWords(markedWord));
+    const keywordsMaptoCdmWords = store.getState().keywordsMaptoCdmWords;
+    const isExistKeyword = markedWord in keywordsMaptoCdmWords;
+    if (isExistKeyword) {
+        store.dispatch(
+            setLoadCdmWordsSuccess(keywordsMaptoCdmWords[markedWord])
+        );
+    } else {
+        store.dispatch(loadCdmWords(markedWord));
+    }
 };
 
 ReactDOM.render(

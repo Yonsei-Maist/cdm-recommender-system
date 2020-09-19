@@ -18,7 +18,7 @@ const cdmWordsReducer = (state = initialState, action) => {
         case CDM_WORDS.LOAD_CDM_WORDS_SUCCESS: {
             return {
                 ...state,
-                data: action.data,
+                data: action.cdmWords,
                 isLoading: false,
             };
         }

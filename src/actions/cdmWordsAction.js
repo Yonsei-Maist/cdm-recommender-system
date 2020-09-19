@@ -5,9 +5,9 @@ const loadCdmWords = (markedWord) => ({
     markedWord,
 });
 
-const setLoadCdmWordsSuccess = (data) => ({
+const setLoadCdmWordsSuccess = (cdmWords) => ({
     type: CDM_WORDS.LOAD_CDM_WORDS_SUCCESS,
-    data,
+    cdmWords,
 });
 
 const setLoadCdmWordsError = (error) => ({
