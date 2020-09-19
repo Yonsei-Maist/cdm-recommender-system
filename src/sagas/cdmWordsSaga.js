@@ -4,16 +4,13 @@ import { fetchCdmWords } from '../api';
 import {
     setLoadCdmWordsSuccess,
     setLoadCdmWordsError,
-} from '../actions/loadCdmWordsAction';
+} from '../actions/cdmWordsAction';
 
 function* handleLoardCdmWords(action) {
     try {
-        console.log(action);
         const loadData = yield call(fetchCdmWords, action.markedWord);
         yield put(setLoadCdmWordsSuccess(loadData));
     } catch (error) {
-        console.log(error);
-        console.log(error.toString());
         yield put(setLoadCdmWordsError(error.toString()));
     }
 }

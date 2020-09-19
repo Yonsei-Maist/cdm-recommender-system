@@ -6,23 +6,23 @@ const initialState = {
     error: '',
 };
 
-const loardDataReducer = (state = initialState, action) => {
+const userDataReducer = (state = initialState, action) => {
     switch (action.type) {
-        case USER_DATA.LOAD_DATA_LOADING: {
+        case USER_DATA.LOAD_USER_DATA_LOADING: {
             return {
                 ...state,
                 isLoading: true,
                 error: '',
             };
         }
-        case USER_DATA.LOAD_DATA_SUCCESS: {
+        case USER_DATA.LOAD_USER_DATA_SUCCESS: {
             return {
                 ...state,
                 data: action.data,
                 isLoading: false,
             };
         }
-        case USER_DATA.LOAD_DATA_ERROR: {
+        case USER_DATA.LOAD_USER_DATA_ERROR: {
             return {
                 ...state,
                 isLoading: false,
@@ -35,4 +35,4 @@ const loardDataReducer = (state = initialState, action) => {
     }
 };
 
-export default loardDataReducer;
+export default userDataReducer;

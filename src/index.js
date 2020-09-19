@@ -8,7 +8,7 @@ import configureStore from './store';
 
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { loadCdmWords } from './actions/loadCdmWordsAction';
+import { loadCdmWords } from './actions/cdmWordsAction';
 
 const store = configureStore();
 

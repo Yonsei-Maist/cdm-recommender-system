@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ListGroup, Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { loadUserData } from '../../actions/loadUserDataAction';
+import { loadUserData } from '../../actions/userDataAction';
 
 class LoadDataModal extends Component {
     componentDidMount() {

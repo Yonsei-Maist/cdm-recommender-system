@@ -1,8 +1,8 @@
 import { all } from 'redux-saga/effects';
 
-import loadUserDataSaga from './loadUserDataSaga';
-import loadCdmWordsSaga from './loadCdmWordsSaga';
+import userDataSaga from './userDataSaga';
+import cdmWordsSaga from './cdmWordsSaga';
 
 export default function* rootSaga() {
-    yield all([loadUserDataSaga(), loadCdmWordsSaga()]);
+    yield all([userDataSaga(), cdmWordsSaga()]);
 }

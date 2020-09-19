@@ -4,7 +4,7 @@ import { fetchUserData } from '../api';
 import {
     setLoadUserDataSuccess,
     setLoadUserDataError,
-} from '../actions/loadUserDataAction';
+} from '../actions/userDataAction';
 
 function* handleLoardUserData() {
     try {
@@ -17,5 +17,5 @@ function* handleLoardUserData() {
 
 export default function* watchLordUserData() {
     // Does not allow concurrent fetches of data
-    yield takeLatest(USER_DATA.LOAD_DATA_LOADING, handleLoardUserData);
+    yield takeLatest(USER_DATA.LOAD_USER_DATA_LOADING, handleLoardUserData);
 }

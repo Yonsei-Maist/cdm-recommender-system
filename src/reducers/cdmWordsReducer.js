@@ -6,7 +6,7 @@ const initialState = {
     error: '',
 };
 
-const loardCdmWordsReducer = (state = initialState, action) => {
+const cdmWordsReducer = (state = initialState, action) => {
     switch (action.type) {
         case CDM_WORDS.LOAD_CDM_WORDS_LOADING: {
             return {
@@ -35,4 +35,4 @@ const loardCdmWordsReducer = (state = initialState, action) => {
     }
 };
 
-export default loardCdmWordsReducer;
+export default cdmWordsReducer;

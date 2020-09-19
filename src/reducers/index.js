@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 
-import loadUserDataReducer from './loadUserDataReducer';
-import loadCdmWordsReducer from './loadCdmWordsReducer';
+import userDataReducer from './userDataReducer';
+import cdmWordsReducer from './cdmWordsReducer';
 
 const rootReducer = combineReducers({
-    userData: loadUserDataReducer,
-    cdmWords: loadCdmWordsReducer,
+    userData: userDataReducer,
+    cdmWords: cdmWordsReducer,
 });
 
 export default rootReducer;
