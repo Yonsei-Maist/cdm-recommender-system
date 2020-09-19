@@ -1,0 +1,3 @@
+[submodule "cdm-recommender-system-mock-server"]
+	path = cdm-recommender-system-mock-server
+	url = https://github.com/phorvicheka/cdm-recommender-system-mock-server.git
