@@ -1,0 +1,23 @@
+version: '3'
+services:
+  nginx-route:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx-route
+    ports:
+      - '3050:80'
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./cdm-recommender-system-mock-server
+    volumes:
+      - /app/node_modules
+      - ./cdm-recommender-system-mock-server:/app
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: .
+    volumes:
+      - /app/node_modules
+      - ./cdm-recommender-system:/app
