@@ -1,4 +1,7 @@
-const API_BASE_ADDRESS = 'http://localhost:4000';
+const API_BASE_ADDRESS =
+    process.env.REACT_APP_DOCKER_COMPOSE === 'true'
+        ? 'http://localhost:3050/api'
+        : 'http://localhost:4000';
 
 const fetchUserData = async () => {
     const uri = API_BASE_ADDRESS + '/user-data';

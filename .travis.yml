@@ -1,4 +1,3 @@
-sudo: required
 services:
   - docker
 
@@ -9,6 +8,8 @@ script:
   - docker run phorvicheka/cdm-recommender-system-reactjs-test npm test -- --coverage
 
 after_success:
+  # Output something every 10 minutes or Travis kills the job
+  - while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
   - docker build -t phorvicheka/cdm-recommender-system-reactjs .
   - docker build -t phorvicheka/cdm-recommender-system-mock-server ./cdm-recommender-system-mock-server
   - docker build -t phorvicheka/cdm-recommender-system-nginx-route ./nginx-route
@@ -18,6 +19,8 @@ after_success:
   - docker push phorvicheka/cdm-recommender-system-reactjs
   - docker push phorvicheka/cdm-recommender-system-mock-server
   - docker push phorvicheka/cdm-recommender-system-nginx-route
+  # Killing background sleep loop
+  - kill %1
 
 # deploy:
 #   provider: elasticbeanstalk
