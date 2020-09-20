@@ -23,9 +23,9 @@ class CdmWordList extends Component {
                     </div>
                 )}
                 <div className='flex-grow-1 flex-wrap'>
-                    {!isLoading && !error && (
+                    {!isLoading && !error && (data && data.length > 0) && (
                         <ListGroup
-                            style={{ overflowY: 'scroll', height: '55vh' }}
+                            style={{ overflowY: 'auto', height: '55vh' }}
                         >
                             {data.map(({ id, data }) => {
                                 return (
