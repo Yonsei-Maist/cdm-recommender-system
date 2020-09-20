@@ -35,21 +35,33 @@ const App = () => {
             <Header />
             <Container className='d-flex flex-grow-1'>
                 <Row className='flex-grow-1'>
-                    <Col md={8} className='d-flex flex-column'>
-                        <Row>
-                            <Col md='auto' className='align-items-start'>
+                    <Col md={8} className='d-flex flex-grow-1 flex-column my-3'>
+                        <Row className='mx-0 my-2'>
+                            <Col
+                                xs={{ order: 2, span: 6 }}
+                                sm={{ order: 1, span: 2 }}
+                                className='d-flex justify-content-start align-items-center'
+                            >
                                 <Button onClick={handleOnClickLoardButton}>
                                     Load
                                 </Button>
                             </Col>
-                            <Col className='text-center'>
+                            <Col
+                                xs={{ order: 1, span: 12 }}
+                                sm={{ order: 2, span: 8 }}
+                                className='d-flex text-center justify-content-center align-items-center mt-n5'
+                            >
                                 <h4>CDM Recommender System</h4>
                             </Col>
-                            <Col md='auto' className='align-items-end'>
+                            <Col
+                                xs={{ order: 3, span: 6 }}
+                                sm={{ order: 3, span: 2 }}
+                                className='d-flex justify-content-end align-items-center'
+                            >
                                 <Button>Save</Button>
                             </Col>
                         </Row>
-                        <Row className='flex-grow-1'>
+                        <Row className='flex-grow-1 mx-0'>
                             <TextArea
                                 html={textArea}
                                 onChange={handleOnChangeTextArea}
@@ -57,7 +69,10 @@ const App = () => {
                             />
                         </Row>
                     </Col>
-                    <Col md={4} className='border border-primary'>
+                    <Col
+                        md={4}
+                        className='d-flex flex-grow-1 border border-primary pr-2'
+                    >
                         <CdmWordList />
                     </Col>
                 </Row>

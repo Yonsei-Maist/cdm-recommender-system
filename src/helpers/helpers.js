@@ -19,8 +19,8 @@ export const addMarkTagWithOnClickHandler = (
     keywords,
     onClickHandler
 ) => {
-    const START_REGEX_STR = '(?<!\\S*<mark)\\b(\\w*';
-    const END_REGEX_STR = '\\w*)\\b(?!\\S*mark>)';
+    const START_REGEX_STR = '(?<!\\S*<mark)\\b(';
+    const END_REGEX_STR = ')\\b(?!\\S*mark>)';
     const newKeywords = keywords.map((keyword) => {
         return START_REGEX_STR + keyword + END_REGEX_STR;
     });
@@ -100,6 +100,37 @@ export const setCaretPosition = (el, pos) => {
     // Loop through all child nodes
     for (var node of el.childNodes) {
         if (node.nodeType === 3) {
+            // we have a text node
+            if (node.length >= pos) {
+                // finally add our range
+                var range = document.createRange(),
+                    sel = window.getSelection();
+                range.setStart(node, pos);
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+                return -1; // we are done
+            } else {
+                pos -= node.length;
+            }
+        } else {
+            pos = setCaretPosition(node, pos);
+            if (pos === -1) {
+                return -1; // no need to finish the for loop
+            }
+        }
+    }
+    return pos; // needed because of recursion stuff
+};
+
+// Move caret to a specific point in a DOM element
+// tagName: "MARK", nodeName: "MARK", nodeType: 1
+// nodeName: "#text", nodeType: 3
+// tagName: "DIV", nodeName: "DIV", nodeType: 1 (when user hits enter key)
+export const setCaretPositionByDiv = (el, pos) => {
+    // Loop through all child nodes
+    for (var node of el.childNodes) {
+        if (node.nodeType === 1 && node.nodeName === 'DIV') {
             // we have a text node
             if (node.length >= pos) {
                 // finally add our range

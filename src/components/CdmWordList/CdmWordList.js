@@ -6,26 +6,37 @@ class CdmWordList extends Component {
     render() {
         const { data, isLoading, error } = this.props;
         return (
-            <div>
+            <div className='d-flex flex-grow-1 flex-column'>
                 <h5 className='text-center py-2'>Recommended CDM word list</h5>
-                <hr className='mt-0' />
+                <hr
+                    className='mx-1 my-2'
+                    style={{
+                        backgroundColor: 'black',
+                        opacity: '0.2',
+                        height: '0.1em',
+                    }}
+                />
                 {isLoading && <div>Loading...</div>}
                 {error && (
                     <div style={{ color: 'red' }}>
                         ERROR: {this.props.error}
                     </div>
                 )}
-                {!isLoading && !error && (
-                    <ListGroup>
-                        {data.map(({ id, data }) => {
-                            return (
-                                <ListGroup.Item action key={id}>
-                                    {data}
-                                </ListGroup.Item>
-                            );
-                        })}
-                    </ListGroup>
-                )}
+                <div className='flex-grow-1 flex-wrap'>
+                    {!isLoading && !error && (
+                        <ListGroup
+                            style={{ overflowY: 'scroll', height: '55vh' }}
+                        >
+                            {data.map(({ id, data }) => {
+                                return (
+                                    <ListGroup.Item action key={id}>
+                                        {data}
+                                    </ListGroup.Item>
+                                );
+                            })}
+                        </ListGroup>
+                    )}
+                </div>
             </div>
         );
     }
