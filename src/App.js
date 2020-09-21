@@ -35,7 +35,7 @@ const App = () => {
             <Header />
             <Container className='d-flex flex-grow-1'>
                 <Row className='flex-grow-1'>
-                    <Col md={8} className='d-flex flex-grow-1 flex-column my-3'>
+                    <Col md={8} className='d-flex flex-grow-1 flex-column mt-3'>
                         <Row className='mx-0 my-2'>
                             <Col
                                 xs={{ order: 2, span: 6 }}
@@ -71,7 +71,7 @@ const App = () => {
                     </Col>
                     <Col
                         md={4}
-                        className='d-flex flex-grow-1 border border-primary pr-2'
+                        className='d-flex flex-grow-1 border border-primary mt-3 pr-2'
                     >
                         <CdmWordList />
                     </Col>
