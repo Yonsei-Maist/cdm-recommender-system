@@ -10,7 +10,7 @@ before_install:
   - docker build -t phorvicheka/cdm-recommender-system-reactjs-test -f Dockerfile.dev .
 
 script:
-  - docker run phorvicheka/cdm-recommender-system-reactjs-test npm test -- --coverage
+  - docker run phorvicheka/cdm-recommender-system-reactjs-test npm test -- --coverage --watchAll=false
 
 after_success:
   # Output something every 10 minutes or Travis kills the job
