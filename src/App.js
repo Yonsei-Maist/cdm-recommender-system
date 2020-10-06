@@ -7,15 +7,20 @@ import './App.css';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import LoadDataModal from './components/LoadDataModal/LoadDataModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserInputText } from './actions/userDataAction';
 
 const App = () => {
     const [show, setShow] = useState(false);
-    const [textArea, setTextArea] = useState('');
+    //this hook allows us to access the dispatch function
+    const dispatch = useDispatch();
+    //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
+    const userInputText = useSelector((state) => state.userData.inputText);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const handleOnDoubleCLickLoardDataItem = (data) => {
-        setTextArea(data);
+        dispatch(setUserInputText(data));
         handleClose();
     };
 
@@ -24,16 +29,16 @@ const App = () => {
     };
 
     const handleOnChangeTextArea = (markedText) => {
-        setTextArea(markedText);
+        dispatch(setUserInputText(markedText));
     };
     const handleOnBlurTextArea = (markedText) => {
-        setTextArea(markedText);
+        dispatch(setUserInputText(markedText));
     };
 
     return (
         <div className='mx-auto mt-5 d-flex flex-column vh-90'>
-            <Header />
-            <Container className='d-flex flex-grow-1'>
+            <Header logo={process.env.PUBLIC_URL + '/logo70.png'} />
+            <Container className='d-flex flex-grow-1 my-5'>
                 <Row className='flex-grow-1'>
                     <Col md={8} className='d-flex flex-grow-1 flex-column mt-3'>
                         <Row className='mx-0 my-2'>
@@ -63,7 +68,7 @@ const App = () => {
                         </Row>
                         <Row className='flex-grow-1 mx-0'>
                             <TextArea
-                                html={textArea}
+                                html={userInputText}
                                 onChange={handleOnChangeTextArea}
                                 onBlur={handleOnBlurTextArea}
                             />

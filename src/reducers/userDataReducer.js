@@ -4,6 +4,7 @@ const initialState = {
     data: [],
     isLoading: false,
     error: '',
+    inputText: '',
 };
 
 const userDataReducer = (state = initialState, action) => {
@@ -27,6 +28,12 @@ const userDataReducer = (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 error: action.error,
+            };
+        }
+        case USER_DATA.SET_USER_INPUT_TEXT: {
+            return {
+                ...state,
+                inputText: action.inputText,
             };
         }
         default: {

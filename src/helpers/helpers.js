@@ -145,7 +145,7 @@ export const setCaretPositionByDiv = (el, pos) => {
                 pos -= node.length;
             }
         } else {
-            pos = setCaretPosition(node, pos);
+            pos = setCaretPositionByDiv(node, pos);
             if (pos === -1) {
                 return -1; // no need to finish the for loop
             }

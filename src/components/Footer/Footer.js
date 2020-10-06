@@ -3,7 +3,7 @@ import { Container } from 'react-bootstrap';
 
 const Footer = () => {
     return (
-        <Container className='text-center mt-5'>
+        <Container className='text-center'>
             @Medical Artificial Intelligence Solution Team - MAIST
         </Container>
     );

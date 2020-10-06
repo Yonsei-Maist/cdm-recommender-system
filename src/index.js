@@ -9,10 +9,10 @@ import configureStore from './store';
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { loadCdmWords, setLoadCdmWordsSuccess } from './actions/cdmWordsAction';
+import { METHOD_NAME_ONCLICK_MARKED_WORD } from './constants';
 
 const store = configureStore();
 
-export const METHOD_NAME_ONCLICK_MARKED_WORD = 'handleOnClickMarkedWord';
 global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord) => {
     const keywordsMaptoCdmWords = store.getState().keywordsMaptoCdmWords;
     const isExistKeyword = markedWord in keywordsMaptoCdmWords;

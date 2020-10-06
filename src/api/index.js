@@ -1,7 +1,7 @@
-const API_BASE_ADDRESS = 'http://localhost:4000';
+import { API_URL_USER_DATA, API_URL_CDM_WORDS } from '../constants';
 
 const fetchUserData = async () => {
-    const uri = API_BASE_ADDRESS + '/user-data';
+    const uri = API_URL_USER_DATA;
     const response = await fetch(uri, {
         method: 'GET',
     });
@@ -14,7 +14,7 @@ const fetchUserData = async () => {
 };
 
 const fetchCdmWords = async (markedWord) => {
-    const uri = API_BASE_ADDRESS + `/cdm-words-${markedWord}`;
+    const uri = `${API_URL_CDM_WORDS}${markedWord}`;
     const response = await fetch(uri, {
         method: 'GET',
     });

@@ -14,4 +14,14 @@ const setLoadUserDataError = (error) => ({
     error,
 });
 
-export { loadUserData, setLoadUserDataSuccess, setLoadUserDataError };
+const setUserInputText = (inputText) => ({
+    type: USER_DATA.SET_USER_INPUT_TEXT,
+    inputText,
+});
+
+export {
+    loadUserData,
+    setLoadUserDataSuccess,
+    setLoadUserDataError,
+    setUserInputText,
+};

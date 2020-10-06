@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import ContentEditable from 'react-contenteditable';
 import {
     getCaretPosition,
@@ -7,7 +7,8 @@ import {
     removeMarkTag,
     addMarkTagWithOnClickHandler,
 } from '../../helpers/helpers';
-import { METHOD_NAME_ONCLICK_MARKED_WORD } from '../../index';
+import { METHOD_NAME_ONCLICK_MARKED_WORD } from '../../constants';
+import { useSelector } from 'react-redux';
 
 const TextArea = ({ html, onChange, onBlur }) => {
     const MEDICAL_KEYWORDS = ['cold', 'patient'];
@@ -16,16 +17,19 @@ const TextArea = ({ html, onChange, onBlur }) => {
     const [currentCaretPos, setCurrentCaretPos] = useState();
     const [inputType, setInputType] = useState();
 
-    React.useEffect(() => {
+    //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
+    const userInputText = useSelector((state) => state.userData.inputText);
+
+    useEffect(() => {
         const markedText = addMarkTagWithOnClickHandler(
-            html,
+            userInputText,
             MEDICAL_KEYWORDS,
             METHOD_NAME_ONCLICK_MARKED_WORD
         );
         setText(markedText);
-    }, [html, MEDICAL_KEYWORDS]);
+    }, [MEDICAL_KEYWORDS, userInputText]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         // set back the current position of carret
         if (inputType === 'insertParagraph') {
             setCaretPositionByDiv(contentEditable.current, currentCaretPos);
@@ -61,6 +65,25 @@ const TextArea = ({ html, onChange, onBlur }) => {
         onBlur(markedText);
     };
 
+    const generateMarkedText = (
+        contentEditable,
+        setCurrentCaretPos,
+        MEDICAL_KEYWORDS,
+        handleOnClickMarkedWordFuncName
+    ) => {
+        // remove all mark tags
+        const modifiedText = removeMarkTag(contentEditable.current.innerHTML);
+        // get the current carret position
+        setCurrentCaretPos(getCaretPosition(contentEditable.current));
+        // find the markedText: text with mark tags
+        const markedText = addMarkTagWithOnClickHandler(
+            modifiedText,
+            MEDICAL_KEYWORDS,
+            handleOnClickMarkedWordFuncName
+        );
+        return markedText;
+    };
+
     return (
         <ContentEditable
             className='flex-grow-1 mx-2 p-3 border border-secondary rounded'
@@ -74,22 +97,3 @@ const TextArea = ({ html, onChange, onBlur }) => {
 };
 
 export default TextArea;
-
-function generateMarkedText(
-    contentEditable,
-    setCurrentCaretPos,
-    MEDICAL_KEYWORDS,
-    handleOnClickMarkedWordFuncName
-) {
-    // remove all mark tags
-    const modifiedText = removeMarkTag(contentEditable.current.innerHTML);
-    // get the current carret position
-    setCurrentCaretPos(getCaretPosition(contentEditable.current));
-    // find the markedText: text with mark tags
-    const markedText = addMarkTagWithOnClickHandler(
-        modifiedText,
-        MEDICAL_KEYWORDS,
-        handleOnClickMarkedWordFuncName
-    );
-    return markedText;
-}

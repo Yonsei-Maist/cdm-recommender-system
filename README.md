@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/phorvicheka/cdm-recommender-system">
-    <img src="./docs/images/logo.png" alt="Logo" width="80" height="80">
+    <img src="./docs/statics/images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">CDM RECOMMENDER SYSTEM</h3>
@@ -32,8 +32,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![CDM Recommender System - screenshot01](./docs/images/screenshot01.png)
-![CDM Recommender System - screenshot02](./docs/images/screenshot02.png)
+![CDM Recommender System - screenshot01](./docs/statics/images/screenshot01.png)
+![CDM Recommender System - screenshot02](./docs/statics/images/screenshot02.png)
 
 
 

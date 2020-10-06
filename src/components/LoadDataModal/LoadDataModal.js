@@ -1,68 +1,60 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { ListGroup, Modal } from 'react-bootstrap';
-import { connect } from 'react-redux';
 import { loadUserData } from '../../actions/userDataAction';
+import { useDispatch, useSelector } from 'react-redux';
 
-class LoadDataModal extends Component {
-    componentDidMount() {
+const LoadDataModal = (props) => {
+    /*     componentDidMount() {
         this.props.loadUserData();
-    }
+    } */
+    const { show, onHide, handleOnDoubleCLick } = props;
 
-    render() {
-        const {
-            show,
-            onHide,
-            data,
-            handleOnDoubleCLick,
-            isLoading,
-            error,
-        } = this.props;
+    //this hook allows us to access the dispatch function
+    const dispatch = useDispatch();
+    //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
+    const userData = useSelector((state) => state.userData);
+    const { data, isLoading, error } = userData;
 
-        return (
-            <Modal animation={false} show={show} onHide={onHide}>
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        <h4>Load Data</h4>
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {isLoading && <div>Loading...</div>}
-                    {error && (
-                        <div style={{ color: 'red' }}>
-                            ERROR: {this.props.error}
-                        </div>
-                    )}
-                    {!isLoading && !error && (
-                        <ListGroup>
-                            {data &&
-                                data.length &&
-                                data.map(({ id, title, data }) => {
-                                    return (
-                                        <ListGroup.Item
-                                            action
-                                            onDoubleClick={() =>
-                                                handleOnDoubleCLick(data)
-                                            }
-                                            key={id}
-                                        >
-                                            {title.toUpperCase()}
-                                        </ListGroup.Item>
-                                    );
-                                })}
-                        </ListGroup>
-                    )}
-                </Modal.Body>
-            </Modal>
-        );
-    }
-}
+    useEffect(() => {
+        dispatch(loadUserData());
+    }, [dispatch]);
 
-const mapStateToProps = ({ userData }) => ({
-    ...userData,
-});
+    return (
+        <Modal animation={false} show={show} onHide={onHide}>
+            <Modal.Header closeButton>
+                <Modal.Title>
+                    <h4>Load Data</h4>
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {isLoading && <div>Loading...</div>}
+                {error && (
+                    <div style={{ color: 'red' }}>
+                        ERROR: {this.props.error}
+                    </div>
+                )}
+                {!isLoading && !error && (
+                    <ListGroup>
+                        {data &&
+                            data.length &&
+                            data.map(({ id, title, data }) => {
+                                return (
+                                    <ListGroup.Item
+                                        action
+                                        onDoubleClick={() =>
+                                            handleOnDoubleCLick(data)
+                                        }
+                                        key={id}
+                                    >
+                                        {title.toUpperCase()}
+                                    </ListGroup.Item>
+                                );
+                            })}
+                    </ListGroup>
+                )}
+            </Modal.Body>
+        </Modal>
+    );
+};
 
-const mapDispatchToProps = (dispatch) => ({
-    loadUserData: () => dispatch(loadUserData()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoadDataModal);
+export default LoadDataModal;
