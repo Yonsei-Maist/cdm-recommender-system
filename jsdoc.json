@@ -1,0 +1,73 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+        "include": [
+            "./src"
+        ],
+        "excludePattern": "(node_modules/|docs|(bundle.*\\.js)|cli.ts)"
+    },
+    "plugins": [
+        "plugins/markdown",
+        "better-docs/component",
+        "better-docs/category",
+        "better-docs/typedef-import"
+    ],
+    "opts": {
+        "encoding": "utf8",
+        "destination": "./docs/jsdocs",
+        "readme": "./docs/home.md",
+        "recurse": true,
+        "private": true,
+        "verbose": true,
+        "template": "./node_modules/better-docs"
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "search": true,
+        "default": {
+            "includeDate": false,
+            "staticFiles": {
+                "include": [
+                    "./docs/statics"
+                ]
+            }
+        },
+        "better-docs": {
+            "logo": "images/logo70.png",
+            "title": "CDM Word Recommendation System - Recommends CDM Word for creating an Electronic Medical Record (EMR)",
+            "component": {
+                "wrapper": "./docs/docs-helpers/component.js"
+            },
+            "head": "<link rel=\"stylesheet\" type=\"text/css\" href=\"./css/custom.css\"/>",
+            "ogTags": {
+                "title": "CDM Word Recommendation System",
+                "description": "YCDM Word Recommendation System - Recommends CDM Word for creating an Electronic Medical Record (EMR)",
+                "image": "images/screenshot01.png"
+            },
+            "navButtons": [
+                {
+                    "label": "Demo",
+                    "href": "#",
+                    "target": "_blank",
+                    "className": "is-primary is-outlined"
+                },
+                {
+                    "label": "Get Started",
+                    "href": "#",
+                    "className": "is-primary is-outlined"
+                }
+            ],
+            "hideGenerator": false,
+            "navLinks": [
+                {
+                    "label": "<i class=\"fab fa-github fa-3x\"></i>",
+                    "href": "https://github.com/phorvicheka/cdm-recommender-system.git",
+                    "className": "no-hover"
+                }
+            ]
+        }
+    }
+}

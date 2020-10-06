@@ -1,3 +1,24 @@
+/**
+ * @category Helpers
+ * @module helpers
+ */
+
+/**
+ * @function
+ * @description
+ * Add mark tag to text with alert method on onclick event by giving a list of keywords
+ * 
+ * @param {string} text 
+ * @param {Array} keywords
+ * 
+ * @returns {string} text with mark tags
+ * 
+ * @example  
+ * const keywords = ['cold', 'patient'];
+ * const text = 'In my opinion, this patient have cold and .....';
+ * const markedText = addMarkTag(text, keywords); // In my opinion, this <mark onclick="alert('patient')">patient</mark> have <mark onclick="alert('cold')">cold</mark> and .....
+ * 
+ */
 export const addMarkTag = (text, keywords) => {
     const START_REGEX_STR = '(?<!\\S<mark.*)\\b(';
     const END_REGEX_STR = ')\\b(?!.*\\Smark>)';
@@ -14,6 +35,25 @@ export const addMarkTag = (text, keywords) => {
     return markedText;
 };
 
+
+/**
+ * @function
+ * @description
+ * Add mark tag to text with onClickHandler method on onclick event by giving a list of keywords
+ * 
+ * @param {string} text
+ * @param {Array} keywords
+ * @param {*} onClickHandler
+ * 
+ * @returns {string} text with mark tags
+ * 
+ * @example  
+ * const keywords = ['cold', 'patient'];
+ * const text = 'In my opinion, this patient have cold and .....';
+ * const markedText = addMarkTagWithOnClickHandler(text, keywords, 'alert');
+ * // In my opinion, this <mark onclick="alert('patient')">patient</mark> have <mark onclick="alert('cold')">cold</mark> and .....
+ * 
+ */
 export const addMarkTagWithOnClickHandler = (
     text,
     keywords,
@@ -32,10 +72,32 @@ export const addMarkTagWithOnClickHandler = (
     return markedText;
 };
 
+/**
+ * @function
+ * @description
+ * Remove all mark tags from text
+ * 
+ * @param {string} text
+ * 
+ * @returns {string} text without mark tags
+ * 
+ * @example
+ * const text = `In my opinion, this <mark onclick="alert('patient')">patient</mark> have <mark onclick="alert('cold')">cold</mark> and .....`;
+ * const removeMarkTagText = removeMarkTag(text); // In my opinion, this patient have cold and .....
+ */
 export const removeMarkTag = (text) => {
     return text.replace(/<mark.*?>(?<innerText>.*?)<\/mark>/g, '$<innerText>');
 };
 
+/**
+ * @function
+ * @description
+ * Remove the last mark tag from text
+ * 
+ * @param {string} text
+ * 
+ * @returns {string} text without the last mark tag
+ */
 export const removeLastMarkTag = (text) => {
     let out = text;
     let lastOccurrence = {};
@@ -58,7 +120,18 @@ export const removeLastMarkTag = (text) => {
     return out;
 };
 
-export const replaceLast = (find, replace, string) => {
+/**
+ * @function
+ * @description
+ * Find the last words and replace it by other words from text
+ * 
+ * @param {string} find words to find inside a text
+ * @param {string} replace words to replace the found words
+ * @param {string} string text
+ * 
+ * @returns {string} text without the last mark tag
+ */
+const replaceLast = (find, replace, string) => {
     var lastIndex = string.lastIndexOf(find);
 
     if (lastIndex === -1) {
@@ -71,6 +144,15 @@ export const replaceLast = (find, replace, string) => {
     return beginString + replace + endString;
 };
 
+/**
+ * @function
+ * @description
+ * Get the caret position from an element
+ * 
+ * @param {Object} el DOM element
+ * 
+ * @returns {number} caret position
+ */
 export const getCaretPosition = (el) => {
     var caretOffset = 0;
     var doc = el.ownerDocument || el.document;
@@ -95,7 +177,17 @@ export const getCaretPosition = (el) => {
     return caretOffset;
 };
 
-// Move caret to a specific point in a DOM element
+/**
+ * @function
+ * @description
+ * Move caret to a specific point of the text in a DOM element.
+ * nodeName: "#text", nodeType: 3.
+ * 
+ * @param {Object} el DOM element
+ * @param {number} pos position to put the caret
+ * 
+ * @returns {number} caret position because of recursion stuff
+ */
 export const setCaretPosition = (el, pos) => {
     // Loop through all child nodes
     for (var node of el.childNodes) {
@@ -123,10 +215,19 @@ export const setCaretPosition = (el, pos) => {
     return pos; // needed because of recursion stuff
 };
 
-// Move caret to a specific point in a DOM element
-// tagName: "MARK", nodeName: "MARK", nodeType: 1
-// nodeName: "#text", nodeType: 3
-// tagName: "DIV", nodeName: "DIV", nodeType: 1 (when user hits enter key)
+/**
+ * @function
+ * @description
+ * Move caret to a specific point of the text in a DOM element by div element.
+ * tagName: "MARK", nodeName: "MARK", nodeType: 1;
+ * nodeName: "#text", nodeType: 3;
+ * tagName: "DIV", nodeName: "DIV", nodeType: 1 (when user hits enter key);
+ * 
+ * @param {Object} el DOM element
+ * @param {number} pos position to put the caret
+ * 
+ * @returns {number} caret position because of recursion stuff
+ */
 export const setCaretPositionByDiv = (el, pos) => {
     // Loop through all child nodes
     for (var node of el.childNodes) {

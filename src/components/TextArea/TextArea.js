@@ -8,8 +8,38 @@ import {
     addMarkTagWithOnClickHandler,
 } from '../../helpers/helpers';
 import { METHOD_NAME_ONCLICK_MARKED_WORD } from '../../constants';
-import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
+/**
+ * Renders Text Area for user to input their text
+ *
+ * ### Usage
+ *
+ * ```
+ * import TextArea from './components/TextArea/TextArea';
+ * ```
+ *
+ * @component
+ * @category Components
+ * @requires react
+ * @requires react-contenteditable
+ * @requires '../../constants'
+ * @requires '../../helpers/helpers'
+ * @param {Function} useState react useState hook for states: text, currentCaretPos, inputType
+ * @param {Function} useEffect react useEffect hook for listening to state changed
+ * @param {Function} useRef react useRef hook for ContentEditable component
+ * 
+ * @example
+ * const onChange = (markedText) => { console.log('onChange'); };
+ * const onBlur = () => { console.log('onBlur'); };
+ * return (
+ *      <TextArea
+ *          html={""}
+ *          onChange={onChange}
+ *          onBlur={onBlur}
+ *  	/>
+ * );
+ */
 const TextArea = ({ html, onChange, onBlur }) => {
     const MEDICAL_KEYWORDS = ['cold', 'patient'];
     const [text, setText] = useState(html);
@@ -17,18 +47,17 @@ const TextArea = ({ html, onChange, onBlur }) => {
     const [currentCaretPos, setCurrentCaretPos] = useState();
     const [inputType, setInputType] = useState();
 
-    //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
-    const userInputText = useSelector((state) => state.userData.inputText);
-
+    // useEffect when props html is changed
     useEffect(() => {
-        const markedText = addMarkTagWithOnClickHandler(
-            userInputText,
+        const markedText = generateMarkedText(
+            html,
             MEDICAL_KEYWORDS,
             METHOD_NAME_ONCLICK_MARKED_WORD
         );
         setText(markedText);
-    }, [MEDICAL_KEYWORDS, userInputText]);
+    }, [MEDICAL_KEYWORDS, html]);
 
+    // useEffect when text is changed - to set back the current position of carret
     useEffect(() => {
         // set back the current position of carret
         if (inputType === 'insertParagraph') {
@@ -38,43 +67,58 @@ const TextArea = ({ html, onChange, onBlur }) => {
         }
     }, [currentCaretPos, text, inputType]);
 
+    /**
+     * @method
+     * @memberof TextArea
+     */
     const handleOnChange = (evt) => {
-        setText(evt.target.value);
+        // set the inputType of user input
         setInputType(evt.nativeEvent.inputType);
+        // get the current caret position
+        setCurrentCaretPos(getCaretPosition(contentEditable.current));
+
         const markedText = generateMarkedText(
-            contentEditable,
-            setCurrentCaretPos,
+            contentEditable.current.innerHTML,
             MEDICAL_KEYWORDS,
             METHOD_NAME_ONCLICK_MARKED_WORD
         );
 
-        // set markedText
+        // set markedText -> then, fire useEffect to set back the current position of carret
+        setText(markedText);
+        // trigger handle onChange from parent component
         onChange(markedText);
     };
 
+    /**
+     * @method
+     * @memberof TextArea
+     */
     const handleOnBlur = () => {
         if (!contentEditable.current.innerHTML) {
             return;
         }
+        // get the current caret position
+        setCurrentCaretPos(getCaretPosition(contentEditable.current));
         const markedText = generateMarkedText(
-            contentEditable,
-            setCurrentCaretPos,
+            contentEditable.current.innerHTML,
             MEDICAL_KEYWORDS,
             METHOD_NAME_ONCLICK_MARKED_WORD
         );
+        // trigger handle onBlur from parent component
         onBlur(markedText);
     };
 
+    /**
+     * @method
+     * @memberof TextArea
+     */
     const generateMarkedText = (
-        contentEditable,
-        setCurrentCaretPos,
+        html,
         MEDICAL_KEYWORDS,
         handleOnClickMarkedWordFuncName
     ) => {
         // remove all mark tags
-        const modifiedText = removeMarkTag(contentEditable.current.innerHTML);
-        // get the current carret position
-        setCurrentCaretPos(getCaretPosition(contentEditable.current));
+        const modifiedText = removeMarkTag(html);
         // find the markedText: text with mark tags
         const markedText = addMarkTagWithOnClickHandler(
             modifiedText,
@@ -94,6 +138,21 @@ const TextArea = ({ html, onChange, onBlur }) => {
             onChange={handleOnChange}
         />
     );
+};
+
+TextArea.propTypes = {
+    /**
+     * path to logo image
+     */
+    html: PropTypes.string.isRequired,
+    /**
+     * function handler triggers when user types anything in the text area
+     */
+    onChange: PropTypes.func.isRequired,
+    /**
+     * function handler triggers when user leaves the text area
+     */
+    onBlur: PropTypes.func.isRequired,
 };
 
 export default TextArea;

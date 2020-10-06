@@ -10,6 +10,30 @@ import LoadDataModal from './components/LoadDataModal/LoadDataModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserInputText } from './actions/userDataAction';
 
+/**
+ * Renders Application Component
+ *
+ * ### Usage
+ *
+ * ```
+ * import App from './App';
+ * ```
+ *
+ * @component
+ * @category Components
+ * @requires react
+ * @requires react-bootstrap
+ * @requires react-redux
+ * @requires './actions/userDataAction'
+ * @requires './components/TextArea/TextArea'
+ * @requires './components/CdmWordList/CdmWordList'
+ * @requires './components/Header/Header'
+ * @requires './components/Footer/Footer'
+ * @requires './components/LoadDataModal/LoadDataModal'
+ * @param {Function} useDispatch the dispatch function that triggers an action
+ * @param {Function} useSelector the selector function that returns state.userData.inputText
+ * @param {Function} useState react useState hook for states: show
+ */
 const App = () => {
     const [show, setShow] = useState(false);
     //this hook allows us to access the dispatch function
@@ -17,20 +41,44 @@ const App = () => {
     //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
     const userInputText = useSelector((state) => state.userData.inputText);
 
+    /**
+     * @method
+     * @memberof App
+     */
     const handleClose = () => setShow(false);
+    /**
+     * @method
+     * @memberof App
+     */
     const handleShow = () => setShow(true);
+    /**
+     * @method
+     * @memberof App
+     */
     const handleOnDoubleCLickLoardDataItem = (data) => {
         dispatch(setUserInputText(data));
         handleClose();
     };
 
+    /**
+     * @method
+     * @memberof App
+     */
     const handleOnClickLoardButton = () => {
         handleShow();
     };
 
+    /**
+     * @method
+     * @memberof App
+     */
     const handleOnChangeTextArea = (markedText) => {
         dispatch(setUserInputText(markedText));
     };
+    /**
+     * @method
+     * @memberof App
+     */
     const handleOnBlurTextArea = (markedText) => {
         dispatch(setUserInputText(markedText));
     };

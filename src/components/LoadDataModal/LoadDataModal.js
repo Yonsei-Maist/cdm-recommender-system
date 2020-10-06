@@ -2,18 +2,33 @@ import React, { useEffect } from 'react';
 import { ListGroup, Modal } from 'react-bootstrap';
 import { loadUserData } from '../../actions/userDataAction';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
+/**
+ * Renders pop up modal to load the user's saved data
+ *
+ * ### Usage
+ *
+ * ```
+ * import LoadDataModal from './components/LoadDataModal/LoadDataModal';
+ * ```
+ *
+ * @component
+ * @category Components
+ * @requires react
+ * @requires react-bootstrap
+ * @requires react-redux
+ * @requires '../../actions/userDataAction'
+ * @param {Function} useDispatch the dispatch function that triggers an action
+ * @param {Function} useSelector the selector function that returns state.userData: { data, isLoading, error }
+ */
 const LoadDataModal = (props) => {
-    /*     componentDidMount() {
-        this.props.loadUserData();
-    } */
     const { show, onHide, handleOnDoubleCLick } = props;
 
     //this hook allows us to access the dispatch function
     const dispatch = useDispatch();
     //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
-    const userData = useSelector((state) => state.userData);
-    const { data, isLoading, error } = userData;
+    const { data, isLoading, error } = useSelector((state) => state.userData);
 
     useEffect(() => {
         dispatch(loadUserData());
@@ -28,11 +43,7 @@ const LoadDataModal = (props) => {
             </Modal.Header>
             <Modal.Body>
                 {isLoading && <div>Loading...</div>}
-                {error && (
-                    <div style={{ color: 'red' }}>
-                        ERROR: {this.props.error}
-                    </div>
-                )}
+                {error && <div style={{ color: 'red' }}>ERROR: {error}</div>}
                 {!isLoading && !error && (
                     <ListGroup>
                         {data &&
@@ -55,6 +66,21 @@ const LoadDataModal = (props) => {
             </Modal.Body>
         </Modal>
     );
+};
+
+LoadDataModal.propTypes = {
+    /**
+     * boolean variable to toggle hide or show Modal
+     */
+    show: PropTypes.bool.isRequired,
+    /**
+     * function handler triggers when close Modal
+     */
+    onHide: PropTypes.func.isRequired,
+    /**
+     * function handler when double click on the item in the modal list
+     */
+    handleOnDoubleCLick: PropTypes.func.isRequired,
 };
 
 export default LoadDataModal;

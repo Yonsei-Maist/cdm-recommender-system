@@ -1,3 +1,19 @@
+/**
+ * @category Index.js
+ * @module index
+ * @description Inside this module for start up the application, there is a global method for handling event when user clicks on marked word.
+ * Note: it is global['handleOnClickMarkedWord'] not global[undefined]
+ * @requires react
+ * @requires react-dom
+ * @requires 'react-redux'
+ * @requires './index.css'
+ * @requires './App'
+ * @requires './serviceWorker'
+ * @requires './store'
+ * @requires 'bootstrap/dist/css/bootstrap.min.css'
+ * @requires './actions/cdmWordsAction'
+ * @requires './constants'
+ */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -11,8 +27,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { loadCdmWords, setLoadCdmWordsSuccess } from './actions/cdmWordsAction';
 import { METHOD_NAME_ONCLICK_MARKED_WORD } from './constants';
 
+/**
+ * @type {Object}
+ */
 const store = configureStore();
 
+/**
+ * @type {Object}
+ * @property {Function} METHOD_NAME_ONCLICK_MARKED_WORD method handler when user clicks on marked word
+ * @param {string} markedWord marked word or highlight word
+ */
 global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord) => {
     const keywordsMaptoCdmWords = store.getState().keywordsMaptoCdmWords;
     const isExistKeyword = markedWord in keywordsMaptoCdmWords;

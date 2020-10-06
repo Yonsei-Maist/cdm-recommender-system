@@ -2,10 +2,30 @@ import React from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 
+/**
+ * Renders recommended CDM words list
+ *
+ * ### Usage
+ *
+ * ```
+ * import CdmWordList from './components/CdmWordList/CdmWordList';
+ * ```
+ *
+ * @component
+ * @category Components
+ * @requires react
+ * @requires react-bootstrap
+ * @requires react-redux
+ * @param {Function} useSelector the selector function that returns state.cdmWords: { data, isLoading, error }
+ * 
+ * @example
+ * return (
+ *      <CdmWordList />
+ * );
+ */
 const CdmWordList = () => {
     //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
-    const cdmWords = useSelector((state) => state.cdmWords);
-    const { data, isLoading, error } = cdmWords;
+    const { data, isLoading, error } = useSelector((state) => state.cdmWords);
 
     return (
         <div className='d-flex flex-grow-1 flex-column'>

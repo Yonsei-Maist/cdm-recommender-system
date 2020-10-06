@@ -1,3 +1,11 @@
+/**
+ * @category Sagas
+ * @module sagas/userDataSaga
+ * @requires '../action-types'
+ * @requires '../api'
+ * @requires '../actions/userDataAction'
+ */
+
 import { put, call, takeLatest } from 'redux-saga/effects';
 import { USER_DATA } from '../action-types';
 import { fetchUserData } from '../api';
@@ -6,6 +14,16 @@ import {
     setLoadUserDataError,
 } from '../actions/userDataAction';
 
+/**
+ * @generator
+ * @function
+ * @description handle saga of load user data
+ * @param {action} action redux action
+ * 
+ * @yields {Object} CallEffect of fetchUserData api
+ * @yields {Object} PutEffect of setLoadUserDataSuccess action
+ * @yields {Object} PutEffect of setLoadUserDataError action
+ */
 function* handleLoardUserData() {
     try {
         const loadData = yield call(fetchUserData);
@@ -15,6 +33,13 @@ function* handleLoardUserData() {
     }
 }
 
+/**
+ * @generator
+ * @function
+ * @description watch saga of load user data
+ * 
+ * @yields {Object} ForkEffect of handleLoardUserData saga
+ */
 export default function* watchLordUserData() {
     // Does not allow concurrent fetches of data
     yield takeLatest(USER_DATA.LOAD_USER_DATA_LOADING, handleLoardUserData);
