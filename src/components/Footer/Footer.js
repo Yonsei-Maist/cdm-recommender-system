@@ -1,7 +1,7 @@
 /**
  * @file
- * @author phorvicheka <phorvicheka@yahoo.com>
- * @date 2020-09-17
+ * @author phorvicheka, Yonsei Univ. Researcher, since 2020.10
+ * @date 2020.09.17
  */
 import React from 'react';
 import { Container } from 'react-bootstrap';

@@ -1,7 +1,7 @@
 /**
  * @file
- * @author phorvicheka <phorvicheka@yahoo.com>
- * @date 2020-10-06
+ * @author phorvicheka, Yonsei Univ. Researcher, since 2020.10
+ * @date 2020.10.06
  */
 
 /**
