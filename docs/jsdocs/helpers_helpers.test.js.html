@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CDM Word Recommendation System - Recommends CDM Word for creating an Electronic Medical Record (EMR) reducers/index</title>
+  <title>CDM Word Recommendation System - Recommends CDM Word for creating an Electronic Medical Record (EMR) helpers/helpers.test.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -110,249 +112,73 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p>Module</p>
-                    <h1>reducers/index</h1>
+                    <p>Source</p>
+                    <h1>helpers/helpers.test.js</h1>
                 </header>
                 
 
 
 
-
-<section>
-
-<header>
     
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-        
-    
-    </div>
-    
-    
-
-    
-        <h3 class="subsection-title">Requires</h3>
-
-        <ul>
-            <li>module:'redux'</li>
-        
-            <li>module:'./cdmWordsReducer'</li>
-        
-            <li>module:'./userDataReducer'</li>
-        
-            <li>module:'./keywordsMaptoCdmWordsReducer'</li>
-        </ul>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <div class='vertical-section'>
-            <h1>Members</h1>
-            <div class="members">
-            
-                <div class="member">
-
-    <span class="method-parameter is-pulled-right">
-        <label>Type:</label>
-        
-<span class="param-type">Object</span>
-
-
-    </span>
-
-<h4 class="name" id="~rootReducer">
-    <a class="href-link" href="#~rootReducer">#</a>
-    
-        
-            <span class='tag'>inner</span>
-        
-            <span class='tag'>constant</span>
-        
-    
-    <span class="code-name">
-        rootReducer
-    </span>
-    
-</h4>
-
-
-
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>userData</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">Object</span>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>cdmWords</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">Object</span>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>keywordsMaptoCdmWords</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">Object</span>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"></td>
-</tr>
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="reducers_index.js.html" class="button">View Source</a>
-            <span>
-                <a href="reducers_index.js.html">reducers/index.js</a>, <a href="reducers_index.js.html#line27">line 27</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-</div>
-            
-            </div>
-        </div>
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * @author phorvicheka &lt;phorvicheka@yahoo.com>
+ * @date 2020-09-18
+ */
+import {
+    addMarkTag,
+    addMarkTagWithOnClickHandler,
+    removeLastMarkTag,
+    removeMarkTag,
+} from './helpers';
+
+describe('test method addMarkTag', () => {
+    it('should add mark tag with the given list of keywords ', () => {
+        const keywords = ['cold', 'patient'];
+        const text = 'In my opinion, this patient have cold and .....';
+        const markedText = addMarkTag(text, keywords);
+        const expectMarkedText = `In my opinion, this &lt;mark onclick="alert('patient')">patient&lt;/mark> have &lt;mark onclick="alert('cold')">cold&lt;/mark> and .....`;
+        expect(markedText).toBe(expectMarkedText);
+    });
+});
+
+describe('test method addMarkTagWithOnClickHandler', () => {
+    it('should add mark tag with the given list of keywords ', () => {
+        const keywords = ['cold', 'patient'];
+        const text = 'In my opinion, this patient have cold and .....';
+        const markedText = addMarkTagWithOnClickHandler(
+            text,
+            keywords,
+            'alert'
+        );
+        const expectMarkedText = `In my opinion, this &lt;mark onclick="alert('patient')">patient&lt;/mark> have &lt;mark onclick="alert('cold')">cold&lt;/mark> and .....`;
+        expect(markedText).toBe(expectMarkedText);
+    });
+});
+
+describe('test method removeMarkTag', () => {
+    it('should remove mark tag with the given list of keywords ', () => {
+        const text = `In my opinion, this &lt;mark onclick="alert('patient')">patient&lt;/mark> have &lt;mark onclick="alert('cold')">cold&lt;/mark> and .....`;
+        const removeMarkTagText = removeMarkTag(text);
+        const expectRemoveMarkTagText =
+            'In my opinion, this patient have cold and .....';
+        expect(removeMarkTagText).toBe(expectRemoveMarkTagText);
+    });
+});
+
+describe('test method removeLastMarkTag', () => {
+    it('should remove mark tag with the given list of keywords ', () => {
+        const text = `In my opinion, this &lt;mark onclick="alert('patient')">patient&lt;/mark> have &lt;mark onclick="alert('cold')">cold&lt;/mark> and .....`;
+        const removeMarkTagText = removeLastMarkTag(text);
+        const expectRemoveMarkTagText = `In my opinion, this &lt;mark onclick="alert('patient')">patient&lt;/mark> have cold and .....`;
+        expect(removeMarkTagText).toBe(expectRemoveMarkTagText);
+    });
+});
+</code></pre>
+        </article>
+    </section>
 
 
 

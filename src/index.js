@@ -1,4 +1,10 @@
 /**
+ * @file
+ * @author phorvicheka <phorvicheka@yahoo.com>
+ * @date 2020-09-16
+ */
+
+/**
  * @category Index.js
  * @module index
  * @description Inside this module for start up the application, there is a global method for handling event when user clicks on marked word.

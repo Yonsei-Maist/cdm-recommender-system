@@ -1,4 +1,10 @@
 /**
+ * @file
+ * @author phorvicheka <phorvicheka@yahoo.com>
+ * @date 2020-09-19
+ */
+
+/**
  * @category Sagas
  * @module sagas/userDataSaga
  * @requires '../action-types'

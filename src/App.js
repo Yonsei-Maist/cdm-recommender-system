@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @author phorvicheka <phorvicheka@yahoo.com>
+ * @date 2020-09-16
+ */
 import React, { useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import TextArea from './components/TextArea/TextArea';

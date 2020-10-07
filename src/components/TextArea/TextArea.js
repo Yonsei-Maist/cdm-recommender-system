@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @author phorvicheka <phorvicheka@yahoo.com>
+ * @date 2020-09-17
+ */
 import React, { useRef, useState, useEffect } from 'react';
 import ContentEditable from 'react-contenteditable';
 import {

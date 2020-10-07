@@ -105,3 +105,4 @@ Distributed under the Medical Artificial Intelligence Solution Team - MAIST, Yon
 
 <b>Yonsei University Wonju College of Medicine</b><br />
 (26426) 20 Ilsan-ro, Wonju Severance Christian Hospital, Gangwon
+<br /><hr /><br />

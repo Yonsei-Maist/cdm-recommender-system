@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @author phorvicheka <phorvicheka@yahoo.com>
+ * @date 2020-09-18
+ */
 import React, { useEffect } from 'react';
 import { ListGroup, Modal } from 'react-bootstrap';
 import { loadUserData } from '../../actions/userDataAction';

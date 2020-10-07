@@ -1,4 +1,10 @@
 /**
+ * @file
+ * @author phorvicheka <phorvicheka@yahoo.com>
+ * @date 2020-10-06
+ */
+
+/**
  * @category Constants
  * @module constants
  */

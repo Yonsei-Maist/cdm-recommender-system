@@ -1,4 +1,10 @@
 /**
+ * @file
+ * @author phorvicheka <phorvicheka@yahoo.com>
+ * @date 2020-09-18
+ */
+
+/**
  * @category Reducers
  * @module reducers/index
  * @requires 'redux'
