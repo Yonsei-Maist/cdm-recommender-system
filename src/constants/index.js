@@ -9,7 +9,7 @@
  * @module constants
  */
 
- /**
+/**
  * @constant
  * @type {string=} http
  */
@@ -31,7 +31,10 @@ const PORT = '4000';
  * @constant
  * @type {string=} ${SCHEME}://${HOST}:${PORT}
  */
-const API_BASE_ADDRESS = `${SCHEME}://${HOST}:${PORT}`;
+const API_BASE_ADDRESS =
+  process.env.REACT_APP_DOCKER_COMPOSE === 'true'
+    ? 'http://localhost:3050/api'
+    : `${SCHEME}://${HOST}:${PORT}`;
 
 /**
  * @constant

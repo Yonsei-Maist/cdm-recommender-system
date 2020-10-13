@@ -1,0 +1,41 @@
+language: node_js
+node_js:
+  - 12
+notifications:
+  email: false
+services:
+  - docker
+
+before_install:
+  - docker build -t phorvicheka/cdm-recommender-system-reactjs-test -f Dockerfile.dev .
+
+script:
+  - docker run phorvicheka/cdm-recommender-system-reactjs-test npm test -- --coverage --watchAll=false
+
+after_success:
+  # Output something every 10 minutes or Travis kills the job
+  - while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
+  - docker build -t phorvicheka/cdm-recommender-system-reactjs .
+  - docker build -t phorvicheka/cdm-recommender-system-mock-server ./cdm-recommender-system-mock-server
+  - docker build -t phorvicheka/cdm-recommender-system-nginx-route ./nginx-route
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push phorvicheka/cdm-recommender-system-reactjs
+  - docker push phorvicheka/cdm-recommender-system-mock-server
+  - docker push phorvicheka/cdm-recommender-system-nginx-route
+  # Killing background sleep loop
+  - kill %1
+
+# deploy:
+#   provider: elasticbeanstalk
+#   region: us-west-1
+#   app: multi-docker
+#   env: MultiDocker-env
+#   bucket_name: elasticbeanstalk-us-west-1-306476627547
+#   bucket_path: docker-multi
+#   on:
+#     branch: master
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key:
+#     secure: $AWS_SECRET_KEY
