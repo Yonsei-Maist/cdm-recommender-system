@@ -25,6 +25,8 @@
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
 - [License](#license)
+- [Author](#author)
+- [Maintainer](#maintainer)
 - [Contact](#contact)
 
 
@@ -99,9 +101,17 @@ npm start
 Distributed under the Medical Artificial Intelligence Solution Team - MAIST, Yonsei University Wonju College of Medicine.
 
 
+## Author
+Vicheka Phor, Yonsei Univ. Researcher, since 2020.10
+
+
+## Maintainer
+Vicheka Phor, phorvicheka@yahoo.com (2020.10 ~)
+
 
 <!-- CONTACT -->
 ## Contact
+Chanwoo Gwon, arknell@yonsei.ac.kr
 
 <b>Yonsei University Wonju College of Medicine</b><br />
 (26426) 20 Ilsan-ro, Wonju Severance Christian Hospital, Gangwon

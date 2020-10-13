@@ -1,6 +1,6 @@
 /**
  * @file
- * @author phorvicheka, Yonsei Univ. Researcher, since 2020.10
+ * @author Vicheka Phor, Yonsei Univ. Researcher, since 2020.10
  * @date 2020.09.17
  */
 import React from 'react';
