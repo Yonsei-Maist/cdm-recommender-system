@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/runtime": "^7.11.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -18,9 +19,9 @@
     "sagas": "^0.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "docs": "jsdoc -c ./jsdoc.json"
   },
@@ -52,6 +53,7 @@
   },
   "devDependencies": {
     "better-docs": "^2.3.2",
-    "jsdoc": "^3.6.6"
+    "jsdoc": "^3.6.6",
+    "react-app-rewired": "^2.1.6"
   }
 }
