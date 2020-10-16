@@ -24,7 +24,6 @@
 - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
-- [License](#license)
 - [Author](#author)
 - [Maintainer](#maintainer)
 - [Contact](#contact)
@@ -93,12 +92,6 @@ npm install
 ```sh
 npm start
 ```
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the Medical Artificial Intelligence Solution Team - MAIST, Yonsei University Wonju College of Medicine.
 
 
 ## Author
