@@ -28,7 +28,7 @@ import { Container } from 'react-bootstrap';
 const Footer = () => {
     return (
         <Container className='text-center'>
-            @Medical Artificial Intelligence Solution Team - MAIST
+            &copy; 2020. YWCM MAIST. All Rights Reserved.
         </Container>
     );
 };
