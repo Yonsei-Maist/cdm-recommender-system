@@ -5,7 +5,7 @@
  */
 import React, { useEffect } from 'react';
 import { ListGroup, Modal } from 'react-bootstrap';
-import { loadUserData } from '../../actions/userDataAction';
+import { getDocListLoading } from '../../actions/docAction';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -23,7 +23,7 @@ import PropTypes from 'prop-types';
  * @requires react
  * @requires react-bootstrap
  * @requires react-redux
- * @requires '../../actions/userDataAction'
+ * @requires '../../actions/docAction'
  * @param {Function} useDispatch the dispatch function that triggers an action
  * @param {Function} useSelector the selector function that returns state.userData: { data, isLoading, error }
  */
@@ -33,10 +33,10 @@ const LoadDataModal = (props) => {
     //this hook allows us to access the dispatch function
     const dispatch = useDispatch();
     //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
-    const { data, isLoading, error } = useSelector((state) => state.userData);
+    const { docList, isLoading, error } = useSelector((state) => state.doc);
 
     useEffect(() => {
-        dispatch(loadUserData());
+        dispatch(getDocListLoading());
     }, [dispatch]);
 
     return (
@@ -49,23 +49,24 @@ const LoadDataModal = (props) => {
             <Modal.Body>
                 {isLoading && <div>Loading...</div>}
                 {error && <div style={{ color: 'red' }}>ERROR: {error}</div>}
-                {!isLoading && !error && (
+                {!isLoading && !error && docList && docList.length === 0 && (
+                    <p>Empty</p>
+                )}
+                {!isLoading && !error && docList && docList.length !== 0 && (
                     <ListGroup>
-                        {data &&
-                            data.length &&
-                            data.map(({ id, title, data }) => {
-                                return (
-                                    <ListGroup.Item
-                                        action
-                                        onDoubleClick={() =>
-                                            handleOnDoubleCLick(data)
-                                        }
-                                        key={id}
-                                    >
-                                        {title.toUpperCase()}
-                                    </ListGroup.Item>
-                                );
-                            })}
+                        {docList.map(({ id, title }) => {
+                            return (
+                                <ListGroup.Item
+                                    action
+                                    onDoubleClick={() =>
+                                        handleOnDoubleCLick(id)
+                                    }
+                                    key={id}
+                                >
+                                    {title.toUpperCase()}
+                                </ListGroup.Item>
+                            );
+                        })}
                     </ListGroup>
                 )}
             </Modal.Body>

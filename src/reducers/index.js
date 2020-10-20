@@ -11,23 +11,27 @@
  * @requires './cdmWordsReducer'
  * @requires './userDataReducer'
  * @requires './keywordsMaptoCdmWordsReducer'
+ * @requires './docReducer'
  */
 import { combineReducers } from 'redux';
 
 import userDataReducer from './userDataReducer';
 import cdmWordsReducer from './cdmWordsReducer';
 import keywordsMaptoCdmWordsReducer from './keywordsMaptoCdmWordsReducer';
+import docReducer from './docReducer';
 
 /**
  * @type {Object}
  * @property {Object} userData
  * @property {Object} cdmWords
  * @property {Object} keywordsMaptoCdmWords
+ * @property {Object} doc
  */
 const rootReducer = combineReducers({
     userData: userDataReducer,
     cdmWords: cdmWordsReducer,
     keywordsMaptoCdmWords: keywordsMaptoCdmWordsReducer,
+    doc: docReducer,
 });
 
 export default rootReducer;

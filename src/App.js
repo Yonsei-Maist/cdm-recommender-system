@@ -60,7 +60,7 @@ const App = () => {
      * @method
      * @memberof App
      */
-    const handleOnDoubleCLickLoardDataItem = (data) => {
+    const handleOnDoubleClickLoadDataItem = (data) => {
         dispatch(setUserInputText(data));
         handleClose();
     };
@@ -69,7 +69,7 @@ const App = () => {
      * @method
      * @memberof App
      */
-    const handleOnClickLoardButton = () => {
+    const handleOnClickLoadButton = () => {
         handleShow();
     };
 
@@ -100,7 +100,7 @@ const App = () => {
                                 sm={{ order: 1, span: 2 }}
                                 className='d-flex justify-content-start align-items-center'
                             >
-                                <Button onClick={handleOnClickLoardButton}>
+                                <Button onClick={handleOnClickLoadButton}>
                                     Load
                                 </Button>
                             </Col>
@@ -140,7 +140,7 @@ const App = () => {
             <LoadDataModal
                 show={show}
                 onHide={handleClose}
-                handleOnDoubleCLick={handleOnDoubleCLickLoardDataItem}
+                handleOnDoubleCLick={handleOnDoubleClickLoadDataItem}
             />
         </div>
     );

@@ -10,20 +10,22 @@
  * @requires 'redux-saga/effects'
  * @requires './userDataSaga'
  * @requires './cdmWordsSaga'
+ * @requires './docSaga'
  */
 
 import { all } from 'redux-saga/effects';
 
 import userDataSaga from './userDataSaga';
 import cdmWordsSaga from './cdmWordsSaga';
+import docSaga from './docSaga';
 
 /**
  * @generator
  * @function
  * @description root saga of all sagas
- * 
+ *
  * @yields {Object} AllEffect of sagas
  */
 export default function* rootSaga() {
-    yield all([userDataSaga(), cdmWordsSaga()]);
+    yield all([userDataSaga(), cdmWordsSaga(), docSaga()]);
 }
