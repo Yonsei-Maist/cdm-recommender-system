@@ -79,6 +79,14 @@ const App = () => {
      * @method
      * @memberof App
      */
+    const handleOnClickSaveButton = () => {
+        console.log(userInputText);
+    };
+
+    /**
+     * @method
+     * @memberof App
+     */
     const handleOnKeyUpTextArea = (markedText) => {
         dispatch(setUserInputText(markedText));
     };
@@ -119,7 +127,7 @@ const App = () => {
                                 sm={{ order: 3, span: 2 }}
                                 className='d-flex justify-content-end align-items-center'
                             >
-                                <Button>Save</Button>
+                                <Button onClick={handleOnClickSaveButton}>Save</Button>
                             </Col>
                         </Row>
                         <Row className='flex-grow-1 mx-0'>
