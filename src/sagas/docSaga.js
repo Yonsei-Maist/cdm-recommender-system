@@ -56,7 +56,7 @@ function* handleGetDocList() {
  */
 const watchGetDocList = function* () {
     // Does not allow concurrent fetches of data
-    yield takeLatest(DOC.GET_DOC_LIST_LOADING, handleGetDocList);
+    yield takeLatest(DOC.GET_DOC_LIST_REQUEST, handleGetDocList);
 };
 
 /* -------------------------------------------------------------------------- */

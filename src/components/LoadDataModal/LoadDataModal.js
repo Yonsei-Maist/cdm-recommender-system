@@ -5,7 +5,7 @@
  */
 import React, { useEffect } from 'react';
 import { ListGroup, Modal } from 'react-bootstrap';
-import { getDocListLoading } from '../../actions/docAction';
+import { getDocListRequest } from '../../actions/docAction';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -36,7 +36,7 @@ const LoadDataModal = (props) => {
     const { data, isLoading, error } = useSelector((state) => state.doc.docList);
 
     useEffect(() => {
-        dispatch(getDocListLoading());
+        dispatch(getDocListRequest());
     }, [dispatch]);
 
     return (

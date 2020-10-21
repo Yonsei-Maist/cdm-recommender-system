@@ -39,7 +39,7 @@ const defaultState = {
 const docReducer = handleActions(
     {
         // Doc List
-        [DOC.GET_DOC_LIST_LOADING]: (state, action) => ({
+        [DOC.GET_DOC_LIST_REQUEST]: (state, action) => ({
             ...state,
             docList: {
                 ...state.docList,
