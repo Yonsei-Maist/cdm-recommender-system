@@ -13,6 +13,12 @@ class DocService {
             userId,
         });
     }
+
+    getDocDetails(docId) {
+        return axiosApiInstance.post(`${API_BASE_ADDRESS}/emr/doc/page`, {
+            id: docId,
+        });
+    }
 }
 
 export default new DocService();

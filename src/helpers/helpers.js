@@ -12,6 +12,29 @@
 /**
  * @function
  * @description
+ * highlight text with onClickHandler method on onclick event
+ * 
+ * @param {string} text
+ * @param {*} onClickHandler
+ * 
+ * @returns {string} text to highlight
+ * 
+ * @example  
+ * const text = 'cold';
+ * const markedText = addMarkTagWithOnClickHandler(text, keywords, 'alert');
+ * // <mark onclick="alert('cold')">cold</mark>
+ */
+export const highlightTextWithOnClickHandler = (
+    text,
+    onClickHandler
+) => {
+    return `<mark onclick="${onClickHandler}(${text})">${text}</mark>`;
+};
+
+
+/**
+ * @function
+ * @description
  * Add mark tag to text with alert method on onclick event by giving a list of keywords
  * 
  * @param {string} text 

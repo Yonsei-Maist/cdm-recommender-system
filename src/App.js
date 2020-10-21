@@ -14,6 +14,7 @@ import Footer from './components/Footer/Footer';
 import LoadDataModal from './components/LoadDataModal/LoadDataModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserInputText } from './actions/userDataAction';
+import { getDocDetailsRequest } from './actions/docAction';
 
 /**
  * Renders Application Component
@@ -60,8 +61,8 @@ const App = () => {
      * @method
      * @memberof App
      */
-    const handleOnDoubleClickLoadDataItem = (data) => {
-        dispatch(setUserInputText(data));
+    const handleOnDoubleClickLoadDataItem = (docId) => {
+        dispatch(getDocDetailsRequest(docId));
         handleClose();
     };
 
@@ -77,7 +78,7 @@ const App = () => {
      * @method
      * @memberof App
      */
-    const handleOnChangeTextArea = (markedText) => {
+    const handleOnKeyUpTextArea = (markedText) => {
         dispatch(setUserInputText(markedText));
     };
     /**
@@ -122,7 +123,7 @@ const App = () => {
                         <Row className='flex-grow-1 mx-0'>
                             <TextArea
                                 html={userInputText}
-                                onChange={handleOnChangeTextArea}
+                                onKeyUp={handleOnKeyUpTextArea}
                                 onBlur={handleOnBlurTextArea}
                             />
                         </Row>

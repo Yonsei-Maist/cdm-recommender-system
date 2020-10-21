@@ -45,7 +45,7 @@ import PropTypes from 'prop-types';
  *  	/>
  * );
  */
-const TextArea = ({ html, onChange, onBlur }) => {
+const TextArea = ({ html, onKeyUp, onBlur }) => {
     const MEDICAL_KEYWORDS = ['cold', 'patient'];
     const [text, setText] = useState(html);
     const contentEditable = useRef();
@@ -54,13 +54,8 @@ const TextArea = ({ html, onChange, onBlur }) => {
 
     // useEffect when props html is changed
     useEffect(() => {
-        const markedText = generateMarkedText(
-            html,
-            MEDICAL_KEYWORDS,
-            METHOD_NAME_ONCLICK_MARKED_WORD
-        );
-        setText(markedText);
-    }, [MEDICAL_KEYWORDS, html]);
+        setText(html);
+    }, [html]);
 
     // useEffect when text is changed - to set back the current position of carret
     useEffect(() => {
@@ -76,7 +71,7 @@ const TextArea = ({ html, onChange, onBlur }) => {
      * @method
      * @memberof TextArea
      */
-    const handleOnChange = (evt) => {
+    const handleOnKeyUp = (evt) => {
         // set the inputType of user input
         setInputType(evt.nativeEvent.inputType);
         // get the current caret position
@@ -91,7 +86,7 @@ const TextArea = ({ html, onChange, onBlur }) => {
         // set markedText -> then, fire useEffect to set back the current position of carret
         setText(markedText);
         // trigger handle onChange from parent component
-        onChange(markedText);
+        onKeyUp(markedText);
     };
 
     /**
@@ -140,7 +135,7 @@ const TextArea = ({ html, onChange, onBlur }) => {
             innerRef={contentEditable}
             html={text}
             onBlur={handleOnBlur}
-            onChange={handleOnChange}
+            onKeyUp={handleOnKeyUp}
         />
     );
 };
@@ -153,7 +148,7 @@ TextArea.propTypes = {
     /**
      * function handler triggers when user types anything in the text area
      */
-    onChange: PropTypes.func.isRequired,
+    onKeyUp: PropTypes.func.isRequired,
     /**
      * function handler triggers when user leaves the text area
      */

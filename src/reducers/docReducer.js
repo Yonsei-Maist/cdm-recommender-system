@@ -11,33 +11,82 @@ import DOC from '../action-types/doc';
  * @type {Object}
  * @default
  * {
- *  docList: [],
- *  isLoading: false,
- *  error: '',
+ *      docList: {
+ *          data: [],
+ *          isLoading: false,
+ *          error: '',
+ *      },
+ *      docDetails: {
+ *          data: {},
+ *          isLoading: false,
+ *          error: '',
+ *      },
  * }
  */
 const defaultState = {
-    docList: [],
-    isLoading: false,
-    error: '',
+    docList: {
+        data: [],
+        isLoading: false,
+        error: '',
+    },
+    docDetails: {
+        data: {},
+        isLoading: false,
+        error: '',
+    },
 };
 
 const docReducer = handleActions(
     {
+        // Doc List
         [DOC.GET_DOC_LIST_LOADING]: (state, action) => ({
             ...state,
-            isLoading: true,
-            error: '',
+            docList: {
+                ...state.docList,
+                isLoading: true,
+                error: '',
+            },
         }),
         [DOC.GET_DOC_LIST_SUCCESS]: (state, action) => ({
             ...state,
-            docList: action.payload.data,
-            isLoading: false,
+            docList: {
+                ...state.docList,
+                data: action.payload.data,
+                isLoading: false,
+            },
         }),
         [DOC.GET_DOC_LIST_ERROR]: (state, action) => ({
             ...state,
-            isLoading: false,
-            error: action.payload.error,
+            docList: {
+                ...state.docList,
+                isLoading: false,
+                error: action.payload.error,
+            },
+        }),
+        // Doc Details
+        [DOC.GET_DOC_DETAILS_REQUEST]: (state, action) => ({
+            ...state,
+            docDetails: {
+                ...state.docDetails,
+                isLoading: true,
+                error: '',
+            },
+        }),
+        [DOC.GET_DOC_DETAILS_SUCCESS]: (state, action) => ({
+            ...state,
+            docDetails: {
+                ...state.docDetails,
+                data: action.payload.data,
+                isLoading: false,
+            },
+        }),
+        [DOC.GET_DOC_DETAILS_ERROR]: (state, action) => ({
+            ...state,
+            docDetails: {
+                ...state.docDetails,
+                isLoading: false,
+                error: action.payload.error,
+            },
         }),
     },
     defaultState

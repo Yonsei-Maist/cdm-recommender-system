@@ -14,9 +14,20 @@
 
 import { put, call, takeLatest } from 'redux-saga/effects';
 import DOC from '../action-types/doc';
-import { getDocListSuccess, getDocListError } from '../actions/docAction';
+import {
+    getDocListSuccess,
+    getDocListError,
+    getDocDetailsSuccess,
+    getDocDetailsError,
+} from '../actions/docAction';
+import { setUserInputText } from '../actions/userDataAction';
 import DocService from '../api/docService';
+import { highlightTextWithOnClickHandler } from '../helpers/helpers';
+import { METHOD_NAME_ONCLICK_MARKED_WORD } from '../constants';
 
+/* -------------------------------------------------------------------------- */
+/*                                  Doc List                                  */
+/* -------------------------------------------------------------------------- */
 /**
  * @generator
  * @function
@@ -43,7 +54,56 @@ function* handleGetDocList() {
  *
  * @yields {Object} ForkEffect of handleGetDocList saga
  */
-export default function* watchGetDocList() {
+const watchGetDocList = function* () {
     // Does not allow concurrent fetches of data
     yield takeLatest(DOC.GET_DOC_LIST_LOADING, handleGetDocList);
+};
+
+/* -------------------------------------------------------------------------- */
+/*                                 Doc Details                                */
+/* -------------------------------------------------------------------------- */
+/**
+ * @generator
+ * @function
+ * @description handle saga of get doc details
+ * @param {action} action redux action
+ *
+ * @yields {Object} CallEffect of DocService.getDocDetails api
+ * @yields {Object} PutEffect of getDocDetailsSuccess action
+ * @yields {Object} PutEffect of getDocDetailsError action
+ */
+function* handleGetDocDetails(action) {
+    try {
+        const docDetails = yield call(DocService.getDocDetails, action.payload);
+        const arrayWords = docDetails.data.content.arr_words.map((word) => {
+            if (word.id_word_emr !== undefined) {
+                return highlightTextWithOnClickHandler(
+                    word.str_text,
+                    METHOD_NAME_ONCLICK_MARKED_WORD
+                ); //`<mark>${word.str_text}</mark>`
+            }
+            return word.str_text;
+        });
+        const userInputText = arrayWords
+            .join(' ')
+            .replace(/\s([!.?,;:'"])/g, '$1');
+        yield put(getDocDetailsSuccess(docDetails));
+        yield put(setUserInputText(userInputText));
+    } catch (error) {
+        yield put(getDocDetailsError(error.toString()));
+    }
 }
+
+/**
+ * @generator
+ * @function
+ * @description watch saga of get doc details
+ *
+ * @yields {Object} ForkEffect of handleGetDocDetails saga
+ */
+const watchGetDocDetails = function* () {
+    // Does not allow concurrent fetches of data
+    yield takeLatest(DOC.GET_DOC_DETAILS_REQUEST, handleGetDocDetails);
+};
+
+export { watchGetDocList, watchGetDocDetails };
