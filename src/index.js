@@ -30,7 +30,7 @@ import configureStore from './store';
 
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { loadCdmWords, setLoadCdmWordsSuccess } from './actions/cdmWordsAction';
+import { getSimilarWordsRequest, getSimilarWordsSuccess } from './actions/wordAction';
 import { METHOD_NAME_ONCLICK_MARKED_WORD } from './constants';
 
 /**
@@ -48,10 +48,10 @@ global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord) => {
     const isExistKeyword = markedWord in keywordsMaptoCdmWords;
     if (isExistKeyword) {
         store.dispatch(
-            setLoadCdmWordsSuccess(keywordsMaptoCdmWords[markedWord])
+            getSimilarWordsSuccess(keywordsMaptoCdmWords[markedWord])
         );
     } else {
-        store.dispatch(loadCdmWords(markedWord));
+        store.dispatch(getSimilarWordsRequest(markedWord));
     }
 };
 

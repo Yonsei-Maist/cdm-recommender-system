@@ -19,6 +19,7 @@ import userDataReducer from './userDataReducer';
 import cdmWordsReducer from './cdmWordsReducer';
 import keywordsMaptoCdmWordsReducer from './keywordsMaptoCdmWordsReducer';
 import docReducer from './docReducer';
+import wordReducer from './wordReducer';
 import errorReducer from './errorReducer';
 
 /**
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
     cdmWords: cdmWordsReducer,
     keywordsMaptoCdmWords: keywordsMaptoCdmWordsReducer,
     doc: docReducer,
+    word: wordReducer,
     error: errorReducer,
 });
 

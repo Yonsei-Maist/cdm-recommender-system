@@ -22,7 +22,7 @@ import { useSelector } from 'react-redux';
  * @requires react-bootstrap
  * @requires react-redux
  * @param {Function} useSelector the selector function that returns state.cdmWords: { data, isLoading, error }
- * 
+ *
  * @example
  * return (
  *      <CdmWordList />
@@ -30,7 +30,13 @@ import { useSelector } from 'react-redux';
  */
 const CdmWordList = () => {
     //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
-    const { data, isLoading, error } = useSelector((state) => state.cdmWords);
+    const { data, isLoading, error } = useSelector(
+        (state) => state.word.similarWords
+    );
+
+    const handleOnClickCdmWord = (cdmWord) => {
+        console.log(cdmWord);
+    };
 
     return (
         <div className='d-flex flex-grow-1 flex-column'>
@@ -44,22 +50,43 @@ const CdmWordList = () => {
                 }}
             />
             {isLoading && <div>Loading...</div>}
-            {error && (
-                <div style={{ color: 'red' }}>ERROR: {this.props.error}</div>
-            )}
-            <div className='flex-grow-1 flex-wrap'>
-                {!isLoading && !error && data && data.length > 0 && (
-                    <ListGroup style={{ overflowY: 'auto', height: '55vh' }}>
-                        {data.map(({ id, data }) => {
-                            return (
-                                <ListGroup.Item action key={id}>
-                                    {data}
-                                </ListGroup.Item>
-                            );
-                        })}
-                    </ListGroup>
+            {error && <div className='text-danger'>{error}</div>}
+            {!isLoading &&
+                !error &&
+                data &&
+                data.cdmWordsList &&
+                data.cdmWordsList.length === 0 && <p>Empty</p>}
+            {!isLoading &&
+                !error &&
+                data &&
+                data.cdmWordsList &&
+                data.cdmWordsList.length !== 0 && (
+                    <div className='flex-grow-1 flex-wrap'>
+                        <ListGroup
+                            style={{ overflowY: 'auto', height: '55vh' }}
+                        >
+                            {data.cdmWordsList.map(
+                                ({ id_word_cdm, float_similarity }) => {
+                                    return (
+                                        <ListGroup.Item
+                                            action
+                                            key={id_word_cdm}
+                                            onClick={() =>
+                                                handleOnClickCdmWord({
+                                                    idWordEmr: data.emrWordId,
+                                                    idWordCdm: id_word_cdm,
+                                                    floatSimilarity: float_similarity,
+                                                })
+                                            }
+                                        >
+                                            {id_word_cdm}
+                                        </ListGroup.Item>
+                                    );
+                                }
+                            )}
+                        </ListGroup>
+                    </div>
                 )}
-            </div>
         </div>
     );
 };

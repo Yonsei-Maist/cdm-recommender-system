@@ -18,6 +18,7 @@ import { all } from 'redux-saga/effects';
 import userDataSaga from './userDataSaga';
 import cdmWordsSaga from './cdmWordsSaga';
 import * as docSaga from './docSaga';
+import * as wordSaga from './wordSaga';
 
 /**
  * @generator
@@ -32,5 +33,6 @@ export default function* rootSaga() {
         cdmWordsSaga(),
         docSaga.watchGetDocList(),
         docSaga.watchGetDocDetails(),
+        wordSaga.watchGetSimilarWords(),
     ]);
 }

@@ -7,9 +7,12 @@
 /**
  * @category Sagas
  * @module sagas/docSaga
- * @requires '../action-types/doc'
+ * @requires '../action-types/docType'
  * @requires '../api/docService'
  * @requires '../actions/docAction'
+ * @requires '../actions/userDataAction'
+ * @requires '../helpers'
+ * @requires '../constants'
  */
 
 import { put, call, takeLatest } from 'redux-saga/effects';
