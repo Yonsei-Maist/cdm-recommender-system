@@ -12,6 +12,7 @@ import './App.css';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import LoadDataModal from './components/LoadDataModal/LoadDataModal';
+import GlobalErrorNotification from './components/GlobalErrorNotification/GlobalErrorNotification';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserInputText } from './actions/userDataAction';
 import { getDocDetailsRequest } from './actions/docAction';
@@ -91,6 +92,7 @@ const App = () => {
 
     return (
         <div className='mx-auto mt-5 d-flex flex-column vh-90'>
+            <GlobalErrorNotification />
             <Header logo={process.env.PUBLIC_URL + '/logo70.png'} />
             <Container className='d-flex flex-grow-1 my-5'>
                 <Row className='flex-grow-1'>

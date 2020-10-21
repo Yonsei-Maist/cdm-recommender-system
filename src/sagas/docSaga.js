@@ -43,7 +43,7 @@ function* handleGetDocList() {
         const docList = yield call(DocService.getDocList, 'doctor1');
         yield put(getDocListSuccess(docList));
     } catch (error) {
-        yield put(getDocListError(error.toString()));
+        yield put(getDocListError({ error: error.toString() }));
     }
 }
 
@@ -80,7 +80,7 @@ function* handleGetDocDetails(action) {
                 return highlightTextWithOnClickHandler(
                     word.str_text,
                     METHOD_NAME_ONCLICK_MARKED_WORD
-                ); //`<mark>${word.str_text}</mark>`
+                );
             }
             return word.str_text;
         });
@@ -90,7 +90,7 @@ function* handleGetDocDetails(action) {
         yield put(getDocDetailsSuccess(docDetails));
         yield put(setUserInputText(userInputText));
     } catch (error) {
-        yield put(getDocDetailsError(error.toString()));
+        yield put(getDocDetailsError({ error: error.toString() }));
     }
 }
 

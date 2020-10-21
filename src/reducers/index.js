@@ -19,6 +19,7 @@ import userDataReducer from './userDataReducer';
 import cdmWordsReducer from './cdmWordsReducer';
 import keywordsMaptoCdmWordsReducer from './keywordsMaptoCdmWordsReducer';
 import docReducer from './docReducer';
+import errorReducer from './errorReducer';
 
 /**
  * @type {Object}
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
     cdmWords: cdmWordsReducer,
     keywordsMaptoCdmWords: keywordsMaptoCdmWordsReducer,
     doc: docReducer,
+    error: errorReducer,
 });
 
 export default rootReducer;

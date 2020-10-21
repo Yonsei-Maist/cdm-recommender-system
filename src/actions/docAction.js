@@ -7,7 +7,7 @@
 /**
  * @category Actions
  * @module actions/docAction
- * @requires ../action-types
+ * @requires ../action-types/docType
  */
 import { createAction } from 'redux-actions';
 import DOC from '../action-types/docType';

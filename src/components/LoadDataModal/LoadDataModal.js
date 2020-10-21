@@ -48,7 +48,7 @@ const LoadDataModal = (props) => {
             </Modal.Header>
             <Modal.Body>
                 {isLoading && <div>Loading...</div>}
-                {error && <div style={{ color: 'red' }}>ERROR: {error}</div>}
+                {error && <div className='text-danger'>{error}</div>}
                 {!isLoading && !error && data && data.length === 0 && (
                     <p>Empty</p>
                 )}

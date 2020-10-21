@@ -28,7 +28,7 @@ export const highlightTextWithOnClickHandler = (
     text,
     onClickHandler
 ) => {
-    return `<mark onclick="${onClickHandler}(${text})">${text}</mark>`;
+    return `<mark onclick="${onClickHandler}('${text}')">${text}</mark>`;
 };
 
 

@@ -26,7 +26,13 @@ axiosApiInstance.interceptors.response.use(
         }
     },
     async function (error) {
-        return Promise.reject(new Error(error.message));
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            return Promise.reject(new Error(error.response.data.message));
+        } else {
+            return Promise.reject(new Error(error.message));
+        }
     }
 );
 
