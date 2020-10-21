@@ -11,7 +11,7 @@ import {
     setCaretPositionByDiv,
     removeMarkTag,
     addMarkTagWithOnClickHandler,
-} from '../../helpers/helpers';
+} from '../../helpers';
 import { METHOD_NAME_ONCLICK_MARKED_WORD } from '../../constants';
 import PropTypes from 'prop-types';
 
@@ -29,7 +29,7 @@ import PropTypes from 'prop-types';
  * @requires react
  * @requires react-contenteditable
  * @requires '../../constants'
- * @requires '../../helpers/helpers'
+ * @requires '../../helpers'
  * @param {Function} useState react useState hook for states: text, currentCaretPos, inputType
  * @param {Function} useEffect react useEffect hook for listening to state changed
  * @param {Function} useRef react useRef hook for ContentEditable component

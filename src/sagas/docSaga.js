@@ -22,7 +22,7 @@ import {
 } from '../actions/docAction';
 import { setUserInputText } from '../actions/userDataAction';
 import DocService from '../api/docService';
-import { highlightTextWithOnClickHandler } from '../helpers/helpers';
+import { highlightTextWithOnClickHandler } from '../helpers';
 import { METHOD_NAME_ONCLICK_MARKED_WORD } from '../constants';
 
 /* -------------------------------------------------------------------------- */
