@@ -5,7 +5,7 @@
  */
 
 import { handleActions } from 'redux-actions';
-import DOC from '../action-types/doc';
+import DOC from '../action-types/docType';
 
 /**
  * @type {Object}

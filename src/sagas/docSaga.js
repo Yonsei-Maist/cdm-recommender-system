@@ -13,7 +13,7 @@
  */
 
 import { put, call, takeLatest } from 'redux-saga/effects';
-import DOC from '../action-types/doc';
+import DOC from '../action-types/docType';
 import {
     getDocListSuccess,
     getDocListError,

@@ -10,7 +10,7 @@
  * @requires ../action-types
  */
 import { createAction } from 'redux-actions';
-import DOC from '../action-types/doc';
+import DOC from '../action-types/docType';
 
 // Doc List
 const getDocListRequest = createAction(DOC.GET_DOC_LIST_REQUEST);
