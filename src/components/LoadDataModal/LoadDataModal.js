@@ -33,17 +33,19 @@ const LoadDataModal = (props) => {
     //this hook allows us to access the dispatch function
     const dispatch = useDispatch();
     //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
-    const { data, isLoading, error } = useSelector((state) => state.doc.docList);
+    const { data, isLoading, error } = useSelector(
+        (state) => state.doc.docList
+    );
 
     useEffect(() => {
         dispatch(getDocListRequest());
     }, [dispatch]);
 
     return (
-        <Modal animation={false} show={show} onHide={onHide}>
+        <Modal animation={false} show={show} onHide={onHide} centered={true}>
             <Modal.Header closeButton>
                 <Modal.Title>
-                    <h4>Doc List</h4>
+                    <h4>Load Data</h4>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -53,7 +55,7 @@ const LoadDataModal = (props) => {
                     <p>Empty</p>
                 )}
                 {!isLoading && !error && data && data.length !== 0 && (
-                    <ListGroup>
+                    <ListGroup style={{ overflowY: 'auto', height: '60vh' }}>
                         {data.map(({ id, title }) => {
                             return (
                                 <ListGroup.Item
