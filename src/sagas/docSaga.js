@@ -23,6 +23,7 @@ import {
     getDocDetailsSuccess,
     getDocDetailsError,
 } from '../actions/docAction';
+import {setContent} from '../actions/contentAction';
 import { setUserInputText } from '../actions/userDataAction';
 import DocService from '../api/docService';
 import { highlightTextWithOnClickHandler } from '../helpers';
@@ -87,10 +88,9 @@ function* handleGetDocDetails(action) {
             }
             return word.str_text;
         });
-        const userInputText = arrayWords
-            .join(' ')
-            .replace(/\s([!.?,;:'"])/g, '$1');
+        const userInputText = arrayWords.join('');//.replace(/\s([!.?,;:'"])/g, '$1');
         yield put(getDocDetailsSuccess(docDetails));
+        yield put(setContent(docDetails.data.content));
         yield put(setUserInputText(userInputText));
     } catch (error) {
         yield put(getDocDetailsError({ error: error.toString() }));

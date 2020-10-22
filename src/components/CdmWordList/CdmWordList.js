@@ -49,19 +49,19 @@ const CdmWordList = () => {
                     height: '0.1em',
                 }}
             />
-            {isLoading && <div>Loading...</div>}
-            {error && <div className='text-danger'>{error}</div>}
-            {!isLoading &&
-                !error &&
-                data &&
-                data.cdmWordsList &&
-                data.cdmWordsList.length === 0 && <p>Empty</p>}
-            {!isLoading &&
-                !error &&
-                data &&
-                data.cdmWordsList &&
-                data.cdmWordsList.length !== 0 && (
-                    <div className='flex-grow-1 flex-wrap'>
+            <div className='flex-grow-1 flex-wrap'>
+                {isLoading && <div>Loading...</div>}
+                {error && <div className='text-danger'>{error}</div>}
+                {!isLoading &&
+                    !error &&
+                    data &&
+                    data.cdmWordsList &&
+                    data.cdmWordsList.length === 0 && <p>Empty</p>}
+                {!isLoading &&
+                    !error &&
+                    data &&
+                    data.cdmWordsList &&
+                    data.cdmWordsList.length !== 0 && (
                         <ListGroup
                             style={{ overflowY: 'auto', height: '55vh' }}
                         >
@@ -85,8 +85,8 @@ const CdmWordList = () => {
                                 }
                             )}
                         </ListGroup>
-                    </div>
-                )}
+                    )}
+            </div>
         </div>
     );
 };

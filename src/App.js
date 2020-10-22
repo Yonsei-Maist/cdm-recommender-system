@@ -16,6 +16,7 @@ import GlobalErrorNotification from './components/GlobalErrorNotification/Global
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserInputText } from './actions/userDataAction';
 import { getDocDetailsRequest } from './actions/docAction';
+import EditorWithMarkedWordFeature from './components/EditorWithMarkedWordFeature/EditorWithMarkedWordFeature';
 
 /**
  * Renders Application Component
@@ -47,6 +48,8 @@ const App = () => {
     const dispatch = useDispatch();
     //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
     const userInputText = useSelector((state) => state.userData.inputText);
+    // content to pass to TextArea when user selects the load data item
+    const content = useSelector((state) => state.content);
 
     /**
      * @method
@@ -80,14 +83,14 @@ const App = () => {
      * @memberof App
      */
     const handleOnClickSaveButton = () => {
-        console.log(userInputText);
+        console.log('handleOnClickSaveButton');
     };
 
     /**
      * @method
      * @memberof App
      */
-    const handleOnKeyUpTextArea = (markedText) => {
+    const handleOnChangeTextArea = (markedText) => {
         dispatch(setUserInputText(markedText));
     };
     /**
@@ -99,7 +102,7 @@ const App = () => {
     };
 
     return (
-        <div className='mx-auto mt-5 d-flex flex-column vh-90'>
+        <div className='mx-auto mt-3 d-flex flex-column vh-90'>
             <GlobalErrorNotification />
             <Header logo={process.env.PUBLIC_URL + '/logo70.png'} />
             <Container className='d-flex flex-grow-1 my-5'>
@@ -127,15 +130,18 @@ const App = () => {
                                 sm={{ order: 3, span: 2 }}
                                 className='d-flex justify-content-end align-items-center'
                             >
-                                <Button onClick={handleOnClickSaveButton}>Save</Button>
+                                <Button onClick={handleOnClickSaveButton}>
+                                    Save
+                                </Button>
                             </Col>
                         </Row>
                         <Row className='flex-grow-1 mx-0'>
-                            <TextArea
-                                html={userInputText}
-                                onKeyUp={handleOnKeyUpTextArea}
+                            {/* <TextArea
+                                content={content}
+                                onKeyUp={handleOnChangeTextArea}
                                 onBlur={handleOnBlurTextArea}
-                            />
+                            /> */}
+                            <EditorWithMarkedWordFeature />
                         </Row>
                     </Col>
                     <Col
