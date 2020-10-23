@@ -5,19 +5,16 @@
  */
 import React, { useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
-import TextArea from './components/TextArea/TextArea';
 import CdmWordList from './components/CdmWordList/CdmWordList';
-
-import './App.css';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import LoadDataModal from './components/LoadDataModal/LoadDataModal';
 import GlobalErrorNotification from './components/GlobalErrorNotification/GlobalErrorNotification';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUserInputText } from './actions/userDataAction';
+import { useDispatch } from 'react-redux';
 import { getDocDetailsRequest } from './actions/docAction';
 import EditorWithMarkedWordFeature from './components/EditorWithMarkedWordFeature/EditorWithMarkedWordFeature';
 
+import './App.css';
 /**
  * Renders Application Component
  *
@@ -46,10 +43,6 @@ const App = () => {
     const [show, setShow] = useState(false);
     //this hook allows us to access the dispatch function
     const dispatch = useDispatch();
-    //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
-    const userInputText = useSelector((state) => state.userData.inputText);
-    // content to pass to TextArea when user selects the load data item
-    const content = useSelector((state) => state.content);
 
     /**
      * @method
@@ -84,21 +77,6 @@ const App = () => {
      */
     const handleOnClickSaveButton = () => {
         console.log('handleOnClickSaveButton');
-    };
-
-    /**
-     * @method
-     * @memberof App
-     */
-    const handleOnChangeTextArea = (markedText) => {
-        dispatch(setUserInputText(markedText));
-    };
-    /**
-     * @method
-     * @memberof App
-     */
-    const handleOnBlurTextArea = (markedText) => {
-        dispatch(setUserInputText(markedText));
     };
 
     return (
@@ -136,11 +114,6 @@ const App = () => {
                             </Col>
                         </Row>
                         <Row className='flex-grow-1 mx-0'>
-                            {/* <TextArea
-                                content={content}
-                                onKeyUp={handleOnChangeTextArea}
-                                onBlur={handleOnBlurTextArea}
-                            /> */}
                             <EditorWithMarkedWordFeature />
                         </Row>
                     </Col>

@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import { MarkedWord } from '../../formats/markedWord';
 import WordService from '../../api/wordService';
 import { useDispatch, useSelector } from 'react-redux';
-import { debounce } from 'lodash';
 
 import 'quill/dist/quill.core.css';
 
@@ -23,19 +22,14 @@ const EditorWithMarkedWordFeature = () => {
     // ReactQuill component
     const [reactQuillRef, setReactQuillRef] = useState(null);
 
-    const userInputText = useSelector((state) => state.userData.inputText);
     const contentFromRedux = useSelector((state) => state.content);
 
     useEffect(() => {
+        console.log(
+            '-------------------------------- useEffect -------------------------------'
+        );
         setEditorHtml(generateText(contentFromRedux));
     }, [contentFromRedux]);
-
-    const generateText = (content) => {
-        const arrayWords = content.arr_words.map((word) => {
-            return word.str_text;
-        });
-        return arrayWords.join('');
-    };
 
     useEffect(() => {
         if (
@@ -47,78 +41,15 @@ const EditorWithMarkedWordFeature = () => {
         setQuillRef(reactQuillRef.getEditor());
     }, [reactQuillRef]);
 
-    const handleOnChange = async (content, delta, source, editor) => {
-        setEditorHtml(content);
-
-        console.log('========== handleOnChange ==========');
-        console.log('editor getContents: ', editor.getContents());
-        if (
-            reactQuillRef == null ||
-            typeof reactQuillRef.getEditor !== 'function'
-        )
-            return;
-        console.log(
-            'handleChange, contents:',
-            reactQuillRef.getEditor().getContents()
-        );
-
-        console.log('>>editor html: ', editorHtml);
-        console.log('>>content: ');
-        console.log(content);
-        console.log(quillRef);
-        console.log(editor);
-
-        // when user click on load data which update the contentFromRedux
-        const isLoadData =
-            // when userInputText from redux state, editor empty
-            (delta.ops.length === 1 &&
-                delta.ops[0].insert &&
-                source === Quill.sources.API) ||
-            // when userInputText from redux state, editor not empty
-            (delta.ops.length === 2 &&
-                delta.ops[0].insert &&
-                delta.ops[1].delete &&
-                source === Quill.sources.API);
-        // editor.getSelection() is null when user pasts text
-        const isPastText = editor.getSelection() == null;
-
-        if (isPastText || isLoadData) {
-            triggerOnChange1(editor, delta, quillRef, isLoadData);
-        }
-
-        // When user insert or delete text
-        if (
-            // editor.getSelection() is null when user pasts text
-            // should handle by the Clipboard Module: Auto format on paste
-            editor.getSelection() !== null &&
-            // when insert the begining of the text area
-            ((delta.ops.length === 1 &&
-                (delta.ops[0].insert || delta.ops[0].delete) &&
-                source === Quill.sources.USER) ||
-                // when insert or delete letter
-                (delta.ops.length === 2 &&
-                    delta.ops[0].retain &&
-                    (delta.ops[1].insert || delta.ops[1].delete) &&
-                    source === Quill.sources.USER))
-        ) {
-            console.log('+++++++++++++++++++++++++++++++++++++++++++++');
-            console.log(editor.getSelection());
-            triggerOnChange2(editor, delta, quillRef);
-        }
-
-        //triggerOnChange(editor, delta, source, quillRef, contentFromRedux);
+    const generateText = (content) => {
+        const arrayWords = content.arr_words.map((word) => {
+            return word.str_text;
+        });
+        return arrayWords.join('');
     };
 
-    const triggerOnChange1 = async (editor, delta, quillRef, isLoadData) => {
-        console.log(
-            '-------------------------------- triggerOnChange1 --------------------------------'
-        );
-        const text = editor.getText();
-        console.log(text);
-        // https://stackoverflow.com/questions/40881365/split-a-string-into-an-array-of-words-punctuation-and-spaces-in-javascript
-        const lookupWords = text.match(/\w+|\s+|[^\s\w]+/g);
-        const newDelta = new Delta().retain(0).delete(text.length);
-        const verifiedLookupWords = await Promise.all(
+    const verifyLookupWords = async (lookupWords) => {
+        return await Promise.all(
             lookupWords.map(async (lookupWord) => {
                 if (lookupWord.match(/\w+/)) {
                     // check similarity of each word again and update the content
@@ -146,6 +77,10 @@ const EditorWithMarkedWordFeature = () => {
                 }
             })
         );
+    };
+
+    const buildDelta = (retainIndex, deleteLength, verifiedLookupWords) => {
+        const newDelta = new Delta().retain(retainIndex).delete(deleteLength);
         verifiedLookupWords.forEach((lookupWordsObj) => {
             if (lookupWordsObj.emrWordId) {
                 newDelta.insert(lookupWordsObj.lookupWord, {
@@ -161,180 +96,76 @@ const EditorWithMarkedWordFeature = () => {
                 });
             }
         });
-
-        // https://github.com/quilljs/quill/issues/1940
-        setImmediate(() => {
-            quillRef.updateContents(newDelta, Quill.sources.API);
-            if (isLoadData) {
-                quillRef.setSelection(text.length, 0, Quill.sources.API);
-            }
-        });
+        return newDelta;
     };
 
-    const triggerOnChange2 = async (editor, delta, quillRef) => {
+    const triggerOnChange1 = async (quillRef, isLoadData) => {
         console.log(
-            '-------------------------------- debounce --------------------------------'
+            '-------------------------------- triggerOnChange1 --------------------------------'
         );
-        const text = editor.getText();
-        let pos = editor.getSelection().index;
-        console.log('>> pos: ', pos);
-        let match = text.match(/\w+|\s+$/);
-        console.log('>> match: ', match);
+        const text = quillRef.getText();
+        console.log(text);
+        // https://stackoverflow.com/questions/40881365/split-a-string-into-an-array-of-words-punctuation-and-spaces-in-javascript
+        const lookupWords = text.match(/\w+|\s+|[^\s\w]+/g);
+        if (lookupWords) {
+            const verifiedLookupWords = await verifyLookupWords(lookupWords);
+            const newDelta = buildDelta(0, text.length, verifiedLookupWords);
+
+            // https://github.com/quilljs/quill/issues/1940
+            setImmediate(() => {
+                quillRef.updateContents(newDelta, Quill.sources.API);
+                if (isLoadData) {
+                    quillRef.setSelection(text.length, 0, Quill.sources.API);
+                }
+            });
+        }
+    };
+
+    const triggerOnChange2 = async (quillRef, delta) => {
+        console.log(
+            '-------------------------------- triggerOnChange2 --------------------------------'
+        );
+        const text = quillRef.getText();
+        let pos = quillRef.getSelection().index;
         // Search for the current typing word's beginning and end.
         let left = text.slice(0, pos).search(/\S+$/);
         let right = text.slice(pos).search(/\s/);
-        console.log('>> left: ', left);
+        let startIndex = left;
+        let endIndex = right + pos;
+        let words = text.slice(startIndex, endIndex);
+
+        // when typing space, left == -1
         if (left === -1) {
+            left = text.slice(0, pos).search(/\w*\s*$/);
             // when type in the begining of the input text area, left set to 0
-            left =
-                text.slice(0, pos).search(/\s$/) === -1
-                    ? 0
-                    : text.slice(0, pos).search(/\s$/);
-            right = text.slice(left).search(/\s/);
-            console.log('***new left: ', left);
+            if (left === -1) {
+                left = 0;
+            }
+            startIndex = left;
+            //endIndex = left+right;
+            words = text.slice(startIndex, endIndex);
         }
-        console.log('>> new left: ', left);
-        console.log('>> new right: ', right);
+
         let currentTypingWord = {
-            startIndex: left,
-            endIndex: right + pos,
-            word: text.slice(left, right + pos),
+            startIndex,
+            endIndex,
+            words,
         };
 
         quillRef.removeFormat(
             currentTypingWord.startIndex,
-            currentTypingWord.word.length
+            currentTypingWord.words.length
         );
 
         // do lookup work in keyWords
-        const lookupWord = currentTypingWord.word;
-        console.log('>> currentTypingWord: ', currentTypingWord);
-        console.log('>> lookupWord: ', lookupWord);
-        const newDelta = new Delta()
-            .retain(currentTypingWord.startIndex)
-            .delete(lookupWord.length);
-        if (lookupWord.match(/\w+/)) {
-            // check similarity of each word again and update the content
-            try {
-                const similarWords = await WordService.getSimilarWords(
-                    lookupWord
-                );
-                if (
-                    similarWords &&
-                    similarWords.data &&
-                    similarWords.data.emrWordId
-                ) {
-                    newDelta.insert(lookupWord, {
-                        markedWord: {
-                            color: 'yellow',
-                            word: lookupWord,
-                        },
-                    });
-                } else {
-                    newDelta.insert(lookupWord, {
-                        markedWord: false,
-                        background: false,
-                    });
-                }
-            } catch (error) {
-                newDelta.insert(lookupWord, {
-                    markedWord: false,
-                    background: false,
-                });
-            }
-        } else {
-            newDelta.insert(lookupWord, {
-                markedWord: false,
-                background: false,
-            });
-        }
-
-        // if the insert text is enter character
-        setImmediate(() => {
-            if (
-                delta.ops.length === 2 &&
-                delta.ops[1].insert &&
-                /\r|\n|\t$/.test(delta.ops[1].insert)
-            ) {
-                pos += 1;
-            }
-            quillRef.updateContents(newDelta, Quill.sources.API);
-            quillRef.setSelection(pos, 0, Quill.sources.API);
-        });
-    };
-
-    const triggerOnChange4 = useCallback(
-        debounce(async (editor, delta, quillRef) => {
-            console.log(
-                '-------------------------------- debounce --------------------------------'
-            );
-            const text = editor.getText();
-            let pos = editor.getSelection().index;
-            // Search for the current typing word's beginning and end.
-            let left = text.slice(0, pos).search(/\S+$/);
-            const right = text.slice(pos).search(/\s/);
-            if (left === -1) {
-                // when type in the begining of the input text area, left set to 0
-                left =
-                    text.slice(0, pos).search(/\s$/) === -1
-                        ? 0
-                        : text.slice(0, pos).search(/\s$/);
-                console.log('***new left: ', left);
-            }
-            let currentTypingWord = {
-                startIndex: left,
-                endIndex: right + pos,
-                word: text.slice(left, right + pos),
-            };
-
-            quillRef.removeFormat(
+        const lookupWords = currentTypingWord.words.match(/\w+|\s+|[^\s\w]+/g);
+        if (lookupWords) {
+            const verifiedLookupWords = await verifyLookupWords(lookupWords);
+            const newDelta = buildDelta(
                 currentTypingWord.startIndex,
-                currentTypingWord.word.length
+                currentTypingWord.words.length,
+                verifiedLookupWords
             );
-
-            // do lookup work in keyWords
-            const lookupWord = currentTypingWord.word;
-            console.log('>> currentTypingWord: ', currentTypingWord);
-            console.log('>> lookupWord: ', lookupWord);
-            const newDelta = new Delta()
-                .retain(currentTypingWord.startIndex)
-                .delete(lookupWord.length);
-            if (lookupWord.match(/\w+/)) {
-                // check similarity of each word again and update the content
-                try {
-                    const similarWords = await WordService.getSimilarWords(
-                        lookupWord
-                    );
-                    if (
-                        similarWords &&
-                        similarWords.data &&
-                        similarWords.data.emrWordId
-                    ) {
-                        newDelta.insert(lookupWord, {
-                            markedWord: {
-                                color: 'yellow',
-                                word: lookupWord,
-                            },
-                        });
-                    } else {
-                        newDelta.insert(lookupWord, {
-                            markedWord: false,
-                            background: false,
-                        });
-                    }
-                } catch (error) {
-                    newDelta.insert(lookupWord, {
-                        markedWord: false,
-                        background: false,
-                    });
-                }
-            } else {
-                newDelta.insert(lookupWord, {
-                    markedWord: false,
-                    background: false,
-                });
-            }
-
             // if the insert text is enter character
             setImmediate(() => {
                 if (
@@ -347,136 +178,54 @@ const EditorWithMarkedWordFeature = () => {
                 quillRef.updateContents(newDelta, Quill.sources.API);
                 quillRef.setSelection(pos, 0, Quill.sources.API);
             });
-        }, 100),
-        []
-    );
+        }
+    };
 
-    const triggerOnChange = useCallback(
-        debounce(async (editor, delta, source, quillRef, contentFromRedux) => {
-            console.log(
-                '-------------------------------- debounce --------------------------------'
-            );
-            const text = editor.getText();
+    const handleOnChange = async (content, delta, source, editor) => {
+        setEditorHtml(content);
 
-            let pos;
-            // editor.getSelection(), when user pasts text
-            if (editor.getSelection()) {
-                pos = editor.getSelection().index;
-            } else {
-                pos = text.length;
-            }
-
-            // Search for the current typing word's beginning and end.
-            const left = text.slice(0, pos).search(/\S+$/);
-            const right = text.slice(pos).search(/\s/);
-            let currentTypingWord = {
-                startIndex: left,
-                endIndex: right + pos,
-                word: text.slice(left, right + pos),
-            };
-
-            // when user input or delete letter
-            if (
-                // when insert the begining of the text area
-                (delta.ops.length === 1 &&
-                    (delta.ops[0].insert || delta.ops[0].delete) &&
-                    source === Quill.sources.USER) ||
-                // when insert or delete letter
+        console.log('========== handleOnChange ==========');
+        if (quillRef === null) {
+            return;
+        }
+        // when user click on load data which update the contentFromRedux
+        // when update text to empty editor --> delta.ops.length === 1 && delta.ops[0].insert
+        // when update text to not-empty editor --> delta.ops.length === 2 && delta.ops[0].insert && delta.ops[1].delete
+        const isLoadData =
+            source === Quill.sources.API &&
+            ((delta.ops.length === 1 && delta.ops[0].insert) ||
+                (delta.ops.length === 2 &&
+                    delta.ops[0].insert &&
+                    delta.ops[1].delete));
+        // when user pasts text -> editor.getSelection() is null
+        const isPastText = editor.getSelection() == null;
+        // when user insert or delete text
+        // when insert the begining of the text area --> delta.ops.length === 1 && (delta.ops[0].insert || delta.ops[0].delete)
+        // when insert or delete letter --> delta.ops.length === 2 && delta.ops[0].retain && (delta.ops[1].insert || delta.ops[1].delete)
+        const isUserInput =
+            source === Quill.sources.USER &&
+            ((delta.ops.length === 1 &&
+                (delta.ops[0].insert || delta.ops[0].delete)) ||
                 (delta.ops.length === 2 &&
                     delta.ops[0].retain &&
-                    (delta.ops[1].insert || delta.ops[1].delete) &&
-                    source === Quill.sources.USER) ||
-                // when userInputText from redux state, editor empty
-                (delta.ops.length === 1 &&
-                    delta.ops[0].insert &&
-                    source === Quill.sources.API) ||
-                // when userInputText from redux state, editor not empty
-                (delta.ops.length === 2 &&
-                    delta.ops[0].insert &&
-                    delta.ops[1].delete &&
-                    source === Quill.sources.API)
-            ) {
-                quillRef.removeFormat(
-                    currentTypingWord.startIndex,
-                    currentTypingWord.word.length
-                );
-                // https://stackoverflow.com/questions/40881365/split-a-string-into-an-array-of-words-punctuation-and-spaces-in-javascript
-                const lookupWords = text.match(/\w+|\s+|[^\s\w]+/g);
-                const newDelta = new Delta().retain(0).delete(text.length);
-                const content = {
-                    arr_words: [],
-                    cnt_emr: 0,
-                    cnt_cdm: 0,
-                };
-                const verifiedLookupWords = await Promise.all(
-                    lookupWords.map(async (lookupWord) => {
-                        if (lookupWord.match(/\w+/)) {
-                            // check similarity of each word again and update the content
-                            try {
-                                const similarWords = await WordService.getSimilarWords(
-                                    lookupWord
-                                );
-                                if (
-                                    similarWords &&
-                                    similarWords.data &&
-                                    similarWords.data.emrWordId
-                                ) {
-                                    const bool_is_changed =
-                                        similarWords.data.emrWordId !==
-                                        lookupWord;
-                                    content.arr_words.push({
-                                        str_text: lookupWord,
-                                        id_word_emr:
-                                            similarWords.data.emrWordId,
-                                        bool_is_changed: false,
-                                    });
-                                    return {
-                                        lookupWord,
-                                        emrWordId: similarWords.data.emrWordId,
-                                    };
-                                } else {
-                                    return { lookupWord };
-                                }
-                            } catch (error) {
-                                return { lookupWord };
-                            }
-                        } else {
-                            return { lookupWord };
-                        }
-                    })
-                );
-                verifiedLookupWords.forEach((lookupWordsObj) => {
-                    if (lookupWordsObj.emrWordId) {
-                        newDelta.insert(lookupWordsObj.lookupWord, {
-                            markedWord: {
-                                color: 'yellow',
-                                word: lookupWordsObj.lookupWord,
-                            },
-                        });
-                    } else {
-                        newDelta.insert(lookupWordsObj.lookupWord, {
-                            markedWord: false,
-                            background: false,
-                        });
-                    }
-                });
+                    (delta.ops[1].insert || delta.ops[1].delete)));
 
-                // https://github.com/quilljs/quill/issues/1940
-                //setImmediate(() => {
-                if (
-                    delta.ops.length === 2 &&
-                    delta.ops[1].insert &&
-                    /\r|\n|\t$/.test(delta.ops[1].insert)
-                ) {
-                    pos = pos + 1;
-                }
-                quillRef.updateContents(newDelta, Quill.sources.API);
-                quillRef.setSelection(pos, 0, Quill.sources.API);
-                //});
-            }
-        }, 400),
-        []
-    );
+        if (isPastText || isLoadData) {
+            triggerOnChange1(quillRef, isLoadData);
+        }
+
+        // When user insert or delete text
+        if (
+            // editor.getSelection() is null when user pasts text
+            !isPastText &&
+            !isLoadData &&
+            isUserInput
+        ) {
+            console.log('+++++++++++++++++++++++++++++++++++++++++++++');
+            console.log(editor.getSelection());
+            triggerOnChange2(quillRef, delta);
+        }
+    };
 
     const generateContent = async (arrWords) => {
         let cnt_cdm = 0;
@@ -524,45 +273,27 @@ const EditorWithMarkedWordFeature = () => {
         };
     };
 
-    /* const handleOnChangeSelection = (range, source, editor) => {
+    const handleOnChangeSelection = (range, source, editor) => {
         console.log(
-            '------------------- handleOnChangeSelection ---------------------'
+            '====================================== handleOnChangeSelection =========================================='
         );
-        console.log('range: ', range);
+        /* console.log('range: ', range);
         console.log('source: ', source);
-        console.log('editor: ', editor);
-        console.log('editor getContents: ', editor.getContents());
-        console.log('editor getText: ', editor.getText());
-        console.log('editor getHTML: ', editor.getHTML());
-        console.log('editor getSelection: ', editor.getSelection());
-        console.log('editor getLength: ', editor.getLength());
-        //triggerOnChangeSelection(editor, quillRef);
-    }; */
-
-    /* const triggerOnChangeSelection = useCallback(
-        debounce((editor, quillRef) => {
-            let pos = editor.getLength();
-            if (editor.getSelection() && editor.getSelection().index !== 0) {
-                pos = editor.getSelection().index;
-            }
-
-            quillRef.setSelection(pos, 0, Quill.sources.API);
-        }, 100),
-        []
-    ); */
+        console.log('editor: ', editor); */
+    };
 
     const handleOnFocus = (range, source, editor) => {
         console.log('-------------------- handleOnFocus --------------------');
-        console.log('range: ', range);
+        /* console.log('range: ', range);
         console.log('source: ', source);
-        console.log('editor: ', editor);
+        console.log('editor: ', editor); */
     };
 
     const handleOnBlur = (previousRange, source, editor) => {
         console.log('===================== handleOnBlur ====================');
-        console.log('previousRange: ', previousRange);
+        /* console.log('previousRange: ', previousRange);
         console.log('source: ', source);
-        console.log('editor: ', editor);
+        console.log('editor: ', editor); */
     };
 
     return (
@@ -578,8 +309,8 @@ const EditorWithMarkedWordFeature = () => {
                 //style={{ overflowY: 'auto', height: '55vh' }}
                 value={editorHtml}
                 onChange={handleOnChange}
-                //onChangeSelection={handleOnChangeSelection}
-                /* onFocus={handleOnFocus} */
+                onChangeSelection={handleOnChangeSelection}
+                onFocus={handleOnFocus}
                 onBlur={handleOnBlur}
                 theme={null}
             />
