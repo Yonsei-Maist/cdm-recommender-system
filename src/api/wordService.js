@@ -5,13 +5,16 @@
  */
 
 import axiosApiInstance from './axiosApiInstance';
-import { API_BASE_ADDRESS } from '../constants';
 
 class WordService {
     getSimilarWords(word) {
-        return axiosApiInstance.post(`${API_BASE_ADDRESS}/cdm/similarity/words`, {
-            word,
-        });
+        return axiosApiInstance.post(
+            `/cdm/similarity/words`,
+            {
+                word,
+            },
+            { timeout: 50 }
+        );
     }
 }
 

@@ -5,8 +5,12 @@
  */
 
 import axios from 'axios';
+import { API_BASE_ADDRESS } from '../constants';
 
-const axiosApiInstance = axios.create();
+const axiosApiInstance = axios.create({
+    baseURL: API_BASE_ADDRESS,
+    timeout: 1000,
+});
 // Response interceptor for API calls
 axiosApiInstance.interceptors.response.use(
     (response) => {
@@ -26,7 +30,11 @@ axiosApiInstance.interceptors.response.use(
         }
     },
     async function (error) {
-        if (error.response && error.response.data && error.response.data.message) {
+        if (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+        ) {
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
             return Promise.reject(new Error(error.response.data.message));

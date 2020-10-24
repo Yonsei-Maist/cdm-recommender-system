@@ -44,6 +44,7 @@ const GlobalErrorNotification = (props) => {
                 position: 'absolute',
                 top: 0,
                 right: 0,
+                zIndex: 1051, // display on the top of the pup up modal
             }}
         >
             <Toast

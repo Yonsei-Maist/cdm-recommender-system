@@ -11,7 +11,7 @@ import Footer from './components/Footer/Footer';
 import LoadDataModal from './components/LoadDataModal/LoadDataModal';
 import GlobalErrorNotification from './components/GlobalErrorNotification/GlobalErrorNotification';
 import { useDispatch } from 'react-redux';
-import { getDocDetailsRequest } from './actions/docAction';
+import { getDocListRequest, getDocDetailsRequest } from './actions/docAction';
 import EditorWithMarkedWordFeature from './components/EditorWithMarkedWordFeature/EditorWithMarkedWordFeature';
 
 import './App.css';
@@ -68,6 +68,7 @@ const App = () => {
      * @memberof App
      */
     const handleOnClickLoadButton = () => {
+        dispatch(getDocListRequest());
         handleShow();
     };
 

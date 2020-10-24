@@ -5,8 +5,7 @@
  */
 import React, { useEffect } from 'react';
 import { ListGroup, Modal } from 'react-bootstrap';
-import { getDocListRequest } from '../../actions/docAction';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 /**
@@ -30,16 +29,10 @@ import PropTypes from 'prop-types';
 const LoadDataModal = (props) => {
     const { show, onHide, handleOnDoubleCLick } = props;
 
-    //this hook allows us to access the dispatch function
-    const dispatch = useDispatch();
     //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
     const { data, isLoading, error } = useSelector(
         (state) => state.doc.docList
     );
-
-    useEffect(() => {
-        dispatch(getDocListRequest());
-    }, [dispatch]);
 
     return (
         <Modal animation={false} show={show} onHide={onHide} centered={true}>

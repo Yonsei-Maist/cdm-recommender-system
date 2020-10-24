@@ -5,17 +5,16 @@
  */
 
 import axiosApiInstance from './axiosApiInstance';
-import { API_BASE_ADDRESS } from '../constants';
 
 class DocService {
     getDocList(userId) {
-        return axiosApiInstance.post(`${API_BASE_ADDRESS}/emr/doc/list`, {
+        return axiosApiInstance.post(`/emr/doc/list`, {
             userId,
         });
     }
 
     getDocDetails(docId) {
-        return axiosApiInstance.post(`${API_BASE_ADDRESS}/emr/doc/page`, {
+        return axiosApiInstance.post(`/emr/doc/page`, {
             id: docId,
         });
     }
