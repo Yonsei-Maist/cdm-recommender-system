@@ -13,7 +13,7 @@ class WordService {
             {
                 word,
             },
-            { timeout: 50 }
+            { timeout: 70 }
         );
     }
 }
