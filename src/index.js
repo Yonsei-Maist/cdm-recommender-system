@@ -17,8 +17,9 @@
  * @requires './serviceWorker'
  * @requires './store'
  * @requires 'bootstrap/dist/css/bootstrap.min.css'
- * @requires './actions/cdmWordsAction'
+ * @requires './actions/wordAction'
  * @requires './constants'
+ * @requires './components/EditorWithMarkedWordFeature/EditorWithMarkedWordFeature'
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -30,10 +31,9 @@ import configureStore from './store';
 
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {
-    getSimilarWordsSuccess,
-} from './actions/wordAction';
+import { getSimilarWordsSuccess } from './actions/wordAction';
 import { METHOD_NAME_ONCLICK_MARKED_WORD } from './constants';
+import { getLookupPhrase } from './components/EditorWithMarkedWordFeature/EditorWithMarkedWordFeature';
 
 /**
  * @type {Object}
@@ -45,15 +45,26 @@ const store = configureStore();
  * @property {Function} METHOD_NAME_ONCLICK_MARKED_WORD method handler when user clicks on marked word
  * @param {Object} markedWord marked word object (refers the formats method of markedWord.js)
  */
-global[METHOD_NAME_ONCLICK_MARKED_WORD] = (
-    markedWord,
-) => {
-    const data = {
-        emrWordId: markedWord.emrWordId,
-        cdmWordsList: markedWord.cdmWordsList,
-        markedWord
-    };
-    store.dispatch(getSimilarWordsSuccess(data));
+global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord, quillRef) => {
+    if (quillRef && quillRef.getSelection()) {
+        const text = quillRef.getText();
+        const cursorStartIndex = quillRef.getSelection().index;
+        const cursorEndIndex = cursorStartIndex;
+        const lookupPhrase = getLookupPhrase(
+            text,
+            cursorStartIndex,
+            cursorEndIndex
+        );
+        // add retain index or index of the first letter of the word
+        markedWord.retain = lookupPhrase.startIndex;
+
+        const data = {
+            emrWordId: markedWord.emrWordId,
+            cdmWordsList: markedWord.cdmWordsList,
+            markedWord,
+        };
+        store.dispatch(getSimilarWordsSuccess(data));
+    }
 };
 
 ReactDOM.render(

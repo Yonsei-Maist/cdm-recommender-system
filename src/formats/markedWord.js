@@ -20,7 +20,7 @@ export class MarkedWord extends Inline {
             cdmWordsList,
             boolIsChanged,
             cdmWordId,
-            retain,
+            quillRef,
         } = value;
         let node = super.create(value);
         node.setAttribute('data-id', id);
@@ -35,8 +35,6 @@ export class MarkedWord extends Inline {
         }
         node.dataset.boolIsChanged = boolIsChanged;
         node.dataset.cdmWordId = cdmWordId;
-        // retain index or index of the first letter of the word
-        node.dataset.retain = retain;
 
         const markedWord = {
             id,
@@ -46,7 +44,6 @@ export class MarkedWord extends Inline {
             cdmWordsList,
             boolIsChanged,
             cdmWordId,
-            retain: retain,
         }
 
         node.addEventListener(
@@ -54,6 +51,7 @@ export class MarkedWord extends Inline {
             function (ev) {
                 global[METHOD_NAME_ONCLICK_MARKED_WORD](
                     markedWord,
+                    quillRef,
                 );
                 ev.preventDefault();
             },
@@ -80,7 +78,6 @@ export class MarkedWord extends Inline {
             boolIsChanged:
                 node.dataset.boolIsChanged === 'false' ? false : true,
             cdmWordId: node.dataset.cdmWordId,
-            retain: node.dataset.retain,
         }
 
         if (node.dataset.cdmWordsList) {

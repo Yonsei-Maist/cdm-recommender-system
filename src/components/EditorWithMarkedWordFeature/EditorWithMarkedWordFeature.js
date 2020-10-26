@@ -39,7 +39,6 @@ const EditorWithMarkedWordFeature = () => {
         let {
             strText,
             emrWordId,
-            boolIsChanged,
             cdmWordId,
             cdmWordsList,
             retain: retainIndex,
@@ -47,8 +46,11 @@ const EditorWithMarkedWordFeature = () => {
 
         const deleteLength = strText.length;
         markedWord.cdmWordId = cdmWord.cdmWordId;
-        markedWord.strText = cdmWord.cdmWordId === strText ? cdmWord.emrWordId : cdmWord.cdmWordId;
-        markedWord.boolIsChanged = !boolIsChanged;
+        markedWord.strText =
+            cdmWord.cdmWordId === strText
+                ? cdmWord.emrWordId
+                : cdmWord.cdmWordId;
+        markedWord.boolIsChanged = markedWord.strText !== markedWord.emrWordId;
         const verifiedLookupWords = [
             {
                 // change back to emr word if cdmWordId === strText
@@ -100,6 +102,8 @@ const EditorWithMarkedWordFeature = () => {
                 dispatch(
                     setContent(buildContentByDelta(quillRef.getContents()))
                 );
+                // reset the cdm list
+                dispatch(getSimilarWordsSuccess({}));
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -274,7 +278,6 @@ const EditorWithMarkedWordFeature = () => {
     // buildDelta build with verifiedLookupWords for displaying content in the editor
     const buildDelta = (retainIndex, deleteLength, verifiedLookupWords) => {
         const newDelta = new Delta().retain(retainIndex).delete(deleteLength);
-        let retain = retainIndex;
         verifiedLookupWords.forEach((lookupWordsObj) => {
             if (lookupWordsObj.emrWordId) {
                 newDelta.insert(lookupWordsObj.lookupWord, {
@@ -285,7 +288,7 @@ const EditorWithMarkedWordFeature = () => {
                         cdmWordsList: lookupWordsObj.cdmWordsList,
                         boolIsChanged: !!lookupWordsObj.boolIsChanged,
                         cdmWordId: lookupWordsObj.cdmWordId,
-                        retain, // retain index or index of the first letter of the word
+                        quillRef,
                     },
                 });
             } else {
@@ -294,7 +297,6 @@ const EditorWithMarkedWordFeature = () => {
                     background: false,
                 });
             }
-            retain += lookupWordsObj.lookupWord.length;
         });
         return newDelta;
     };
