@@ -8,16 +8,15 @@
  * @category Reducers
  * @module reducers/index
  * @requires 'redux'
- * @requires './cdmWordsReducer'
  * @requires './userDataReducer'
- * @requires './keywordsMaptoCdmWordsReducer'
  * @requires './docReducer'
+ * @requires './wordReducer'
+ * @requires './errorReducer'
+ * @requires './contentReducer'
  */
 import { combineReducers } from 'redux';
 
 import userDataReducer from './userDataReducer';
-import cdmWordsReducer from './cdmWordsReducer';
-import keywordsMaptoCdmWordsReducer from './keywordsMaptoCdmWordsReducer';
 import docReducer from './docReducer';
 import wordReducer from './wordReducer';
 import errorReducer from './errorReducer';
@@ -26,14 +25,10 @@ import contentReducer from './contentReducer';
 /**
  * @type {Object}
  * @property {Object} userData
- * @property {Object} cdmWords
- * @property {Object} keywordsMaptoCdmWords
  * @property {Object} doc
  */
 const rootReducer = combineReducers({
     userData: userDataReducer,
-    cdmWords: cdmWordsReducer,
-    keywordsMaptoCdmWords: keywordsMaptoCdmWordsReducer,
     doc: docReducer,
     word: wordReducer,
     error: errorReducer,

@@ -43,21 +43,8 @@ const setLoadUserDataError = (error) => ({
     error,
 });
 
-/**
- * @method
- * @description set user input text
- * @param {string} inputText user input text
- *
- * @returns {Object} {type: USER_DATA.SET_USER_INPUT_TEXT, inputText}
- */
-const setUserInputText = (inputText) => ({
-    type: USER_DATA.SET_USER_INPUT_TEXT,
-    inputText,
-});
-
 export {
     loadUserData,
     setLoadUserDataSuccess,
     setLoadUserDataError,
-    setUserInputText,
 };

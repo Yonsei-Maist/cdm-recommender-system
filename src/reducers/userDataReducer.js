@@ -56,12 +56,6 @@ const userDataReducer = (state = initialState, action) => {
                 error: action.error,
             };
         }
-        case USER_DATA.SET_USER_INPUT_TEXT: {
-            return {
-                ...state,
-                inputText: action.inputText,
-            };
-        }
         default: {
             return state;
         }

@@ -8,11 +8,9 @@
  * @category Sagas
  * @module sagas/docSaga
  * @requires '../action-types/docType'
- * @requires '../api/docService'
  * @requires '../actions/docAction'
- * @requires '../actions/userDataAction'
- * @requires '../helpers'
- * @requires '../constants'
+ * @requires '../actions/contentAction'
+ * @requires '../api/docService'
  */
 
 import { put, call, takeLatest } from 'redux-saga/effects';
@@ -24,10 +22,7 @@ import {
     getDocDetailsError,
 } from '../actions/docAction';
 import {setContent} from '../actions/contentAction';
-import { setUserInputText } from '../actions/userDataAction';
 import DocService from '../api/docService';
-import { highlightTextWithOnClickHandler } from '../helpers';
-import { METHOD_NAME_ONCLICK_MARKED_WORD } from '../constants';
 
 /* -------------------------------------------------------------------------- */
 /*                                  Doc List                                  */
@@ -79,19 +74,8 @@ const watchGetDocList = function* () {
 function* handleGetDocDetails(action) {
     try {
         const docDetails = yield call(DocService.getDocDetails, action.payload);
-        const arrayWords = docDetails.data.content.arr_words.map((word) => {
-            if (word.id_word_emr !== undefined) {
-                return highlightTextWithOnClickHandler(
-                    word.str_text,
-                    METHOD_NAME_ONCLICK_MARKED_WORD
-                );
-            }
-            return word.str_text;
-        });
-        const userInputText = arrayWords.join('');//.replace(/\s([!.?,;:'"])/g, '$1');
         yield put(getDocDetailsSuccess(docDetails));
         yield put(setContent(docDetails.data.content));
-        yield put(setUserInputText(userInputText));
     } catch (error) {
         yield put(getDocDetailsError({ error: error.toString() }));
     }
