@@ -12,19 +12,31 @@ export class MarkedWord extends Inline {
      * @param {Any} value
      */
     static create(value) {
-        console.log('======================> ', value);
         const id = v4();
-        const { color, word } = value;
+        const {
+            color,
+            strText,
+            emrWordId,
+            cdmWordsList,
+            boolIsChanged,
+            cdmWordId,
+            quillRef,
+        } = value;
         let node = super.create(value);
         node.setAttribute('data-id', id);
         node.style.backgroundColor = color;
         node.style.cursor = 'pointer';
         node.dataset.id = id;
-        node.dataset.word = word;
+        node.dataset.color = color;
+        node.dataset.strText = strText;
+        node.dataset.emrWordId = emrWordId;
+        node.dataset.cdmWordsList = JSON.stringify(cdmWordsList);
+        node.dataset.boolIsChanged = boolIsChanged;
+        node.dataset.cdmWordId = cdmWordId;
         node.addEventListener(
             'click',
             function (ev) {
-                global[METHOD_NAME_ONCLICK_MARKED_WORD](word);
+                global[METHOD_NAME_ONCLICK_MARKED_WORD](emrWordId, quillRef);
                 ev.preventDefault();
             },
             false
@@ -43,9 +55,13 @@ export class MarkedWord extends Inline {
         if (!node.style.backgroundColor) return null;
 
         return {
-            color: node.style.backgroundColor,
-            word: node.dataset.word,
             id: node.dataset.id,
+            color: node.dataset.color,
+            strText: node.dataset.strText,
+            emrWordId: node.dataset.emrWordId,
+            cdmWordsList: JSON.parse(node.dataset.cdmWordsList),
+            boolIsChanged: node.dataset.boolIsChanged === 'false'? false: true,
+            cdmWordId: node.dataset.cdmWordId,
         };
     }
 }

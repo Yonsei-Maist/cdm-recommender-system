@@ -3,7 +3,7 @@
  * @author Vicheka Phor, Yonsei Univ. Researcher, since 2020.10
  * @date 2020.09.18
  */
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ListGroup, Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';

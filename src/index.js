@@ -43,7 +43,10 @@ const store = configureStore();
  * @property {Function} METHOD_NAME_ONCLICK_MARKED_WORD method handler when user clicks on marked word
  * @param {string} markedWord marked word or highlight word
  */
-global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord) => {
+global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord, quillRef) => {
+    console.log(quillRef);
+    console.log(quillRef.getSelection());
+    console.log(quillRef.getContents());
     const keywordsMaptoCdmWords = store.getState().keywordsMaptoCdmWords;
     const isExistKeyword = markedWord in keywordsMaptoCdmWords;
     if (isExistKeyword) {

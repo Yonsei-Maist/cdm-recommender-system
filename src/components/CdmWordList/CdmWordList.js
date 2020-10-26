@@ -62,29 +62,33 @@ const CdmWordList = () => {
                     data &&
                     data.cdmWordsList &&
                     data.cdmWordsList.length !== 0 && (
-                        <ListGroup
-                            style={{ overflowY: 'auto', height: '55vh' }}
-                        >
-                            {data.cdmWordsList.map(
-                                ({ id_word_cdm, float_similarity }) => {
-                                    return (
-                                        <ListGroup.Item
-                                            action
-                                            key={id_word_cdm}
-                                            onClick={() =>
-                                                handleOnClickCdmWord({
-                                                    idWordEmr: data.emrWordId,
-                                                    idWordCdm: id_word_cdm,
-                                                    floatSimilarity: float_similarity,
-                                                })
-                                            }
-                                        >
-                                            {id_word_cdm}
-                                        </ListGroup.Item>
-                                    );
-                                }
-                            )}
-                        </ListGroup>
+                        <div>
+                            <h6>{data.emrWordId}</h6>
+                            <ListGroup
+                                style={{ overflowY: 'auto', height: '55vh' }}
+                            >
+                                {data.cdmWordsList.map(
+                                    ({ id_word_cdm, float_similarity }) => {
+                                        return (
+                                            <ListGroup.Item
+                                                action
+                                                key={id_word_cdm}
+                                                onClick={() =>
+                                                    handleOnClickCdmWord({
+                                                        idWordEmr:
+                                                            data.emrWordId,
+                                                        idWordCdm: id_word_cdm,
+                                                        floatSimilarity: float_similarity,
+                                                    })
+                                                }
+                                            >
+                                                {id_word_cdm}
+                                            </ListGroup.Item>
+                                        );
+                                    }
+                                )}
+                            </ListGroup>
+                        </div>
                     )}
             </div>
         </div>
