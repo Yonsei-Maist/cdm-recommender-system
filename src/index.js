@@ -31,7 +31,6 @@ import configureStore from './store';
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
-    getSimilarWordsRequest,
     getSimilarWordsSuccess,
 } from './actions/wordAction';
 import { METHOD_NAME_ONCLICK_MARKED_WORD } from './constants';
