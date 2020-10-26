@@ -39,12 +39,12 @@ const EditorWithMarkedWordFeature = () => {
         let {
             strText,
             emrWordId,
-            cdmWordId,
             cdmWordsList,
             retain: retainIndex,
         } = markedWord;
 
         const deleteLength = strText.length;
+        // update markedWord
         markedWord.cdmWordId = cdmWord.cdmWordId;
         markedWord.strText =
             cdmWord.cdmWordId === strText
@@ -57,7 +57,7 @@ const EditorWithMarkedWordFeature = () => {
                 lookupWord: markedWord.strText,
                 emrWordId: emrWordId,
                 boolIsChanged: markedWord.boolIsChanged,
-                cdmWordId,
+                cdmWordId: markedWord.cdmWordId,
                 cdmWordsList,
             },
         ];

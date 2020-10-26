@@ -10,7 +10,7 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import LoadDataModal from './components/LoadDataModal/LoadDataModal';
 import GlobalErrorNotification from './components/GlobalErrorNotification/GlobalErrorNotification';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getDocListRequest, getDocDetailsRequest } from './actions/docAction';
 import EditorWithMarkedWordFeature from './components/EditorWithMarkedWordFeature/EditorWithMarkedWordFeature';
 
@@ -43,6 +43,7 @@ const App = () => {
     const [show, setShow] = useState(false);
     //this hook allows us to access the dispatch function
     const dispatch = useDispatch();
+    const content = useSelector((state) => state.content);
 
     /**
      * @method
@@ -78,6 +79,7 @@ const App = () => {
      */
     const handleOnClickSaveButton = () => {
         console.log('handleOnClickSaveButton');
+        console.log(content);
     };
 
     return (
