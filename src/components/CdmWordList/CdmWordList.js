@@ -5,7 +5,8 @@
  */
 import React from 'react';
 import { ListGroup } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setChangeEmrWord } from '../../actions/wordAction';
 
 /**
  * Renders recommended CDM words list
@@ -33,9 +34,10 @@ const CdmWordList = () => {
     const { data, isLoading, error } = useSelector(
         (state) => state.word.similarWords
     );
+    const dispatch = useDispatch();
 
-    const handleOnClickCdmWord = (cdmWord) => {
-        console.log(cdmWord);
+    const handleOnClickCdmWord = (cdmWord, markedWord) => {
+        dispatch(setChangeEmrWord({ cdmWord, markedWord }));
     };
 
     return (
@@ -74,12 +76,15 @@ const CdmWordList = () => {
                                                 action
                                                 key={id_word_cdm}
                                                 onClick={() =>
-                                                    handleOnClickCdmWord({
-                                                        idWordEmr:
-                                                            data.emrWordId,
-                                                        idWordCdm: id_word_cdm,
-                                                        floatSimilarity: float_similarity,
-                                                    })
+                                                    handleOnClickCdmWord(
+                                                        {
+                                                            emrWordId:
+                                                                data.emrWordId,
+                                                            cdmWordId: id_word_cdm,
+                                                            floatSimilarity: float_similarity,
+                                                        },
+                                                        data.markedWord
+                                                    )
                                                 }
                                             >
                                                 {id_word_cdm}

@@ -20,7 +20,7 @@ export class MarkedWord extends Inline {
             cdmWordsList,
             boolIsChanged,
             cdmWordId,
-            quillRef,
+            retain,
         } = value;
         let node = super.create(value);
         node.setAttribute('data-id', id);
@@ -30,13 +30,31 @@ export class MarkedWord extends Inline {
         node.dataset.color = color;
         node.dataset.strText = strText;
         node.dataset.emrWordId = emrWordId;
-        node.dataset.cdmWordsList = JSON.stringify(cdmWordsList);
+        if (cdmWordsList) {
+            node.dataset.cdmWordsList = JSON.stringify(cdmWordsList);
+        }
         node.dataset.boolIsChanged = boolIsChanged;
         node.dataset.cdmWordId = cdmWordId;
+        // retain index or index of the first letter of the word
+        node.dataset.retain = retain;
+
+        const markedWord = {
+            id,
+            color,
+            strText,
+            emrWordId,
+            cdmWordsList,
+            boolIsChanged,
+            cdmWordId,
+            retain: retain,
+        }
+
         node.addEventListener(
             'click',
             function (ev) {
-                global[METHOD_NAME_ONCLICK_MARKED_WORD](emrWordId, quillRef);
+                global[METHOD_NAME_ONCLICK_MARKED_WORD](
+                    markedWord,
+                );
                 ev.preventDefault();
             },
             false
@@ -54,15 +72,22 @@ export class MarkedWord extends Inline {
     static formats(node) {
         if (!node.style.backgroundColor) return null;
 
-        return {
+        const markedWord = {
             id: node.dataset.id,
             color: node.dataset.color,
             strText: node.dataset.strText,
             emrWordId: node.dataset.emrWordId,
-            cdmWordsList: JSON.parse(node.dataset.cdmWordsList),
-            boolIsChanged: node.dataset.boolIsChanged === 'false'? false: true,
+            boolIsChanged:
+                node.dataset.boolIsChanged === 'false' ? false : true,
             cdmWordId: node.dataset.cdmWordId,
-        };
+            retain: node.dataset.retain,
+        }
+
+        if (node.dataset.cdmWordsList) {
+            markedWord.cdmWordsList = JSON.parse(node.dataset.cdmWordsList);
+        }
+
+        return markedWord;
     }
 }
 

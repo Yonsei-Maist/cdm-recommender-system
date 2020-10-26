@@ -37,7 +37,7 @@ import WordService from '../api/wordService';
 function* handleGetSimilarWords(action) {
     try {
         const similarWords = yield call(WordService.getSimilarWords, action.payload);
-        yield put(getSimilarWordsSuccess(similarWords));
+        yield put(getSimilarWordsSuccess(similarWords.data));
     } catch (error) {
         yield put(getSimilarWordsError({ error: error.toString() }));
     }

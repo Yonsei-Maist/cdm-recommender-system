@@ -30,7 +30,10 @@ import configureStore from './store';
 
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getSimilarWordsRequest, getSimilarWordsSuccess } from './actions/wordAction';
+import {
+    getSimilarWordsRequest,
+    getSimilarWordsSuccess,
+} from './actions/wordAction';
 import { METHOD_NAME_ONCLICK_MARKED_WORD } from './constants';
 
 /**
@@ -41,21 +44,17 @@ const store = configureStore();
 /**
  * @type {Object}
  * @property {Function} METHOD_NAME_ONCLICK_MARKED_WORD method handler when user clicks on marked word
- * @param {string} markedWord marked word or highlight word
+ * @param {Object} markedWord marked word object (refers the formats method of markedWord.js)
  */
-global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord, quillRef) => {
-    console.log(quillRef);
-    console.log(quillRef.getSelection());
-    console.log(quillRef.getContents());
-    const keywordsMaptoCdmWords = store.getState().keywordsMaptoCdmWords;
-    const isExistKeyword = markedWord in keywordsMaptoCdmWords;
-    if (isExistKeyword) {
-        store.dispatch(
-            getSimilarWordsSuccess(keywordsMaptoCdmWords[markedWord])
-        );
-    } else {
-        store.dispatch(getSimilarWordsRequest(markedWord));
-    }
+global[METHOD_NAME_ONCLICK_MARKED_WORD] = (
+    markedWord,
+) => {
+    const data = {
+        emrWordId: markedWord.emrWordId,
+        cdmWordsList: markedWord.cdmWordsList,
+        markedWord
+    };
+    store.dispatch(getSimilarWordsSuccess(data));
 };
 
 ReactDOM.render(

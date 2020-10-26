@@ -20,10 +20,11 @@ import WORD from '../action-types/wordType';
  */
 const defaultState = {
     similarWords: {
-        data: [],
+        data: {},
         isLoading: false,
         error: '',
     },
+    changeEmrWord: {},
 };
 
 const wordReducer = handleActions(
@@ -41,7 +42,7 @@ const wordReducer = handleActions(
             ...state,
             similarWords: {
                 ...state.similarWords,
-                data: action.payload.data,
+                data: action.payload,
                 isLoading: false,
             },
         }),
@@ -52,6 +53,10 @@ const wordReducer = handleActions(
                 isLoading: false,
                 error: action.payload.error,
             },
+        }),
+        [WORD.SET_CHANGE_EMR_WORD]: (state, action) => ({
+            ...state,
+            changeEmrWord: action.payload,
         }),
     },
     defaultState

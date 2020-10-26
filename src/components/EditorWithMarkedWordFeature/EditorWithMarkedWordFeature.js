@@ -7,6 +7,7 @@ import { setContent } from '../../actions/contentAction';
 import _ from 'lodash';
 
 import 'quill/dist/quill.core.css';
+import { getSimilarWordsSuccess } from '../../actions/wordAction';
 
 Quill.register(
     {
@@ -26,6 +27,60 @@ const EditorWithMarkedWordFeature = () => {
 
     const dispatch = useDispatch();
     const content = useSelector((state) => state.content);
+    const changeEmrWord = useSelector((state) => state.word.changeEmrWord);
+
+    useEffect(() => {
+        if (quillRef === null) {
+            return;
+        }
+
+        const { cdmWord, markedWord } = changeEmrWord;
+
+        let {
+            strText,
+            emrWordId,
+            boolIsChanged,
+            cdmWordId,
+            cdmWordsList,
+            retain: retainIndex,
+        } = markedWord;
+
+        const deleteLength = strText.length;
+        markedWord.cdmWordId = cdmWord.cdmWordId;
+        markedWord.strText = cdmWord.cdmWordId === strText ? cdmWord.emrWordId : cdmWord.cdmWordId;
+        markedWord.boolIsChanged = !boolIsChanged;
+        const verifiedLookupWords = [
+            {
+                // change back to emr word if cdmWordId === strText
+                lookupWord: markedWord.strText,
+                emrWordId: emrWordId,
+                boolIsChanged: markedWord.boolIsChanged,
+                cdmWordId,
+                cdmWordsList,
+            },
+        ];
+        const newDelta = buildDelta(
+            retainIndex,
+            deleteLength,
+            verifiedLookupWords
+        );
+        quillRef.updateContents(newDelta, Quill.sources.API);
+        quillRef.setSelection(
+            retainIndex + markedWord.strText.length,
+            0,
+            Quill.sources.API
+        );
+        // update content from quillRef.getContents()
+        dispatch(setContent(buildContentByDelta(quillRef.getContents())));
+        // update the cdm list
+        const data = {
+            emrWordId: emrWordId,
+            cdmWordsList: cdmWordsList,
+            markedWord,
+        };
+        dispatch(getSimilarWordsSuccess(data));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [changeEmrWord]);
 
     useEffect(() => {
         (async () => {
@@ -219,6 +274,7 @@ const EditorWithMarkedWordFeature = () => {
     // buildDelta build with verifiedLookupWords for displaying content in the editor
     const buildDelta = (retainIndex, deleteLength, verifiedLookupWords) => {
         const newDelta = new Delta().retain(retainIndex).delete(deleteLength);
+        let retain = retainIndex;
         verifiedLookupWords.forEach((lookupWordsObj) => {
             if (lookupWordsObj.emrWordId) {
                 newDelta.insert(lookupWordsObj.lookupWord, {
@@ -229,7 +285,7 @@ const EditorWithMarkedWordFeature = () => {
                         cdmWordsList: lookupWordsObj.cdmWordsList,
                         boolIsChanged: !!lookupWordsObj.boolIsChanged,
                         cdmWordId: lookupWordsObj.cdmWordId,
-                        quillRef,
+                        retain, // retain index or index of the first letter of the word
                     },
                 });
             } else {
@@ -238,6 +294,7 @@ const EditorWithMarkedWordFeature = () => {
                     background: false,
                 });
             }
+            retain += lookupWordsObj.lookupWord.length;
         });
         return newDelta;
     };
@@ -284,33 +341,6 @@ const EditorWithMarkedWordFeature = () => {
         }
     };
 
-    const getLookupPhrase = (text, cursorStartIndex, cursorEndIndex) => {
-        let left = text.slice(0, cursorStartIndex).search(/\S+$/);
-        let right = text.slice(cursorEndIndex).search(/\s/);
-        let startIndex = left;
-        let endIndex = right + cursorEndIndex;
-        let words = text.slice(startIndex, endIndex);
-
-        // when typing space, left == -1
-        if (left === -1) {
-            left = text.slice(0, cursorStartIndex).search(/\w*\s*$/);
-            // when type in the begining of the input text area, left set to 0
-            if (left === -1) {
-                left = 0;
-            }
-            startIndex = left;
-            //endIndex = left+right;
-            words = text.slice(startIndex, endIndex);
-        }
-
-        let currentTypingWords = {
-            startIndex,
-            endIndex,
-            words,
-        };
-        return currentTypingWords;
-    };
-
     const handleOnChange = async (content, delta, source, editor) => {
         setEditorHtml(content);
 
@@ -333,15 +363,14 @@ const EditorWithMarkedWordFeature = () => {
                     (delta.ops[1].insert || delta.ops[1].delete)));
 
         // When user insert or delete text, or past text
-        if (
-            isPastText ||
-            isUserInput
-        ) {
+        if (isPastText || isUserInput) {
             const text = quillRef.getText();
             let cursorStartIndex;
             let cursorEndIndex;
             if (isPastText) {
-                cursorStartIndex = delta.ops[0].retain ? delta.ops[0].retain : 0;
+                cursorStartIndex = delta.ops[0].retain
+                    ? delta.ops[0].retain
+                    : 0;
                 cursorEndIndex = delta.ops.reduce((accumulator, op) => {
                     if (op.retain) {
                         return (accumulator += op.retain);
@@ -389,3 +418,31 @@ const EditorWithMarkedWordFeature = () => {
 EditorWithMarkedWordFeature.propTypes = {};
 
 export default EditorWithMarkedWordFeature;
+
+export const getLookupPhrase = (text, cursorStartIndex, cursorEndIndex) => {
+    let left = text.slice(0, cursorStartIndex).search(/\S+$/);
+    let right = text.slice(cursorEndIndex).search(/\s/);
+    let startIndex = left;
+    let endIndex = right + cursorEndIndex;
+    let words = text.slice(startIndex, endIndex);
+
+    // when typing space, left == -1
+    if (left === -1) {
+        left = text.slice(0, cursorStartIndex).search(/\w*\s*$/);
+        // when type in the begining of the input text area, left set to 0
+        if (left === -1) {
+            left = 0;
+        }
+        startIndex = left;
+        //endIndex = left+right;
+        words = text.slice(startIndex, endIndex);
+    }
+
+    let currentTypingWords = {
+        startIndex,
+        endIndex,
+        words,
+    };
+
+    return currentTypingWords;
+};
