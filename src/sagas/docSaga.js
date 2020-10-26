@@ -2,6 +2,8 @@
  * @file
  * @author Vicheka Phor, Yonsei Univ. Researcher, since 2020.10
  * @date 2020.10.20
+ * @author Chanwoo Gwon, Yonsei Univ, Researcher, since 2020.05. ~
+ * @date 2020.10.26
  */
 
 /**
@@ -13,7 +15,7 @@
  * @requires '../api/docService'
  */
 
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest, select } from 'redux-saga/effects';
 import DOC from '../action-types/docType';
 import {
     getDocListSuccess,
@@ -27,6 +29,9 @@ import DocService from '../api/docService';
 /* -------------------------------------------------------------------------- */
 /*                                  Doc List                                  */
 /* -------------------------------------------------------------------------- */
+
+const getDefaultSetting = (state) => state.config;
+
 /**
  * @generator
  * @function
@@ -39,7 +44,8 @@ import DocService from '../api/docService';
  */
 function* handleGetDocList() {
     try {
-        const docList = yield call(DocService.getDocList, 'doctor1');
+        let url = (yield select(getDefaultSetting)).get('defaultSetting').APIServer;
+        const docList = yield call(DocService.getDocList, url, 'doctor1');
         yield put(getDocListSuccess(docList));
     } catch (error) {
         yield put(getDocListError({ error: error.toString() }));
@@ -73,7 +79,8 @@ const watchGetDocList = function* () {
  */
 function* handleGetDocDetails(action) {
     try {
-        const docDetails = yield call(DocService.getDocDetails, action.payload);
+        let url = (yield select(getDefaultSetting)).get('defaultSetting').APIServer;
+        const docDetails = yield call(DocService.getDocDetails, url, action.payload);
         yield put(getDocDetailsSuccess(docDetails));
         yield put(setContent(docDetails.data.content));
     } catch (error) {

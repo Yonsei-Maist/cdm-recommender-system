@@ -25,6 +25,21 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>CDM Recommender System</title>
+    
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script>
+      $(document).ready(function () {
+
+        if (typeof CDMRecommender === 'undefined') {
+          throw new Error('Cannot find CDMRecommender')
+        }
+        console.log(CDMRecommender);
+        var app = new CDMRecommender.MainApp();
+        app.init("root", {
+          APIServer : "http://165.132.221.44:8899/"
+        })
+      });
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

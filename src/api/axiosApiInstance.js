@@ -8,7 +8,7 @@ import axios from 'axios';
 import { API_BASE_ADDRESS } from '../constants';
 
 const axiosApiInstance = axios.create({
-    baseURL: API_BASE_ADDRESS,
+    baseURL: '',
     timeout: 1000,
 });
 // Response interceptor for API calls

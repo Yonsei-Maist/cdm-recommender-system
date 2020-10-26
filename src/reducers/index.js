@@ -2,6 +2,8 @@
  * @file
  * @author Vicheka Phor, Yonsei Univ. Researcher, since 2020.10
  * @date 2020.09.18
+ * @author Chanwoo Gwon, Yonsei Univ, Researcher, since 2020.05. ~
+ * @date 2020.10.26
  */
 
 /**
@@ -21,6 +23,7 @@ import docReducer from './docReducer';
 import wordReducer from './wordReducer';
 import errorReducer from './errorReducer';
 import contentReducer from './contentReducer';
+import config from './config';
 
 /**
  * @type {Object}
@@ -33,6 +36,7 @@ const rootReducer = combineReducers({
     word: wordReducer,
     error: errorReducer,
     content: contentReducer,
+    config: config,
 });
 
 export default rootReducer;

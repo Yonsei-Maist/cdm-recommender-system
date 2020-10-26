@@ -27,6 +27,10 @@ const replacePlugin = (plugins, nameMatcher, newPlugin) => {
 module.exports = {
     webpack: function (config, env) {
         const isEnvProduction = env === 'production';
+
+        config.output.libraryTarget = 'umd';
+        config.output.library = 'CDMRecommender';
+        
         if (isEnvProduction) {
             // Entry Naming: buildFileName instead of main by CRA default build file name
             // https://webpack.js.org/configuration/entry-context/#naming

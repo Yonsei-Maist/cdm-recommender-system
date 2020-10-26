@@ -2,6 +2,8 @@
  * @file
  * @author Vicheka Phor, Yonsei Univ. Researcher, since 2020.10
  * @date 2020.10.21
+ * @author Chanwoo Gwon, Yonsei Univ, Researcher, since 2020.05. ~
+ * @date 2020.10.26
  */
 
 /**
@@ -12,7 +14,7 @@
  * @requires '../actions/wordAction'
  */
 
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest, select } from 'redux-saga/effects';
 import WORD from '../action-types/wordType';
 import {
     getSimilarWordsSuccess,
@@ -20,10 +22,12 @@ import {
 } from '../actions/wordAction';
 import WordService from '../api/wordService';
 
-
 /* -------------------------------------------------------------------------- */
 /*                    Get similar words List                                  */
 /* -------------------------------------------------------------------------- */
+
+const getDefaultSetting = (state) => state.config;
+
 /**
  * @generator
  * @function
@@ -36,7 +40,9 @@ import WordService from '../api/wordService';
  */
 function* handleGetSimilarWords(action) {
     try {
-        const similarWords = yield call(WordService.getSimilarWords, action.payload);
+        let url = (yield select(getDefaultSetting)).get('defaultSetting').APIServer;
+        console.log(url);
+        const similarWords = yield call(WordService.getSimilarWords, url, action.payload);
         yield put(getSimilarWordsSuccess(similarWords.data));
     } catch (error) {
         yield put(getSimilarWordsError({ error: error.toString() }));

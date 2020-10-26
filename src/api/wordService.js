@@ -2,14 +2,16 @@
  * @file
  * @author Vicheka Phor, Yonsei Univ. Researcher, since 2020.10
  * @date 2020.10.21
+ * @author Chanwoo Gwon, Yonsei Univ, Researcher, since 2020.05. ~
+ * @date 2020.10.26
  */
 
 import axiosApiInstance from './axiosApiInstance';
 
 class WordService {
-    getSimilarWords(word, timeout = 70) {
+    getSimilarWords(server, word, timeout = 70) {
         return axiosApiInstance.post(
-            `/cdm/similarity/words`,
+            server + `/cdm/similarity/words`,
             {
                 word,
             },

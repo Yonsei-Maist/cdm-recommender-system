@@ -28,6 +28,7 @@ const EditorWithMarkedWordFeature = () => {
     const dispatch = useDispatch();
     const content = useSelector((state) => state.content);
     const changeEmrWord = useSelector((state) => state.word.changeEmrWord);
+    const defaultSetting = (useSelector((state) => state.config)).get('defaultSetting').APIServer;
 
     useEffect(() => {
         if (quillRef === null) {
@@ -203,6 +204,7 @@ const EditorWithMarkedWordFeature = () => {
                     // check similarity of each word
                     try {
                         similarWords = await WordService.getSimilarWords(
+                            defaultSetting,
                             lookupWord
                         );
                         if (
@@ -249,6 +251,7 @@ const EditorWithMarkedWordFeature = () => {
                     // check similarity of each word again and update the content
                     try {
                         const similarWords = await WordService.getSimilarWords(
+                            defaultSetting,
                             lookupWord
                         );
                         if (
