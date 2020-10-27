@@ -34,7 +34,7 @@ const PORT = '8080';
 export const API_BASE_ADDRESS =
   process.env.REACT_APP_DOCKER_COMPOSE === 'true'
     ? 'http://localhost:3050/api'
-    : `${SCHEME}://${HOST}:${PORT}`;
+    : `${SCHEME}://${HOST}:${PORT}/`;
 
 /**
  * @constant

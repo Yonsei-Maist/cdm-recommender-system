@@ -19,6 +19,7 @@ Quill.register(
 const Delta = Quill.import('delta');
 
 const EditorWithMarkedWordFeature = () => {
+    const GET_SIMILAR_WORDS_TIMEOUT_WHEN_LOAD_OR_PAST_CONTENT = 200;
     const [editorHtml, setEditorHtml] = useState('');
     // Quill instance
     const [quillRef, setQuillRef] = useState(null);
@@ -28,7 +29,9 @@ const EditorWithMarkedWordFeature = () => {
     const dispatch = useDispatch();
     const content = useSelector((state) => state.content);
     const changeEmrWord = useSelector((state) => state.word.changeEmrWord);
-    const defaultSetting = (useSelector((state) => state.config)).get('defaultSetting').APIServer;
+    const { APIServer } = useSelector((state) => state.config).get(
+        'defaultSetting'
+    );
 
     useEffect(() => {
         if (quillRef === null) {
@@ -204,8 +207,9 @@ const EditorWithMarkedWordFeature = () => {
                     // check similarity of each word
                     try {
                         similarWords = await WordService.getSimilarWords(
-                            defaultSetting,
-                            lookupWord
+                            APIServer,
+                            lookupWord,
+                            GET_SIMILAR_WORDS_TIMEOUT_WHEN_LOAD_OR_PAST_CONTENT
                         );
                         if (
                             similarWords &&
@@ -244,15 +248,18 @@ const EditorWithMarkedWordFeature = () => {
     };
 
     // return verifiedLookupWords object for buildDelta
-    const verifyLookupWords = async (lookupWords) => {
+    const verifyLookupWords = async (lookupWords, isPastText = false) => {
         return await Promise.all(
             lookupWords.map(async (lookupWord) => {
                 if (lookupWord.match(/\w+/)) {
                     // check similarity of each word again and update the content
                     try {
                         const similarWords = await WordService.getSimilarWords(
-                            defaultSetting,
-                            lookupWord
+                            APIServer,
+                            lookupWord,
+                            isPastText
+                                ? GET_SIMILAR_WORDS_TIMEOUT_WHEN_LOAD_OR_PAST_CONTENT
+                                : undefined
                         );
                         if (
                             similarWords &&
@@ -285,7 +292,9 @@ const EditorWithMarkedWordFeature = () => {
             if (lookupWordsObj.emrWordId) {
                 newDelta.insert(lookupWordsObj.lookupWord, {
                     markedWord: {
-                        color: 'yellow',
+                        color: !!lookupWordsObj.boolIsChanged
+                            ? 'lightgreen'
+                            : 'yellow',
                         strText: lookupWordsObj.lookupWord,
                         emrWordId: lookupWordsObj.emrWordId,
                         cdmWordsList: lookupWordsObj.cdmWordsList,
@@ -304,12 +313,7 @@ const EditorWithMarkedWordFeature = () => {
         return newDelta;
     };
 
-    const triggerOnChange = async (
-        quillRef,
-        delta,
-        lookupPhrase,
-        cursorPosition
-    ) => {
+    const triggerOnChange = async (quillRef, lookupPhrase, isPastText) => {
         // remove format from lookup phrase
         quillRef.removeFormat(
             lookupPhrase.startIndex,
@@ -321,23 +325,17 @@ const EditorWithMarkedWordFeature = () => {
         // + word found from right side of the cursor position
         const lookupWords = lookupPhrase.words.match(/\w+|\s+|[^\s\w]+/g);
         if (lookupWords) {
-            const verifiedLookupWords = await verifyLookupWords(lookupWords);
+            const verifiedLookupWords = await verifyLookupWords(
+                lookupWords,
+                isPastText
+            );
             const newDelta = buildDelta(
                 lookupPhrase.startIndex,
                 lookupPhrase.words.length,
                 verifiedLookupWords
             );
-            // if the insert text is enter character
             setImmediate(() => {
-                if (
-                    delta.ops.length === 2 &&
-                    delta.ops[1].insert &&
-                    /\r|\n|\t$/.test(delta.ops[1].insert)
-                ) {
-                    cursorPosition += 1;
-                }
                 quillRef.updateContents(newDelta, Quill.sources.API);
-                quillRef.setSelection(cursorPosition, 0, Quill.sources.API);
                 // update content from quillRef.getContents()
                 dispatch(
                     setContent(buildContentByDelta(quillRef.getContents()))
@@ -390,16 +388,23 @@ const EditorWithMarkedWordFeature = () => {
                 cursorEndIndex = cursorStartIndex;
             }
 
+            // if the insert text is enter character
+            const isEnterKeyPressed =
+                delta.ops.length === 2 &&
+                delta.ops[1].insert &&
+                /\r|\n|\t$/.test(delta.ops[1].insert);
+
             // Search for lookup phrase
             // word found from the left of cursorPosition until
             // word found from the right of cursorPosition
             let lookupPhrase = getLookupPhrase(
                 text,
                 cursorStartIndex,
-                cursorEndIndex
+                cursorEndIndex,
+                isEnterKeyPressed
             );
 
-            triggerOnChange(quillRef, delta, lookupPhrase, cursorEndIndex);
+            triggerOnChange(quillRef, lookupPhrase, isPastText);
         }
     };
 
@@ -424,7 +429,15 @@ EditorWithMarkedWordFeature.propTypes = {};
 
 export default EditorWithMarkedWordFeature;
 
-export const getLookupPhrase = (text, cursorStartIndex, cursorEndIndex) => {
+export const getLookupPhrase = (
+    text,
+    cursorStartIndex,
+    cursorEndIndex,
+    isEnterKeyPressed = false
+) => {
+    if (isEnterKeyPressed) {
+        cursorEndIndex += 1;
+    }
     let left = text.slice(0, cursorStartIndex).search(/\S+$/);
     let right = text.slice(cursorEndIndex).search(/\s/);
     let startIndex = left;

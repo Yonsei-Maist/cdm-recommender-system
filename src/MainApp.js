@@ -28,7 +28,8 @@ import configureStore from './store';
 import { getSimilarWordsSuccess } from './actions/wordAction';
 import { METHOD_NAME_ONCLICK_MARKED_WORD } from './constants';
 import { getLookupPhrase } from './components/EditorWithMarkedWordFeature/EditorWithMarkedWordFeature';
-import {setConfig} from './reducers/config';
+import { setConfig } from './reducers/config';
+import { API_BASE_ADDRESS } from './constants';
 
 /**
  * @type {Object}
@@ -63,19 +64,26 @@ global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord, quillRef) => {
 };
 
 class MainApp {
-	constructor(el) {
-		this.el = el;
-		this.store = store
-	}
-	
-	/**
-	 * 화면 정보 초기화
-	 */
-	init(randerDiv, setting) {
-		this.store.dispatch(setConfig({
-			defaultSetting:              setting
-		}));
-		
+    constructor(el) {
+        this.el = el;
+        this.store = store;
+    }
+
+    /**
+     * 화면 정보 초기화
+     */
+    init(randerDiv, setting) {
+        if (process && process.env && process.env.NODE_ENV !== 'production') {
+            setting = {
+                APIServer: API_BASE_ADDRESS,
+            };
+        }
+        this.store.dispatch(
+            setConfig({
+                defaultSetting: setting,
+            })
+        );
+
         ReactDOM.render(
             <React.StrictMode>
                 <Provider store={store}>
@@ -84,7 +92,7 @@ class MainApp {
             </React.StrictMode>,
             document.getElementById(randerDiv)
         );
-	}
+    }
 }
 
 export default MainApp;
