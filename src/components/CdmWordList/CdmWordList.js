@@ -42,7 +42,7 @@ const CdmWordList = ({ disabled = false }) => {
     };
 
     return (
-        <div className='d-flex flex-grow-1 flex-column h-100 py-3'>
+        <div className='d-flex flex-grow-1 flex-column h-100 pb-3'>
             <h5 className='text-center pt-2'>Recommended CDM Word List</h5>
             <hr
                 className='mx-1 my-1'
