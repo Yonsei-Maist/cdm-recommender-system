@@ -4,7 +4,13 @@
  * @date 2020.09.18
  */
 import React from 'react';
-import { ListGroup, Modal } from 'react-bootstrap';
+import {
+    MDBListGroup,
+    MDBListGroupItem,
+    MDBModal,
+    MDBModalHeader,
+    MDBModalBody,
+} from 'mdbreact';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -20,7 +26,7 @@ import PropTypes from 'prop-types';
  * @component
  * @category Components
  * @requires react
- * @requires react-bootstrap
+ * @requires mdbreact
  * @requires react-redux
  * @requires '../../actions/docAction'
  * @param {Function} useDispatch the dispatch function that triggers an action
@@ -35,37 +41,34 @@ const LoadDataModal = (props) => {
     );
 
     return (
-        <Modal animation={false} show={show} onHide={onHide} centered={true}>
-            <Modal.Header closeButton>
-                <Modal.Title>
-                    <h4>Load Data</h4>
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
+        <MDBModal isOpen={show} toggle={onHide} centered>
+            <MDBModalHeader toggle={onHide}>Load Data</MDBModalHeader>
+            <MDBModalBody>
                 {isLoading && <div>Loading...</div>}
                 {error && <div className='text-danger'>{error}</div>}
                 {!isLoading && !error && data && data.length === 0 && (
                     <p>Empty</p>
                 )}
                 {!isLoading && !error && data && data.length !== 0 && (
-                    <ListGroup style={{ overflowY: 'auto', height: '60vh' }}>
+                    <MDBListGroup style={{ overflowY: 'auto', height: '60vh' }}>
                         {data.map(({ id, title }) => {
                             return (
-                                <ListGroup.Item
-                                    action
+                                <MDBListGroupItem
+                                    hover
+                                    style={{ cursor: 'pointer' }}
                                     onDoubleClick={() =>
                                         handleOnDoubleCLick(id)
                                     }
                                     key={id}
                                 >
-                                    {title.toUpperCase()}
-                                </ListGroup.Item>
+                                    {title && title.toUpperCase()}
+                                </MDBListGroupItem>
                             );
                         })}
-                    </ListGroup>
+                    </MDBListGroup>
                 )}
-            </Modal.Body>
-        </Modal>
+            </MDBModalBody>
+        </MDBModal>
     );
 };
 

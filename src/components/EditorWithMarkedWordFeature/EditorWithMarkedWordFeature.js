@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @author Vicheka Phor, Yonsei Univ. Researcher, since 2020.10
+ * @date 2020.10.23
+ */
 import React, { useState, useEffect } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import { MarkedWord } from '../../formats/markedWord';
@@ -293,8 +298,8 @@ const EditorWithMarkedWordFeature = () => {
                 newDelta.insert(lookupWordsObj.lookupWord, {
                     markedWord: {
                         color: !!lookupWordsObj.boolIsChanged
-                            ? 'lightgreen'
-                            : 'yellow',
+                            ? 'darkgreen'
+                            : '#fb3',
                         strText: lookupWordsObj.lookupWord,
                         emrWordId: lookupWordsObj.emrWordId,
                         cdmWordsList: lookupWordsObj.cdmWordsList,
@@ -410,8 +415,7 @@ const EditorWithMarkedWordFeature = () => {
 
     return (
         <div
-            className='flex-grow-1 p-3 border border-secondary rounded'
-            style={{ width: '100%' }}
+            className='flex-grow-1'
         >
             <ReactQuill
                 ref={(el) => {

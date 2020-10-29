@@ -4,8 +4,8 @@
  * @date 2020.10.21
  */
 
-import React from 'react';
-import { Toast } from 'react-bootstrap';
+import React, { useEffect } from 'react';
+import { MDBNotification } from 'mdbreact';
 import { useSelector, useDispatch } from 'react-redux';
 import { hideError } from '../../actions/errorAction';
 
@@ -21,7 +21,7 @@ import { hideError } from '../../actions/errorAction';
  * @component
  * @category Components
  * @requires react
- * @requires react-bootstrap
+ * @requires mdbreact
  * @requires 'react-redux'
  * @requires '../../actions/errorAction'
  *
@@ -34,9 +34,14 @@ const GlobalErrorNotification = (props) => {
     const { isShow, error } = useSelector((state) => state.error);
     const dispatch = useDispatch();
 
-    const handleClose = () => {
-        dispatch(hideError());
-    };
+    useEffect(() => {
+        if (isShow) {
+            const timer = setTimeout(() => {
+                dispatch(hideError());
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [isShow, dispatch]);
 
     return (
         <div
@@ -47,20 +52,18 @@ const GlobalErrorNotification = (props) => {
                 zIndex: 1051, // display on the top of the pup up modal
             }}
         >
-            <Toast
-                animation={false}
-                onClose={handleClose}
-                show={isShow}
-                delay={3000}
-                autohide
-            >
-                <Toast.Header className='bg-danger text-white'>
-                    <strong className='mr-auto'>Error</strong>
-                </Toast.Header>
-                <Toast.Body>
-                    <p className='text-danger'>{error}</p>
-                </Toast.Body>
-            </Toast>
+            {isShow && (
+                <MDBNotification
+                    show
+                    iconClassName='text-white'
+                    icon='exclamation-triangle'
+                    fade
+                    title='Error'
+                    titleClassName='bg-danger text-white'
+                    message={error}
+                    bodyClassName='text-danger'
+                />
+            )}
         </div>
     );
 };

@@ -41,7 +41,6 @@ const getDefaultSetting = (state) => state.config;
 function* handleGetSimilarWords(action) {
     try {
         let url = (yield select(getDefaultSetting)).get('defaultSetting').APIServer;
-        console.log(url);
         const similarWords = yield call(WordService.getSimilarWords, url, action.payload);
         yield put(getSimilarWordsSuccess(similarWords.data));
     } catch (error) {

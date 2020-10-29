@@ -4,8 +4,8 @@
  * @date 2020.09.17
  */
 import React from 'react';
-import { Container, Row, Col, Image } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+import { MDBContainer, MDBRow, MDBCol } from 'mdbreact';
+import { ReactComponent as Logo } from '../../assets/logo70.svg';
 
 /**
  * Renders Header of the page
@@ -19,39 +19,27 @@ import PropTypes from 'prop-types';
  * @component
  * @category Components
  * @requires react
- * @requires react-bootstrap
+ * @requires mdbreact
+ * @requires '../../assets/logo70.svg'
  *
  * @example
  * return (
- *      <Header logo="images/logo70.png" />
+ *      <Header />
  * );
  */
-const Header = ({ logo }) => {
+const Header = () => {
     return (
-        <Container className='text-start'>
-            <Row>
-                {logo && (
-                    <Col md={'auto'} className='pr-0'>
-                        <Image src={logo} alt='logo' />
-                    </Col>
-                )}
-                <Col className='d-flex justify-content-start align-items-center'>
+        <MDBContainer className='text-start'>
+            <MDBRow>
+                <MDBCol md={'auto'} className='pr-0'>
+                    <Logo style={{ height: '5rem', width: '5rem' }} />
+                </MDBCol>
+                <MDBCol className='d-flex justify-content-start align-items-center'>
                     <h5>Yonsei University, Wonju College of Medicine</h5>
-                </Col>
-            </Row>
-        </Container>
+                </MDBCol>
+            </MDBRow>
+        </MDBContainer>
     );
 };
-
-Header.propTypes = {
-    /**
-     * path to logo image
-     */
-    logo: PropTypes.string,
-};
-
-Header.defaultProps = {
-    logo: '',
-}
 
 export default Header;

@@ -25,6 +25,8 @@ export class MarkedWord extends Inline {
         let node = super.create(value);
         node.setAttribute('data-id', id);
         node.style.backgroundColor = color;
+        node.style.color = 'white';
+        node.style.padding = '0.2em';
         node.style.cursor = 'pointer';
         node.dataset.id = id;
         node.dataset.color = color;

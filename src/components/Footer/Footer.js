@@ -4,7 +4,7 @@
  * @date 2020.09.17
  */
 import React from 'react';
-import { Container } from 'react-bootstrap';
+import { MDBContainer, MDBFooter } from 'mdbreact';
 
 /**
  * Renders Footer of the page
@@ -18,7 +18,7 @@ import { Container } from 'react-bootstrap';
  * @component
  * @category Components
  * @requires react
- * @requires react-bootstrap
+ * @requires mdbreact
  *
  * @example
  * return (
@@ -27,9 +27,13 @@ import { Container } from 'react-bootstrap';
  */
 const Footer = () => {
     return (
-        <Container className='text-center'>
-            &copy; 2020. YWCM MAIST. All Rights Reserved.
-        </Container>
+        <MDBContainer className='px-0 my-2'>
+            <MDBFooter color='bg-primary' className='font-small'>
+                <MDBContainer fluid className='text-center'>
+                    &copy; 2020. YWMC MAIST. All Rights Reserved.
+                </MDBContainer>
+            </MDBFooter>
+        </MDBContainer>
     );
 };
 

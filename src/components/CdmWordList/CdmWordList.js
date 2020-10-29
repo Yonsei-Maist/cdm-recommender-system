@@ -4,7 +4,7 @@
  * @date 2020.09.17
  */
 import React from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { MDBListGroup, MDBListGroupItem, MDBBadge } from 'mdbreact';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChangeEmrWord } from '../../actions/wordAction';
 
@@ -20,8 +20,9 @@ import { setChangeEmrWord } from '../../actions/wordAction';
  * @component
  * @category Components
  * @requires react
- * @requires react-bootstrap
+ * @requires mdbreact
  * @requires react-redux
+ * @requires '../../actions/wordAction'
  * @param {Function} useSelector the selector function that returns state.cdmWords: { data, isLoading, error }
  *
  * @example
@@ -29,7 +30,7 @@ import { setChangeEmrWord } from '../../actions/wordAction';
  *      <CdmWordList />
  * );
  */
-const CdmWordList = () => {
+const CdmWordList = ({ disabled = false }) => {
     //here we watch for the loading prop in the redux store. every time it gets updated, our component will reflect it
     const { data, isLoading, error } = useSelector(
         (state) => state.word.similarWords
@@ -41,17 +42,17 @@ const CdmWordList = () => {
     };
 
     return (
-        <div className='d-flex flex-grow-1 flex-column'>
-            <h5 className='text-center py-2'>Recommended CDM word list</h5>
+        <div className='d-flex flex-grow-1 flex-column h-100 py-3'>
+            <h5 className='text-center pt-2'>Recommended CDM Word List</h5>
             <hr
-                className='mx-1 my-2'
+                className='mx-1 my-1'
                 style={{
                     backgroundColor: 'black',
                     opacity: '0.2',
                     height: '0.1em',
                 }}
             />
-            <div className='flex-grow-1 flex-wrap'>
+            <div className='flex-grow-1 flex-wrap overflow-auto'>
                 {isLoading && <div>Loading...</div>}
                 {error && <div className='text-danger'>{error}</div>}
                 {!isLoading &&
@@ -65,16 +66,20 @@ const CdmWordList = () => {
                     data.cdmWordsList &&
                     data.cdmWordsList.length !== 0 && (
                         <div>
-                            <h6>{data.emrWordId}</h6>
-                            <ListGroup
-                                style={{ overflowY: 'auto', height: '55vh' }}
-                            >
+                            <h3>
+                                <MDBBadge color='warning'>
+                                    {data.emrWordId}
+                                </MDBBadge>
+                            </h3>
+                            <MDBListGroup>
                                 {data.cdmWordsList.map(
                                     ({ id_word_cdm, float_similarity }) => {
                                         return (
-                                            <ListGroup.Item
-                                                action
+                                            <MDBListGroupItem
+                                                hover
+                                                style={{ cursor: 'pointer' }}
                                                 key={id_word_cdm}
+                                                disabled={disabled}
                                                 onClick={() =>
                                                     handleOnClickCdmWord(
                                                         {
@@ -87,12 +92,13 @@ const CdmWordList = () => {
                                                     )
                                                 }
                                             >
-                                                {id_word_cdm}
-                                            </ListGroup.Item>
+                                                {id_word_cdm} -{' '}
+                                                {float_similarity * 100}%
+                                            </MDBListGroupItem>
                                         );
                                     }
                                 )}
-                            </ListGroup>
+                            </MDBListGroup>
                         </div>
                     )}
             </div>

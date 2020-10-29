@@ -42,7 +42,7 @@
 
 Client-side (ReactJs):
 * [create-react-app](https://github.com/facebook/create-react-app)
-* [react-bootstrap](https://github.com/react-bootstrap/react-bootstrap)
+* [mdbreact](https://github.com/mdbootstrap/React-Bootstrap-with-Material-Design)
 * [react-contenteditable](https://github.com/lovasoa/react-contenteditable)
 * [react-redux](https://github.com/reduxjs/react-redux)
 * [redux-saga](https://github.com/redux-saga/redux-saga)
