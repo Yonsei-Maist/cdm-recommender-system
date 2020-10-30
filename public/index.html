@@ -29,11 +29,9 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script>
       $(document).ready(function () {
-
         if (typeof CDMRecommender === 'undefined') {
           throw new Error('Cannot find CDMRecommender')
         }
-        console.log(CDMRecommender);
         var app = new CDMRecommender.MainApp();
         app.init("root", {
           APIServer : "http://165.132.221.44:8899/"
