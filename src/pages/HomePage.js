@@ -113,7 +113,7 @@ const HomePage = () => {
                     </div>
                     <MDBCard
                         className='flex-grow-1 flex-md-grow-0 ml-md-2 mt-3 mt-lg-0 px-3'
-                        style={{ minHeight: '30vh', maxHeight: '70vh', minWidth: '25vw' }}
+                        style={{ minHeight: '30vh', minWidth: '25vw' }}
                     >
                         <CdmWordList />
                     </MDBCard>

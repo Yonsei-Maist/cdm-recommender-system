@@ -4,7 +4,7 @@
  * @date 2020.09.17
  */
 import React from 'react';
-import { MDBListGroup, MDBListGroupItem, MDBBadge } from 'mdbreact';
+import { MDBListGroup, MDBListGroupItem, MDBBadge, MDBBtn } from 'mdbreact';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChangeEmrWord } from '../../actions/wordAction';
 
@@ -41,6 +41,10 @@ const CdmWordList = ({ disabled = false }) => {
         dispatch(setChangeEmrWord({ cdmWord, markedWord }));
     };
 
+    const handleOnClickResetButton = (markedWord) => {
+        console.log('reset change of cdm word back to emr word');
+    };
+
     return (
         <div className='d-flex flex-grow-1 flex-column h-100 pb-3'>
             <h5 className='text-center pt-2'>Recommended CDM Word List</h5>
@@ -52,56 +56,76 @@ const CdmWordList = ({ disabled = false }) => {
                     height: '0.1em',
                 }}
             />
-            <div className='flex-grow-1 flex-wrap overflow-auto'>
-                {isLoading && <div>Loading...</div>}
-                {error && <div className='text-danger'>{error}</div>}
-                {!isLoading &&
-                    !error &&
-                    data &&
-                    data.cdmWordsList &&
-                    data.cdmWordsList.length === 0 && <p>Empty</p>}
-                {!isLoading &&
-                    !error &&
-                    data &&
-                    data.cdmWordsList &&
-                    data.cdmWordsList.length !== 0 && (
-                        <div>
+            {isLoading && <div>Loading...</div>}
+            {error && <div className='text-danger'>{error}</div>}
+            {!isLoading &&
+                !error &&
+                data &&
+                data.cdmWordsList &&
+                data.cdmWordsList.length === 0 && <p>Empty</p>}
+            {!isLoading &&
+                !error &&
+                data &&
+                data.cdmWordsList &&
+                data.cdmWordsList.length !== 0 && (
+                    <div className='d-flex flex-column'>
+                        <div className='d-flex flex-row justify-content-between'>
                             <h3>
                                 <MDBBadge color='warning'>
                                     {data.emrWordId}
                                 </MDBBadge>
                             </h3>
+                            {data.markedWord && data.markedWord.boolIsChanged && (
+                                <MDBBtn
+                                    size='sm'
+                                    color='primary'
+                                    onClick={() =>
+                                        handleOnClickResetButton(
+                                            data.markedWord
+                                        )
+                                    }
+                                >
+                                    Reset
+                                </MDBBtn>
+                            )}
+                        </div>
+                        <div
+                            className='flex-grow-1 overflow-auto'
+                            style={{ maxHeight: '90vh', height: '35vh' }}
+                        >
                             <MDBListGroup>
                                 {data.cdmWordsList.map(
-                                    ({ id_word_cdm, float_similarity }) => {
+                                    ({ cdmWordId, floatSimilarity }) => {
                                         return (
                                             <MDBListGroupItem
                                                 hover
-                                                style={{ cursor: 'pointer' }}
-                                                key={id_word_cdm}
+                                                style={{
+                                                    cursor: 'pointer',
+                                                }}
+                                                key={cdmWordId}
                                                 disabled={disabled}
                                                 onClick={() =>
                                                     handleOnClickCdmWord(
                                                         {
                                                             emrWordId:
                                                                 data.emrWordId,
-                                                            cdmWordId: id_word_cdm,
-                                                            floatSimilarity: float_similarity,
+                                                            cdmWordId,
+                                                            floatSimilarity,
                                                         },
                                                         data.markedWord
                                                     )
                                                 }
                                             >
-                                                {id_word_cdm} -{' '}
-                                                {float_similarity * 100}%
+                                                {cdmWordId} -{' '}
+                                                {floatSimilarity * 100}%
                                             </MDBListGroupItem>
                                         );
                                     }
                                 )}
                             </MDBListGroup>
                         </div>
-                    )}
-            </div>
+                    </div>
+                )}
         </div>
     );
 };

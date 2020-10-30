@@ -52,18 +52,21 @@ const LoadDataModal = (props) => {
                 {!isLoading && !error && data && data.length !== 0 && (
                     <MDBListGroup style={{ overflowY: 'auto', height: '60vh' }}>
                         {data.map(({ id, title }) => {
-                            return (
-                                <MDBListGroupItem
-                                    hover
-                                    style={{ cursor: 'pointer' }}
-                                    onDoubleClick={() =>
-                                        handleOnDoubleCLick(id)
-                                    }
-                                    key={id}
-                                >
-                                    {title && title.toUpperCase()}
-                                </MDBListGroupItem>
-                            );
+                            if (title) {
+                                return (
+                                    <MDBListGroupItem
+                                        hover
+                                        style={{ cursor: 'pointer' }}
+                                        onDoubleClick={() =>
+                                            handleOnDoubleCLick(id)
+                                        }
+                                        key={id}
+                                    >
+                                        {title.toUpperCase()}
+                                    </MDBListGroupItem>
+                                );
+                            }
+                            return null;
                         })}
                     </MDBListGroup>
                 )}

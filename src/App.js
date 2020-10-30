@@ -3,23 +3,22 @@
  * @author Vicheka Phor, Yonsei Univ. Researcher, since 2020.10
  * @date 2020.09.16
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import GlobalErrorNotification from './components/GlobalErrorNotification/GlobalErrorNotification';
 import HomePage from './pages/HomePage';
 import EmrCdmWordsViewerPage from './pages/EmrCdmWordsViewerPage';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Redirect,
-} from 'react-router-dom';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import NotFoundPage from './pages/NotFountPage';
 import AppNavbar from './components/AppNavbar/AppNavbar';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { getSimilarWordsSuccess } from './actions/wordAction';
+
 
 import './App.css';
 
@@ -44,46 +43,55 @@ import './App.css';
  * @param {Function} useSelector the selector function that returns state.userData.inputText
  * @param {Function} useState react useState hook for states: show
  */
-const App = () => {
+const App = ({history}) => {
     const isAuthenticated = true;
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const unlisten = history.listen((location, action) => {
+            // on route change
+            // reset the cdm list
+            dispatch(getSimilarWordsSuccess({}));
+        });
+        return () => unlisten();
+    }, [dispatch, history]);
+
     return (
-        <Router>
-            <div className='mx-auto mt-3 d-flex flex-column vh-95'>
-                <GlobalErrorNotification />
-                <Header />
-                <AppNavbar />
-                <div className='flex-grow-1'>
-                    <Switch>
-                        <Route exact path='/cdm/words/list'>
-                            <EmrCdmWordsViewerPage />
-                        </Route>
-                        <Route exact path='/home'>
-                            <HomePage />
-                        </Route>
-                        <Route exact path='/login'>
-                            <LoginPage />
-                        </Route>
-                        <Route exact path='/register'>
-                            <SignUpPage />
-                        </Route>
-                        <Route
-                            exact
-                            path='/'
-                            render={() => {
-                                return isAuthenticated ? (
-                                    <Redirect to='/home' />
-                                ) : (
-                                    <Redirect to='/login' />
-                                );
-                            }}
-                        />
-                        <Route component={NotFoundPage} />
-                    </Switch>
-                </div>
-                <Footer />
+        <div className='mx-auto mt-3 d-flex flex-column vh-95'>
+            <GlobalErrorNotification />
+            <Header />
+            <AppNavbar />
+            <div className='flex-grow-1'>
+                <Switch>
+                    <Route exact path='/cdm/words/list'>
+                        <EmrCdmWordsViewerPage />
+                    </Route>
+                    <Route exact path='/home'>
+                        <HomePage />
+                    </Route>
+                    <Route exact path='/login'>
+                        <LoginPage />
+                    </Route>
+                    <Route exact path='/register'>
+                        <SignUpPage />
+                    </Route>
+                    <Route
+                        exact
+                        path='/'
+                        render={() => {
+                            return isAuthenticated ? (
+                                <Redirect to='/home' />
+                            ) : (
+                                <Redirect to='/login' />
+                            );
+                        }}
+                    />
+                    <Route component={NotFoundPage} />
+                </Switch>
             </div>
-        </Router>
+            <Footer />
+        </div>
     );
 };
 
-export default App;
+export default withRouter(App);

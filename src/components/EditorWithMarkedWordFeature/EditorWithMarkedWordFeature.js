@@ -52,6 +52,11 @@ const EditorWithMarkedWordFeature = () => {
             retain: retainIndex,
         } = markedWord;
 
+        // if cdmWordId === strText, do nothing
+        if(cdmWord.cdmWordId === strText) {
+            return;
+        }
+
         const deleteLength = strText.length;
         // update markedWord
         markedWord.cdmWordId = cdmWord.cdmWordId;
