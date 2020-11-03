@@ -66,7 +66,7 @@ const App = ({history}) => {
                     <Route exact path='/cdm/words/list'>
                         <EmrCdmWordsViewerPage />
                     </Route>
-                    <Route exact path='/home'>
+                    <Route exact path='/cdm'>
                         <HomePage />
                     </Route>
                     <Route exact path='/login'>
@@ -80,7 +80,7 @@ const App = ({history}) => {
                         path='/'
                         render={() => {
                             return isAuthenticated ? (
-                                <Redirect to='/home' />
+                                <Redirect to='/cdm' />
                             ) : (
                                 <Redirect to='/login' />
                             );

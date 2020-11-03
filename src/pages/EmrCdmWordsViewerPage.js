@@ -21,8 +21,6 @@ const EmrCdmWordsViewerPage = () => {
     }, []);
 
     useEffect(() => {
-        console.log('useEffect');
-
         if (
             !isLoading &&
             !error &&
