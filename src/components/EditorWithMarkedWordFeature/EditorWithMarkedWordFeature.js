@@ -408,6 +408,9 @@ const EditorWithMarkedWordFeature = () => {
 
     const handleOnChange = async (content, delta, source, editor) => {
         setEditorHtml(content);
+        dispatch(
+            setContent(buildContentByDelta(quillRef.getContents()))
+        );
 
         if (quillRef === null) {
             return;

@@ -20,6 +20,10 @@ const getDocListError = createAction(DOC.GET_DOC_LIST_ERROR);
 const getDocDetailsRequest = createAction(DOC.GET_DOC_DETAILS_REQUEST);
 const getDocDetailsSuccess = createAction(DOC.GET_DOC_DETAILS_SUCCESS);
 const getDocDetailsError = createAction(DOC.GET_DOC_DETAILS_ERROR);
+// Save Doc
+const setSaveDocRequest = createAction(DOC.SAVE_DOC_REQUEST);
+const setSaveDocSuccess = createAction(DOC.SAVE_DOC_SUCCESS);
+const setSaveDocError = createAction(DOC.SAVE_DOC_ERROR);
 
 export {
     getDocListRequest,
@@ -28,4 +32,7 @@ export {
     getDocDetailsRequest,
     getDocDetailsSuccess,
     getDocDetailsError,
+    setSaveDocRequest,
+    setSaveDocSuccess,
+    setSaveDocError,
 };

@@ -3,14 +3,28 @@
  * @author Vicheka Phor, Yonsei Univ. Researcher, since 2020.10
  * @date 2020.10.29
  */
-import React, { useState } from 'react';
-import { MDBContainer, MDBCard, MDBBtn } from 'mdbreact';
+import React, { useState, useEffect } from 'react';
+import {
+    MDBContainer,
+    MDBCard,
+    MDBBtn,
+    MDBModal,
+    MDBModalHeader,
+    MDBModalBody,
+    MDBInput,
+    MDBAlert,
+} from 'mdbreact';
+import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 
 import CdmWordList from '../components/CdmWordList/CdmWordList';
 import LoadDataModal from '../components/LoadDataModal/LoadDataModal';
 import EditorWithMarkedWordFeature from '../components/EditorWithMarkedWordFeature/EditorWithMarkedWordFeature';
-import { getDocListRequest, getDocDetailsRequest } from '../actions/docAction';
+import {
+    getDocListRequest,
+    getDocDetailsRequest,
+    setSaveDocRequest,
+} from '../actions/docAction';
 
 /**
  * Renders HomePagelication Component
@@ -36,9 +50,65 @@ import { getDocListRequest, getDocDetailsRequest } from '../actions/docAction';
  */
 const HomePage = () => {
     const [show, setShow] = useState(false);
+    const [saveModalShow, setSaveModalShow] = useState(false);
     //this hook allows us to access the dispatch function
     const dispatch = useDispatch();
     const content = useSelector((state) => state.content);
+    const saveDoc = useSelector((state) => state.doc.saveDoc);
+
+    useEffect(() => {
+        if (saveDoc.error) {
+            formik.setErrors({ server: `Something's wrong: ${saveDoc.error}` });
+        } else {
+            if (saveDoc.data && saveDoc.data.result === 'success') {
+                // Close modal
+                toggleModalSave();
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [saveDoc]);
+
+    const toggleModalSave = () => {
+        setSaveModalShow(!saveModalShow);
+        // reset formik errors
+        formik.setErrors({});
+    };
+
+    const validate = (values) => {
+        const errors = {};
+        if (!values.title) {
+            errors.title = 'Title is required.';
+        }
+        if (content && content.arr_words.length === 0) {
+            errors.content = 'There is no content to be saved.';
+        }
+        return errors;
+    };
+
+    const formik = useFormik({
+        initialValues: {
+            title: '',
+        },
+        validate,
+        onSubmit: (values) => {
+            //TODO: replace userId with userId login from redux state
+            const userId = 'doctor1';
+            const title = values.title;
+            dispatch(
+                setSaveDocRequest({
+                    userId,
+                    title,
+                    content,
+                })
+            );
+        },
+    });
+
+    const submitSaveHandler = (event) => {
+        event.preventDefault();
+        event.target.className += ' was-validated';
+        formik.handleSubmit(event.target.values);
+    };
 
     /**
      * @method
@@ -68,15 +138,6 @@ const HomePage = () => {
         handleShow();
     };
 
-    /**
-     * @method
-     * @memberof HomePage
-     */
-    const handleOnClickSaveButton = () => {
-        console.log('handleOnClickSaveButton');
-        console.log(content);
-    };
-
     return (
         <>
             <MDBContainer className='my-4 d-flex flex-column px-0'>
@@ -92,12 +153,66 @@ const HomePage = () => {
                             >
                                 Load
                             </MDBBtn>
-                            <MDBBtn
-                                color='primary'
-                                onClick={handleOnClickSaveButton}
-                            >
+                            <MDBBtn color='primary' onClick={toggleModalSave}>
                                 Save
                             </MDBBtn>
+                            <MDBModal
+                                isOpen={saveModalShow}
+                                toggle={toggleModalSave}
+                            >
+                                <MDBModalHeader
+                                    className='text-center'
+                                    titleClass='w-100 font-weight-bold'
+                                    toggle={toggleModalSave}
+                                >
+                                    Save Data
+                                </MDBModalHeader>
+                                <MDBModalBody>
+                                    <form
+                                        className='mx-3 grey-text needs-validation'
+                                        onSubmit={submitSaveHandler}
+                                        noValidate
+                                    >
+                                        {formik.errors.title ? (
+                                            <MDBAlert color='danger'>
+                                                {formik.errors.title}
+                                            </MDBAlert>
+                                        ) : null}
+                                        {formik.errors.content ? (
+                                            <MDBAlert color='danger'>
+                                                {formik.errors.content}
+                                            </MDBAlert>
+                                        ) : null}
+                                        {formik.errors.server ? (
+                                            <MDBAlert color='danger'>
+                                                {formik.errors.server}
+                                            </MDBAlert>
+                                        ) : null}
+                                        <MDBInput
+                                            label='Enter the title for your save data'
+                                            icon='tag'
+                                            type='text'
+                                            name='title'
+                                            className={
+                                                formik.errors.title
+                                                    ? 'invalid'
+                                                    : ''
+                                            }
+                                            onChange={formik.handleChange}
+                                            value={formik.values.title}
+                                            required
+                                        />
+                                        <div className='text-center'>
+                                            <MDBBtn
+                                                color='primary'
+                                                type='submit'
+                                            >
+                                                Save
+                                            </MDBBtn>
+                                        </div>
+                                    </form>
+                                </MDBModalBody>
+                            </MDBModal>
                         </div>
                         <div
                             className='flex-grow-1 d-flex flex-column mx-0 overflow-auto border border-primary rounded'

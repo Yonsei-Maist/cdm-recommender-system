@@ -34,6 +34,11 @@ const defaultState = {
         isLoading: false,
         error: '',
     },
+    saveDoc: {
+        data: {},
+        isLoading: false,
+        error: '',
+    },
 };
 
 const docReducer = handleActions(
@@ -84,6 +89,31 @@ const docReducer = handleActions(
             ...state,
             docDetails: {
                 ...state.docDetails,
+                isLoading: false,
+                error: action.payload.error,
+            },
+        }),
+        // Save Doc
+        [DOC.SAVE_DOC_REQUEST]: (state, action) => ({
+            ...state,
+            saveDoc: {
+                data: {},
+                isLoading: true,
+                error: '',
+            },
+        }),
+        [DOC.SAVE_DOC_SUCCESS]: (state, action) => ({
+            ...state,
+            saveDoc: {
+                ...state.saveDoc,
+                data: action.payload,
+                isLoading: false,
+            },
+        }),
+        [DOC.SAVE_DOC_ERROR]: (state, action) => ({
+            ...state,
+            saveDoc: {
+                data: {},
                 isLoading: false,
                 error: action.payload.error,
             },

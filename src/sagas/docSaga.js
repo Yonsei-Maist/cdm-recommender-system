@@ -22,6 +22,8 @@ import {
     getDocListError,
     getDocDetailsSuccess,
     getDocDetailsError,
+    setSaveDocSuccess,
+    setSaveDocError,
 } from '../actions/docAction';
 import {setContent} from '../actions/contentAction';
 import DocService from '../api/docService';
@@ -45,7 +47,9 @@ const getDefaultSetting = (state) => state.config;
 function* handleGetDocList() {
     try {
         let url = (yield select(getDefaultSetting)).get('defaultSetting').APIServer;
-        const docList = yield call(DocService.getDocList, url, 'doctor1');
+        //TODO: replace userId with userId login from redux state
+        const userId = 'doctor1';
+        const docList = yield call(DocService.getDocList, url, userId);
         yield put(getDocListSuccess(docList));
     } catch (error) {
         yield put(getDocListError({ error: error.toString() }));
@@ -100,4 +104,40 @@ const watchGetDocDetails = function* () {
     yield takeLatest(DOC.GET_DOC_DETAILS_REQUEST, handleGetDocDetails);
 };
 
-export { watchGetDocList, watchGetDocDetails };
+
+/* -------------------------------------------------------------------------- */
+/*                                  Save Doc                                  */
+/* -------------------------------------------------------------------------- */
+/**
+ * @generator
+ * @function
+ * @description handle saga of save doc
+ * @param {action} action redux action
+ *
+ * @yields {Object} CallEffect of DocService.saveDoc api
+ * @yields {Object} PutEffect of saveDocSuccess action
+ * @yields {Object} PutEffect of saveDocError action
+ */
+function* handleSaveDoc(action) {
+    try {
+        let url = (yield select(getDefaultSetting)).get('defaultSetting').APIServer;
+        const saveDoc = yield call(DocService.saveDoc, url, action.payload);
+        yield put(setSaveDocSuccess(saveDoc));
+    } catch (error) {
+        yield put(setSaveDocError({ error: error.toString() }));
+    }
+}
+
+/**
+ * @generator
+ * @function
+ * @description watch saga of save doc
+ *
+ * @yields {Object} ForkEffect of handleSaveDoc saga
+ */
+const watchSaveDoc = function* () {
+    // Does not allow concurrent fetches of data
+    yield takeLatest(DOC.SAVE_DOC_REQUEST, handleSaveDoc);
+};
+
+export { watchGetDocList, watchGetDocDetails, watchSaveDoc };

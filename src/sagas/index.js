@@ -31,6 +31,7 @@ export default function* rootSaga() {
         userDataSaga(),
         docSaga.watchGetDocList(),
         docSaga.watchGetDocDetails(),
+        docSaga.watchSaveDoc(),
         wordSaga.watchGetSimilarWords(),
     ]);
 }

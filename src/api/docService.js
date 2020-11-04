@@ -20,6 +20,14 @@ class DocService {
             id: docId,
         });
     }
+
+    saveDoc(server, {userId, title, content}) {
+        return axiosApiInstance.post(server + `/emr/doc`, {
+            userId,
+            title,
+            content,
+        });
+    }
 }
 
 export default new DocService();
