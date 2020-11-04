@@ -18,10 +18,12 @@ const getSimilarWordsSuccess = createAction(WORD.GET_SIMILAR_WORDS_SUCCESS);
 const getSimilarWordsError = createAction(WORD.GET_SIMILAR_WORDS_ERROR);
 
 const setChangeEmrWord = createAction(WORD.SET_CHANGE_EMR_WORD);
+const setResetChangeEmrWord = createAction(WORD.SET_RESET_CHANGE_EMR_WORD);
 
 export {
     getSimilarWordsRequest,
     getSimilarWordsSuccess,
     getSimilarWordsError,
     setChangeEmrWord,
+    setResetChangeEmrWord,
 };

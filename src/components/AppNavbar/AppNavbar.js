@@ -32,7 +32,7 @@ const AppNavbar = () => {
                 <MDBCollapse id='navbarCollapse3' isOpen={isOpen} navbar>
                     <MDBNavbarNav left>
                         <MDBLink to={'/cdm'}>Home</MDBLink>
-                        <MDBLink to={'/cdm/words/list'}>
+                        <MDBLink to={'/emr-cdm-relationship'}>
                             EMR & CDM Relationship
                         </MDBLink>
                     </MDBNavbarNav>

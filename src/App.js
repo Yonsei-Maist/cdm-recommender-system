@@ -63,11 +63,11 @@ const App = ({history}) => {
             <AppNavbar />
             <div className='flex-grow-1'>
                 <Switch>
-                    <Route exact path='/cdm/words/list'>
-                        <EmrCdmWordsViewerPage />
-                    </Route>
                     <Route exact path='/cdm'>
                         <HomePage />
+                    </Route>
+                    <Route exact path='/emr-cdm-relationship'>
+                        <EmrCdmWordsViewerPage />
                     </Route>
                     <Route exact path='/login'>
                         <LoginPage />

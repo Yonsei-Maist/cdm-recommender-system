@@ -12,7 +12,7 @@ import { setContent } from '../../actions/contentAction';
 import _ from 'lodash';
 
 import 'quill/dist/quill.core.css';
-import { getSimilarWordsSuccess } from '../../actions/wordAction';
+import { getSimilarWordsSuccess, setResetChangeEmrWord } from '../../actions/wordAction';
 
 Quill.register(
     {
@@ -34,6 +34,7 @@ const EditorWithMarkedWordFeature = () => {
     const dispatch = useDispatch();
     const content = useSelector((state) => state.content);
     const changeEmrWord = useSelector((state) => state.word.changeEmrWord);
+    const resetChangeEmrWord = useSelector((state) => state.word.resetChangeEmrWord);
     const { APIServer } = useSelector((state) => state.config).get(
         'defaultSetting'
     );
@@ -97,6 +98,57 @@ const EditorWithMarkedWordFeature = () => {
         dispatch(getSimilarWordsSuccess(data));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [changeEmrWord]);
+
+    useEffect(() => {
+        if (quillRef === null || _.isEmpty(resetChangeEmrWord)) {
+            return;
+        }
+        const markedWord = resetChangeEmrWord;
+
+        let {
+            strText,
+            emrWordId,
+            cdmWordsList,
+            retain: retainIndex,
+        } = markedWord;
+        const deleteLength = strText.length;
+        // update markedWord
+        delete markedWord.cdmWordId;
+        markedWord.strText = markedWord.emrWordId;
+        markedWord.boolIsChanged = false;
+        const verifiedLookupWords = [
+            {
+                // change back to emr word if cdmWordId === strText
+                lookupWord: markedWord.strText,
+                emrWordId,
+                boolIsChanged: markedWord.boolIsChanged,
+                cdmWordsList,
+            },
+        ];
+        const newDelta = buildDelta(
+            retainIndex,
+            deleteLength,
+            verifiedLookupWords
+        );
+        quillRef.updateContents(newDelta, Quill.sources.API);
+        quillRef.setSelection(
+            retainIndex + markedWord.strText.length,
+            0,
+            Quill.sources.API
+        );
+        // update content from quillRef.getContents()
+        dispatch(setContent(buildContentByDelta(quillRef.getContents())));
+        // update the cdm list
+        const data = {
+            emrWordId: emrWordId,
+            cdmWordsList: cdmWordsList,
+            markedWord,
+        };
+        dispatch(getSimilarWordsSuccess(data));
+        // set resetChangeEmrWord to {}
+        dispatch(setResetChangeEmrWord({}));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resetChangeEmrWord]);
 
     useEffect(() => {
         (async () => {

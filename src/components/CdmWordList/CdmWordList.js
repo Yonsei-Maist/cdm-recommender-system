@@ -6,7 +6,7 @@
 import React from 'react';
 import { MDBListGroup, MDBListGroupItem, MDBBadge, MDBBtn } from 'mdbreact';
 import { useDispatch, useSelector } from 'react-redux';
-import { setChangeEmrWord } from '../../actions/wordAction';
+import { setChangeEmrWord, setResetChangeEmrWord } from '../../actions/wordAction';
 
 /**
  * Renders recommended CDM words list
@@ -43,6 +43,7 @@ const CdmWordList = ({ disabled = false }) => {
 
     const handleOnClickResetButton = (markedWord) => {
         console.log('reset change of cdm word back to emr word');
+        dispatch(setResetChangeEmrWord(markedWord));
     };
 
     return (

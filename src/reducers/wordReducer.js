@@ -25,6 +25,7 @@ const defaultState = {
         error: '',
     },
     changeEmrWord: {},
+    resetChangeEmrWord: {},
 };
 
 const wordReducer = handleActions(
@@ -57,6 +58,10 @@ const wordReducer = handleActions(
         [WORD.SET_CHANGE_EMR_WORD]: (state, action) => ({
             ...state,
             changeEmrWord: action.payload,
+        }),
+        [WORD.SET_RESET_CHANGE_EMR_WORD]: (state, action) => ({
+            ...state,
+            resetChangeEmrWord: action.payload,
         }),
     },
     defaultState
