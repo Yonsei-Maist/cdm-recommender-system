@@ -9,7 +9,8 @@
 import axiosApiInstance from './axiosApiInstance';
 
 class WordService {
-    getSimilarWords(server, word, timeout = 70) {
+    // default is `0` (no timeout)
+    getSimilarWords(server, word, timeout = 0) {
         return axiosApiInstance.post(
             server + `/cdm/similarity/words`,
             {

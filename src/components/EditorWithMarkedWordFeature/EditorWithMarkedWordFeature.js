@@ -24,7 +24,7 @@ Quill.register(
 const Delta = Quill.import('delta');
 
 const EditorWithMarkedWordFeature = () => {
-    const GET_SIMILAR_WORDS_TIMEOUT_WHEN_LOAD_OR_PAST_CONTENT = 200;
+    const GET_SIMILAR_WORDS_TIMEOUT_WHEN_LOAD_OR_PAST_CONTENT = 0; // default is `0` (no timeout)
     const [editorHtml, setEditorHtml] = useState('');
     // Quill instance
     const [quillRef, setQuillRef] = useState(null);
