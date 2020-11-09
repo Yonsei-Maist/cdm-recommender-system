@@ -7,18 +7,27 @@ import React, { useState, useEffect } from 'react';
 import { MDBContainer, MDBCard, MDBBtn } from 'mdbreact';
 import EmrWordList from '../components/EmrWordList/EmrWordList';
 import CdmWordList from '../components/CdmWordList/CdmWordList';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getEmrCdmRelationshipRequest } from '../actions/wordAction';
 
 const EmrCdmWordsViewerPage = () => {
     const [isShowCdmWordList, setIsShowCdmWordList] = useState(true);
+    const dispatch = useDispatch();
 
     const { data, isLoading, error } = useSelector(
         (state) => state.word.similarWords
+    );
+    const { pageNumberOfEmrWordList } = useSelector(
+        (state) => state.word.pageNumberOfEmrWordList
     );
 
     useEffect(() => {
         setIsShowCdmWordList(false);
     }, []);
+
+    useEffect(() => {
+        dispatch(getEmrCdmRelationshipRequest(pageNumberOfEmrWordList));
+    }, [dispatch, pageNumberOfEmrWordList]);
 
     useEffect(() => {
         if (

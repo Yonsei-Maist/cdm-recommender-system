@@ -3,11 +3,11 @@
  * @author Vicheka Phor, Yonsei Univ. Researcher, since 2020.10
  * @date 2020.10.29
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MDBBtn, MDBBadge } from 'mdbreact';
 import Pagination from 'react-js-pagination';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSimilarWordsRequest } from '../../actions/wordAction';
+import { getSimilarWordsRequest, setPageNumberOfEmrWordList } from '../../actions/wordAction';
 
 /**
  * Renders recommended CDM words list
@@ -32,32 +32,53 @@ import { getSimilarWordsRequest } from '../../actions/wordAction';
  * );
  */
 const EmrWordList = () => {
-    const NUMBER_OF_SYNONYMS_PER_EMR_WORD = 5;
-    const NUMBER_OF_EMR_WORDS_PER_PAGE = 20;
     const PAGE_RANGE_DISPLAYED = 10;
-    const [totalItemsCount, setTotalItemsCount] = useState(450);
+    const [itemsCountPerPage, setItemsCountPerPage] = useState(0);
+    const [totalItemsCount, setTotalItemsCount] = useState(0);
     const [activePage, setActivePage] = useState(1);
 
     const dispatch = useDispatch();
+    const defaultsData = {
+        recordCountPerPage: 0,
+        totalRecordCount: 0,
+        wordList: [],
+    };
+    const {
+        data: { recordCountPerPage, totalRecordCount, wordList } = defaultsData,
+        isLoading,
+        error,
+    } = useSelector((state) => state.word.emrCdmRelationship);
+    const { pageNumberOfEmrWordList } = useSelector(
+        (state) => state.word.pageNumberOfEmrWordList
+    );
+
+    useEffect(() => {
+        setActivePage(pageNumberOfEmrWordList);
+    }, [pageNumberOfEmrWordList]);
+
+    useEffect(() => {
+        setTotalItemsCount(totalRecordCount);
+        setItemsCountPerPage(recordCountPerPage);
+    }, [totalRecordCount, recordCountPerPage]);
 
     const handlePageChange = (pageNumber) => {
-        console.log(`active page is ${pageNumber}`);
         setActivePage(pageNumber);
+        dispatch(setPageNumberOfEmrWordList(pageNumber));
     };
 
-    const renderEmrSynonyms = () => {
+    const renderEmrSynonyms = (synonymList) => {
         const out = [];
-        for (var i = 1; i <= NUMBER_OF_SYNONYMS_PER_EMR_WORD; i++) {
+        for (var i = 0; i < synonymList.length; i++) {
             out.push(
-                <MDBBadge 
+                <MDBBadge
                     key={i}
                     pill
                     color='success'
                     className='p-2 mb-2 mr-2'
                     disabled
                 >
-                    Synonyms {i}
-                </MDBBadge >
+                    {synonymList[i].word}
+                </MDBBadge>
             );
         }
         out.push(
@@ -80,9 +101,9 @@ const EmrWordList = () => {
         dispatch(getSimilarWordsRequest(emrWord));
     };
 
-    const renderEmrWordList = () => {
+    const renderEmrWordList = (wordList) => {
         const out = [];
-        for (let i = 1; i <= NUMBER_OF_EMR_WORDS_PER_PAGE; i++) {
+        for (let i = 0; i < wordList.length; i++) {
             out.push(
                 <div
                     key={i}
@@ -92,13 +113,13 @@ const EmrWordList = () => {
                         <MDBBtn
                             color='warning'
                             style={{ width: '15em' }}
-                            onClick={() => handleOnClickEmrWord('cold')}
+                            onClick={() => handleOnClickEmrWord(wordList[i].id)}
                         >
-                            EMR WORD {i}
+                            {wordList[i].word}
                         </MDBBtn>
                     </div>
                     <div className='flew-grow-1 px-2'>
-                        {renderEmrSynonyms()}
+                        {renderEmrSynonyms(wordList[i].synonym.synonymList)}
                     </div>
                 </div>
             );
@@ -118,26 +139,35 @@ const EmrWordList = () => {
                     height: '0.1em',
                 }}
             />
-            <div
-                className='flex-grow-1'
-                style={{
-                    height: '65vh',
-                    overflowY: 'auto',
-                    marginBottom: '2em',
-                }}
-            >
-                {renderEmrWordList()}
-            </div>
-            <Pagination
-                activePage={activePage}
-                totalItemsCount={totalItemsCount}
-                itemsCountPerPage={NUMBER_OF_EMR_WORDS_PER_PAGE}
-                pageRangeDisplayed={PAGE_RANGE_DISPLAYED}
-                onChange={handlePageChange}
-                itemClass='page-item'
-                linkClass='page-link'
-                innerClass='pagination pg-blue justify-content-center'
-            />
+            {isLoading && <div>Loading...</div>}
+            {error && <div className='text-danger'>{error}</div>}
+            {!isLoading && !error && wordList && wordList.length === 0 && (
+                <p>Empty</p>
+            )}
+            {!isLoading && !error && wordList && wordList.length !== 0 && (
+                <>
+                    <div
+                        className='flex-grow-1'
+                        style={{
+                            height: '65vh',
+                            overflowY: 'auto',
+                            marginBottom: '2em',
+                        }}
+                    >
+                        {renderEmrWordList(wordList)}
+                    </div>
+                    <Pagination
+                        activePage={activePage}
+                        totalItemsCount={totalItemsCount}
+                        itemsCountPerPage={itemsCountPerPage}
+                        pageRangeDisplayed={PAGE_RANGE_DISPLAYED}
+                        onChange={handlePageChange}
+                        itemClass='page-item'
+                        linkClass='page-link'
+                        innerClass='pagination pg-blue justify-content-center'
+                    />
+                </>
+            )}
         </div>
     );
 };

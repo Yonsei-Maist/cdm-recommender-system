@@ -26,6 +26,8 @@ const defaultState = {
     },
     changeEmrWord: {},
     resetChangeEmrWord: {},
+    emrCdmRelationship: {},
+    pageNumberOfEmrWordList: 1,
 };
 
 const wordReducer = handleActions(
@@ -62,6 +64,36 @@ const wordReducer = handleActions(
         [WORD.SET_RESET_CHANGE_EMR_WORD]: (state, action) => ({
             ...state,
             resetChangeEmrWord: action.payload,
+        }),
+        // Get Emr-Cdm Relationship List
+        [WORD.GET_EMR_CDM_RELATIONSHIP_REQUEST]: (state, action) => ({
+            ...state,
+            emrCdmRelationship: {
+                ...state.emrCdmRelationship,
+                isLoading: true,
+                error: '',
+            },
+        }),
+        [WORD.GET_EMR_CDM_RELATIONSHIP_SUCCESS]: (state, action) => ({
+            ...state,
+            emrCdmRelationship: {
+                ...state.emrCdmRelationship,
+                data: action.payload,
+                isLoading: false,
+            },
+        }),
+        [WORD.GET_EMR_CDM_RELATIONSHIP_ERROR]: (state, action) => ({
+            ...state,
+            emrCdmRelationship: {
+                ...state.emrCdmRelationship,
+                isLoading: false,
+                error: action.payload.error,
+            },
+        }),
+        // Set page number of emr word list
+        [WORD.SET_PAGE_NUMBER_OF_EMR_WORD_LIST]: (state, action) => ({
+            ...state,
+            pageNumberOfEmrWordList: action.payload,
         }),
     },
     defaultState

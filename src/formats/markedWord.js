@@ -32,9 +32,6 @@ export class MarkedWord extends Inline {
         node.dataset.color = color;
         node.dataset.strText = strText;
         node.dataset.emrWordId = emrWordId;
-        if (cdmWordsList) {
-            node.dataset.cdmWordsList = JSON.stringify(cdmWordsList);
-        }
         node.dataset.boolIsChanged = boolIsChanged;
         node.dataset.cdmWordId = cdmWordId;
 
@@ -80,10 +77,6 @@ export class MarkedWord extends Inline {
             boolIsChanged:
                 node.dataset.boolIsChanged === 'false' ? false : true,
             cdmWordId: node.dataset.cdmWordId,
-        }
-
-        if (node.dataset.cdmWordsList) {
-            markedWord.cdmWordsList = JSON.parse(node.dataset.cdmWordsList);
         }
 
         return markedWord;

@@ -19,6 +19,8 @@ import WORD from '../action-types/wordType';
 import {
     getSimilarWordsSuccess,
     getSimilarWordsError,
+    getEmrCdmRelationshipSuccess,
+    getEmrCdmRelationshipError,
 } from '../actions/wordAction';
 import WordService from '../api/wordService';
 
@@ -60,4 +62,41 @@ const watchGetSimilarWords = function* () {
     yield takeLatest(WORD.GET_SIMILAR_WORDS_REQUEST, handleGetSimilarWords);
 };
 
-export { watchGetSimilarWords };
+/* -------------------------------------------------------------------------- */
+/*                    Get Emr-Cdm Relationship List                           */
+/* -------------------------------------------------------------------------- */
+/**
+ * @generator
+ * @function
+ * @description handle saga of get Emr-Cdm Relationship list
+ * @param {action} action redux action
+ *
+ * @yields {Object} CallEffect of WordService.getEmrCdmRelationship api
+ * @yields {Object} PutEffect of getEmrCdmRelationshipSuccess action
+ * @yields {Object} PutEffect of getEmrCdmRelationshipError action
+ */
+function* handleGetEmrCdmRelationship(action) {
+    try {
+        let url = (yield select(getDefaultSetting)).get('defaultSetting').APIServer;
+        // action.payload -> currentPageNo
+        const emrCdmRelationship = yield call(WordService.getEmrCdmRelationship, url, action.payload);
+        yield put(getEmrCdmRelationshipSuccess(emrCdmRelationship.data));
+    } catch (error) {
+        yield put(getEmrCdmRelationshipError({ error: error.toString() }));
+    }
+}
+
+/**
+ * @generator
+ * @function
+ * @description watch saga of Emr-Cdm Relationship list
+ *
+ * @yields {Object} ForkEffect of handleGetEmrCdmRelationship saga
+ */
+const watchGetEmrCdmRelationship = function* () {
+    // Does not allow concurrent fetches of data
+    yield takeLatest(WORD.GET_EMR_CDM_RELATIONSHIP_REQUEST, handleGetEmrCdmRelationship);
+};
+
+
+export { watchGetSimilarWords, watchGetEmrCdmRelationship };

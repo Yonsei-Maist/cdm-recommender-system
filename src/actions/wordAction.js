@@ -20,10 +20,20 @@ const getSimilarWordsError = createAction(WORD.GET_SIMILAR_WORDS_ERROR);
 const setChangeEmrWord = createAction(WORD.SET_CHANGE_EMR_WORD);
 const setResetChangeEmrWord = createAction(WORD.SET_RESET_CHANGE_EMR_WORD);
 
+// Get Emr-Cdm Relationship List
+const getEmrCdmRelationshipRequest = createAction(WORD.GET_EMR_CDM_RELATIONSHIP_REQUEST);
+const getEmrCdmRelationshipSuccess = createAction(WORD.GET_EMR_CDM_RELATIONSHIP_SUCCESS);
+const getEmrCdmRelationshipError = createAction(WORD.GET_EMR_CDM_RELATIONSHIP_ERROR);
+const setPageNumberOfEmrWordList = createAction(WORD.SET_PAGE_NUMBER_OF_EMR_WORD_LIST);
+
 export {
     getSimilarWordsRequest,
     getSimilarWordsSuccess,
     getSimilarWordsError,
     setChangeEmrWord,
     setResetChangeEmrWord,
+    getEmrCdmRelationshipRequest,
+    getEmrCdmRelationshipSuccess,
+    getEmrCdmRelationshipError,
+    setPageNumberOfEmrWordList,
 };

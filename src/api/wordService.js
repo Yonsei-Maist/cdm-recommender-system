@@ -19,6 +19,15 @@ class WordService {
             { timeout }
         );
     }
+
+    getEmrCdmRelationship(server, currentPageNo) {
+        return axiosApiInstance.post(
+            server + `/cdm/words/list`,
+            {
+                currentPageNo,
+            },
+        );
+    }
 }
 
 export default new WordService();

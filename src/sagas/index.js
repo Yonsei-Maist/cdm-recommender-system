@@ -33,5 +33,6 @@ export default function* rootSaga() {
         docSaga.watchGetDocDetails(),
         docSaga.watchSaveDoc(),
         wordSaga.watchGetSimilarWords(),
+        wordSaga.watchGetEmrCdmRelationship(),
     ]);
 }
