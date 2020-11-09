@@ -16,7 +16,7 @@ axiosApiInstance.interceptors.response.use(
         const data = response.data;
         // if fail
         if (
-            data.result === 'success' &&
+            (data.result === 'success' || data.result === 'fail')  &&
             data.data === undefined &&
             data.message !== undefined
         ) {

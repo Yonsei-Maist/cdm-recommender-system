@@ -26,7 +26,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import { Provider } from 'react-redux';
 import configureStore from './store';
-import { getSimilarWordsSuccess } from './actions/wordAction';
+import { getSimilarWordsRequest } from './actions/wordAction';
 import { METHOD_NAME_ONCLICK_MARKED_WORD } from './constants';
 import { getLookupPhrase } from './components/EditorWithMarkedWordFeature/EditorWithMarkedWordFeature';
 import { setConfig } from './reducers/config';
@@ -45,22 +45,26 @@ const store = configureStore();
 global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord, quillRef) => {
     if (quillRef && quillRef.getSelection()) {
         const text = quillRef.getText();
-        const cursorStartIndex = quillRef.getSelection().index;
-        const cursorEndIndex = cursorStartIndex;
-        const lookupPhrase = getLookupPhrase(
-            text,
-            cursorStartIndex,
-            cursorEndIndex
-        );
-        // add retain index or index of the first letter of the word
+        let isKeepSearchingRetain = true;
+        let cursorStartIndex = quillRef.getSelection().index;
+        let lookupPhrase;
+        // looking to the left until word without format markedWord
+        while(isKeepSearchingRetain) {    
+            const format = quillRef.getFormat(cursorStartIndex);
+            if(format.markedWord !== undefined){
+                lookupPhrase = getLookupPhrase(
+                    text,
+                    cursorStartIndex,
+                    cursorStartIndex
+                );
+                cursorStartIndex = lookupPhrase.startIndex;
+            } else {
+                isKeepSearchingRetain = false;
+            }
+        }
+        // add retain index or index of the first letter of the marked word
         markedWord.retain = lookupPhrase.startIndex;
-
-        const data = {
-            emrWordId: markedWord.emrWordId,
-            cdmWordsList: markedWord.cdmWordsList,
-            markedWord,
-        };
-        store.dispatch(getSimilarWordsSuccess(data));
+        store.dispatch(getSimilarWordsRequest(markedWord));
     }
 };
 

@@ -7,7 +7,10 @@ import React, { useState, useEffect } from 'react';
 import { MDBBtn, MDBBadge } from 'mdbreact';
 import Pagination from 'react-js-pagination';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSimilarWordsRequest, setPageNumberOfEmrWordList } from '../../actions/wordAction';
+import {
+    getSimilarWordsRequest,
+    setPageNumberOfEmrWordList,
+} from '../../actions/wordAction';
 
 /**
  * Renders recommended CDM words list
@@ -33,6 +36,7 @@ import { getSimilarWordsRequest, setPageNumberOfEmrWordList } from '../../action
  */
 const EmrWordList = () => {
     const PAGE_RANGE_DISPLAYED = 10;
+    const NUMBER_OF_SYNONYMS_PER_EMR_WORD = 5;
     const [itemsCountPerPage, setItemsCountPerPage] = useState(0);
     const [totalItemsCount, setTotalItemsCount] = useState(0);
     const [activePage, setActivePage] = useState(1);
@@ -68,7 +72,12 @@ const EmrWordList = () => {
 
     const renderEmrSynonyms = (synonymList) => {
         const out = [];
-        for (var i = 0; i < synonymList.length; i++) {
+        const isOverLimit =
+            synonymList.length > NUMBER_OF_SYNONYMS_PER_EMR_WORD;
+        const count = isOverLimit
+            ? NUMBER_OF_SYNONYMS_PER_EMR_WORD
+            : synonymList.length;
+        for (var i = 0; i < count; i++) {
             out.push(
                 <MDBBadge
                     key={i}
@@ -81,18 +90,20 @@ const EmrWordList = () => {
                 </MDBBadge>
             );
         }
-        out.push(
-            <MDBBtn
-                key={i}
-                color='transparent'
-                className='p-0 blue-text text-capitalize'
-                style={{
-                    boxShadow: 'none',
-                }}
-            >
-                Show All...
-            </MDBBtn>
-        );
+        if (isOverLimit) {
+            out.push(
+                <MDBBtn
+                    key={i}
+                    color='transparent'
+                    className='p-0 blue-text text-capitalize'
+                    style={{
+                        boxShadow: 'none',
+                    }}
+                >
+                    Show All...
+                </MDBBtn>
+            );
+        }
 
         return out;
     };
@@ -107,7 +118,7 @@ const EmrWordList = () => {
             out.push(
                 <div
                     key={i}
-                    className='d-flex flex-row my-4 justify-content-center align-items-center'
+                    className='d-flex flex-row my-4 justify-content-start align-items-center'
                 >
                     <div className='text-center'>
                         <MDBBtn
@@ -147,7 +158,7 @@ const EmrWordList = () => {
             {!isLoading && !error && wordList && wordList.length !== 0 && (
                 <>
                     <div
-                        className='flex-grow-1'
+                        className='flex-grow-1 pl-5'
                         style={{
                             height: '65vh',
                             overflowY: 'auto',

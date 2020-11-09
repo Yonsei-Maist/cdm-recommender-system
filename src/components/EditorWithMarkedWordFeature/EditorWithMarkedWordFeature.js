@@ -12,7 +12,10 @@ import { setContent } from '../../actions/contentAction';
 import _ from 'lodash';
 
 import 'quill/dist/quill.core.css';
-import { getSimilarWordsSuccess, setResetChangeEmrWord } from '../../actions/wordAction';
+import {
+    getSimilarWordsSuccess,
+    setResetChangeEmrWord,
+} from '../../actions/wordAction';
 
 Quill.register(
     {
@@ -34,46 +37,46 @@ const EditorWithMarkedWordFeature = () => {
     const dispatch = useDispatch();
     const content = useSelector((state) => state.content);
     const changeEmrWord = useSelector((state) => state.word.changeEmrWord);
-    const resetChangeEmrWord = useSelector((state) => state.word.resetChangeEmrWord);
+    const resetChangeEmrWord = useSelector(
+        (state) => state.word.resetChangeEmrWord
+    );
     const { APIServer } = useSelector((state) => state.config).get(
         'defaultSetting'
     );
 
+    // change EMR word to CDM word
     useEffect(() => {
         if (quillRef === null) {
             return;
         }
 
-        const { cdmWord, markedWord } = changeEmrWord;
+        const { cdmWord, cdmWordsList, markedWord } = changeEmrWord;
 
         let {
             strText,
             emrWordId,
-            cdmWordsList,
+            emrWordStrText,
             retain: retainIndex,
         } = markedWord;
 
         // if cdmWordId === strText, do nothing
-        if(cdmWord.cdmWordId === strText) {
+        if (cdmWord.detail.word === strText) {
             return;
         }
 
         const deleteLength = strText.length;
         // update markedWord
         markedWord.cdmWordId = cdmWord.cdmWordId;
-        markedWord.strText =
-            cdmWord.cdmWordId === strText
-                ? cdmWord.emrWordId
-                : cdmWord.cdmWordId;
-        markedWord.boolIsChanged = markedWord.strText !== markedWord.emrWordId;
+        markedWord.strText = cdmWord.detail.word;
+        markedWord.boolIsChanged = true;
         const verifiedLookupWords = [
             {
                 // change back to emr word if cdmWordId === strText
-                lookupWord: markedWord.strText,
+                lookupWord: cdmWord.detail.word,
                 emrWordId: emrWordId,
+                emrWordStrText: emrWordStrText,
                 boolIsChanged: markedWord.boolIsChanged,
                 cdmWordId: markedWord.cdmWordId,
-                cdmWordsList,
             },
         ];
         const newDelta = buildDelta(
@@ -99,30 +102,31 @@ const EditorWithMarkedWordFeature = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [changeEmrWord]);
 
+    // reset change EMR word (change CDM word back to EMR word)
     useEffect(() => {
         if (quillRef === null || _.isEmpty(resetChangeEmrWord)) {
             return;
         }
-        const markedWord = resetChangeEmrWord;
+        const { cdmWordsList, markedWord } = resetChangeEmrWord;
 
         let {
             strText,
             emrWordId,
-            cdmWordsList,
+            emrWordStrText,
             retain: retainIndex,
         } = markedWord;
         const deleteLength = strText.length;
         // update markedWord
         delete markedWord.cdmWordId;
-        markedWord.strText = markedWord.emrWordId;
+        markedWord.strText = emrWordStrText;
         markedWord.boolIsChanged = false;
         const verifiedLookupWords = [
             {
                 // change back to emr word if cdmWordId === strText
-                lookupWord: markedWord.strText,
+                lookupWord: emrWordStrText,
                 emrWordId,
+                emrWordStrText,
                 boolIsChanged: markedWord.boolIsChanged,
-                cdmWordsList,
             },
         ];
         const newDelta = buildDelta(
@@ -265,34 +269,32 @@ const EditorWithMarkedWordFeature = () => {
                 } = arrWord;
                 let lookupWord = id_word_emr ? id_word_emr : str_text;
                 if (lookupWord.match(/\w+/)) {
-                    let similarWords;
+                    let searchWord;
                     // check similarity of each word
                     try {
-                        similarWords = await WordService.getSimilarWords(
+                        searchWord = await WordService.getSearchWord(
                             APIServer,
                             lookupWord,
                             GET_SIMILAR_WORDS_TIMEOUT_WHEN_LOAD_OR_PAST_CONTENT
                         );
                         if (
-                            similarWords &&
-                            similarWords.data &&
-                            similarWords.data.emrWordId
+                            searchWord &&
+                            searchWord.data &&
+                            searchWord.data.emrExists
                         ) {
                             if (bool_is_changed) {
                                 return {
-                                    lookupWord: id_word_cdm,
-                                    emrWordId: similarWords.data.emrWordId,
-                                    cdmWordsList:
-                                        similarWords.data.cdmWordsList,
+                                    lookupWord: str_text,
+                                    emrWordId: searchWord.data.id,
+                                    emrWordStrText: searchWord.data.word,
                                     boolIsChanged: bool_is_changed,
                                     cdmWordId: id_word_cdm,
                                 };
                             } else {
                                 return {
-                                    lookupWord: similarWords.data.emrWordId,
-                                    emrWordId: similarWords.data.emrWordId,
-                                    cdmWordsList:
-                                        similarWords.data.cdmWordsList,
+                                    lookupWord: searchWord.data.word,
+                                    emrWordId: searchWord.data.id,
+                                    emrWordStrText: searchWord.data.word,
                                     boolIsChanged: false,
                                 };
                             }
@@ -316,7 +318,7 @@ const EditorWithMarkedWordFeature = () => {
                 if (lookupWord.match(/\w+/)) {
                     // check similarity of each word again and update the content
                     try {
-                        const similarWords = await WordService.getSimilarWords(
+                        const searchWord = await WordService.getSearchWord(
                             APIServer,
                             lookupWord,
                             isPastText
@@ -324,14 +326,14 @@ const EditorWithMarkedWordFeature = () => {
                                 : undefined
                         );
                         if (
-                            similarWords &&
-                            similarWords.data &&
-                            similarWords.data.emrWordId
+                            searchWord &&
+                            searchWord.data &&
+                            searchWord.data.emrExists
                         ) {
                             return {
                                 lookupWord,
-                                emrWordId: similarWords.data.emrWordId,
-                                cdmWordsList: similarWords.data.cdmWordsList,
+                                emrWordId: searchWord.data.id,
+                                emrWordStrText: searchWord.data.word,
                                 boolIsChanged: false,
                             };
                         } else {
@@ -359,7 +361,7 @@ const EditorWithMarkedWordFeature = () => {
                             : '#fb3',
                         strText: lookupWordsObj.lookupWord,
                         emrWordId: lookupWordsObj.emrWordId,
-                        cdmWordsList: lookupWordsObj.cdmWordsList,
+                        emrWordStrText: lookupWordsObj.emrWordStrText,
                         boolIsChanged: !!lookupWordsObj.boolIsChanged,
                         cdmWordId: lookupWordsObj.cdmWordId,
                         quillRef,
@@ -408,9 +410,7 @@ const EditorWithMarkedWordFeature = () => {
 
     const handleOnChange = async (content, delta, source, editor) => {
         setEditorHtml(content);
-        dispatch(
-            setContent(buildContentByDelta(quillRef.getContents()))
-        );
+        dispatch(setContent(buildContentByDelta(quillRef.getContents())));
 
         if (quillRef === null) {
             return;
@@ -474,9 +474,7 @@ const EditorWithMarkedWordFeature = () => {
     };
 
     return (
-        <div
-            className='flex-grow-1'
-        >
+        <div className='flex-grow-1'>
             <ReactQuill
                 ref={(el) => {
                     setReactQuillRef(el);

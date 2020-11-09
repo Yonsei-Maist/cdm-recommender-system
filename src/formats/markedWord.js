@@ -17,7 +17,7 @@ export class MarkedWord extends Inline {
             color,
             strText,
             emrWordId,
-            cdmWordsList,
+            emrWordStrText,
             boolIsChanged,
             cdmWordId,
             quillRef,
@@ -26,12 +26,13 @@ export class MarkedWord extends Inline {
         node.setAttribute('data-id', id);
         node.style.backgroundColor = color;
         node.style.color = 'white';
-        node.style.padding = '0.2em';
+        node.style.padding = '0.1em';
         node.style.cursor = 'pointer';
         node.dataset.id = id;
         node.dataset.color = color;
         node.dataset.strText = strText;
         node.dataset.emrWordId = emrWordId;
+        node.dataset.emrWordStrText = emrWordStrText;
         node.dataset.boolIsChanged = boolIsChanged;
         node.dataset.cdmWordId = cdmWordId;
 
@@ -40,7 +41,7 @@ export class MarkedWord extends Inline {
             color,
             strText,
             emrWordId,
-            cdmWordsList,
+            emrWordStrText,
             boolIsChanged,
             cdmWordId,
         }
@@ -74,6 +75,7 @@ export class MarkedWord extends Inline {
             color: node.dataset.color,
             strText: node.dataset.strText,
             emrWordId: node.dataset.emrWordId,
+            emrWordStrText: node.dataset.emrWordStrText,
             boolIsChanged:
                 node.dataset.boolIsChanged === 'false' ? false : true,
             cdmWordId: node.dataset.cdmWordId,

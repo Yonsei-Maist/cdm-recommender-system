@@ -43,8 +43,14 @@ const getDefaultSetting = (state) => state.config;
 function* handleGetSimilarWords(action) {
     try {
         let url = (yield select(getDefaultSetting)).get('defaultSetting').APIServer;
-        const similarWords = yield call(WordService.getSimilarWords, url, action.payload);
-        yield put(getSimilarWordsSuccess(similarWords.data));
+        const markedWord = action.payload;
+        const similarWords = yield call(WordService.getSimilarWords, url, markedWord.emrWordId);
+        const data = {
+            emrWordId: similarWords.data.emrWordId,
+            cdmWordsList: similarWords.data.cdmWordsList,
+            markedWord,
+        };
+        yield put(getSimilarWordsSuccess(data));
     } catch (error) {
         yield put(getSimilarWordsError({ error: error.toString() }));
     }

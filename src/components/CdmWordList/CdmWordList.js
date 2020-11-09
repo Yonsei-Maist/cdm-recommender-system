@@ -6,7 +6,10 @@
 import React from 'react';
 import { MDBListGroup, MDBListGroupItem, MDBBadge, MDBBtn } from 'mdbreact';
 import { useDispatch, useSelector } from 'react-redux';
-import { setChangeEmrWord, setResetChangeEmrWord } from '../../actions/wordAction';
+import {
+    setChangeEmrWord,
+    setResetChangeEmrWord,
+} from '../../actions/wordAction';
 
 /**
  * Renders recommended CDM words list
@@ -37,13 +40,12 @@ const CdmWordList = ({ disabled = false }) => {
     );
     const dispatch = useDispatch();
 
-    const handleOnClickCdmWord = (cdmWord, markedWord) => {
-        dispatch(setChangeEmrWord({ cdmWord, markedWord }));
+    const handleOnClickCdmWord = (cdmWord, cdmWordsList, markedWord) => {
+        dispatch(setChangeEmrWord({ cdmWord, cdmWordsList, markedWord }));
     };
 
-    const handleOnClickResetButton = (markedWord) => {
-        console.log('reset change of cdm word back to emr word');
-        dispatch(setResetChangeEmrWord(markedWord));
+    const handleOnClickResetButton = (cdmWordsList, markedWord) => {
+        dispatch(setResetChangeEmrWord({ cdmWordsList, markedWord }));
     };
 
     return (
@@ -82,6 +84,7 @@ const CdmWordList = ({ disabled = false }) => {
                                     color='primary'
                                     onClick={() =>
                                         handleOnClickResetButton(
+                                            data.cdmWordsList,
                                             data.markedWord
                                         )
                                     }
@@ -96,7 +99,11 @@ const CdmWordList = ({ disabled = false }) => {
                         >
                             <MDBListGroup>
                                 {data.cdmWordsList.map(
-                                    ({ cdmWordId, floatSimilarity }) => {
+                                    ({
+                                        cdmWordId,
+                                        floatSimilarity,
+                                        detail,
+                                    }) => {
                                         return (
                                             <MDBListGroupItem
                                                 hover
@@ -112,7 +119,9 @@ const CdmWordList = ({ disabled = false }) => {
                                                                 data.emrWordId,
                                                             cdmWordId,
                                                             floatSimilarity,
+                                                            detail,
                                                         },
+                                                        data.cdmWordsList,
                                                         data.markedWord
                                                     )
                                                 }

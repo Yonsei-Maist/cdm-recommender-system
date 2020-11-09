@@ -47,6 +47,7 @@ const wordReducer = handleActions(
                 ...state.similarWords,
                 data: action.payload,
                 isLoading: false,
+                error: '',
             },
         }),
         [WORD.GET_SIMILAR_WORDS_ERROR]: (state, action) => ({

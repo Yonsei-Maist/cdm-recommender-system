@@ -9,10 +9,11 @@
 import axiosApiInstance from './axiosApiInstance';
 
 class WordService {
-    // default is `0` (no timeout)
-    getSimilarWords(server, word, timeout = 0) {
+
+    // getSearchWord to verify if word is emr word
+    getSearchWord(server, word, timeout = 0) {
         return axiosApiInstance.post(
-            server + `/cdm/similarity/words`,
+            server + `/cdm/words`,
             {
                 word,
             },
@@ -20,13 +21,21 @@ class WordService {
         );
     }
 
-    getEmrCdmRelationship(server, currentPageNo) {
+    // default is `0` (no timeout)
+    getSimilarWords(server, id, timeout = 0) {
         return axiosApiInstance.post(
-            server + `/cdm/words/list`,
+            server + `/cdm/similarity/words`,
             {
-                currentPageNo,
+                id,
             },
+            { timeout }
         );
+    }
+
+    getEmrCdmRelationship(server, currentPageNo) {
+        return axiosApiInstance.post(server + `/cdm/words/list`, {
+            currentPageNo,
+        });
     }
 }
 
