@@ -218,7 +218,7 @@ const HomePage = () => {
                             className='flex-grow-1 d-flex flex-column mx-0 overflow-auto border border-primary rounded'
                             style={{
                                 minHeight: '40vh',
-                                maxHeight: '50vh',
+                                maxHeight: '90vh',
                                 minWidth: '100%',
                                 maxWidth: 'fit-content',
                             }}
