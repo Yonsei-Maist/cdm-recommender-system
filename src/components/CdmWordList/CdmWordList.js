@@ -126,7 +126,7 @@ const CdmWordList = ({ disabled = false }) => {
                                                     )
                                                 }
                                             >
-                                                {cdmWordId} -{' '}
+                                                {detail.word} -{' '}
                                                 {floatSimilarity * 100}%
                                             </MDBListGroupItem>
                                         );
