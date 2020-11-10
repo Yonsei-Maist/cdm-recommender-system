@@ -154,6 +154,7 @@ const EditorWithMarkedWordFeature = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resetChangeEmrWord]);
 
+    // useEffect on content from redux and quillRef
     useEffect(() => {
         (async () => {
             if (
@@ -177,8 +178,9 @@ const EditorWithMarkedWordFeature = () => {
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [content]);
+    }, [content, quillRef]);
 
+    // useEffect on reactQuillRef
     useEffect(() => {
         if (
             reactQuillRef == null ||

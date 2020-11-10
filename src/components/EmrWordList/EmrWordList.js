@@ -108,8 +108,8 @@ const EmrWordList = () => {
         return out;
     };
 
-    const handleOnClickEmrWord = (emrWord) => {
-        dispatch(getSimilarWordsRequest(emrWord));
+    const handleOnClickEmrWord = (emrWordId) => {
+        dispatch(getSimilarWordsRequest(emrWordId));
     };
 
     const renderEmrWordList = (wordList) => {
