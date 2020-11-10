@@ -47,12 +47,11 @@ global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord, quillRef) => {
         const text = quillRef.getText();
         let isKeepSearchingRetain = true;
         let cursorStartIndex = quillRef.getSelection().index;
-        let lookupPhrase;
         // looking to the left until word without format markedWord
-        while(isKeepSearchingRetain) {    
+        while (isKeepSearchingRetain) {
             const format = quillRef.getFormat(cursorStartIndex);
-            if(format.markedWord !== undefined){
-                lookupPhrase = getLookupPhrase(
+            if (format.markedWord !== undefined) {
+                const lookupPhrase = getLookupPhrase(
                     text,
                     cursorStartIndex,
                     cursorStartIndex
@@ -63,7 +62,7 @@ global[METHOD_NAME_ONCLICK_MARKED_WORD] = (markedWord, quillRef) => {
             }
         }
         // add retain index or index of the first letter of the marked word
-        markedWord.retain = lookupPhrase.startIndex;
+        markedWord.retain = cursorStartIndex;
         store.dispatch(getSimilarWordsRequest(markedWord));
     }
 };
