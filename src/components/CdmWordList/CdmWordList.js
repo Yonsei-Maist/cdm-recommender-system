@@ -95,7 +95,7 @@ const CdmWordList = ({ disabled = false }) => {
                         </div>
                         <div
                             className='flex-grow-1 overflow-auto'
-                            style={{ maxHeight: '90vh', height: '35vh' }}
+                            style={{ maxHeight: '90vh' }}
                         >
                             <MDBListGroup>
                                 {data.cdmWordsList.map(
