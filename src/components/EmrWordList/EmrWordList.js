@@ -8,6 +8,7 @@ import { MDBBtn, MDBBadge } from 'mdbreact';
 import Pagination from 'react-js-pagination';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    getEmrCdmRelationshipRequest,
     getSimilarWordsRequest,
     setPageNumberOfEmrWordList,
 } from '../../actions/wordAction';
@@ -53,12 +54,13 @@ const EmrWordList = () => {
         error,
     } = useSelector((state) => state.word.emrCdmRelationship);
     const { pageNumberOfEmrWordList } = useSelector(
-        (state) => state.word.pageNumberOfEmrWordList
+        (state) => state.word
     );
 
     useEffect(() => {
+        dispatch(getEmrCdmRelationshipRequest(pageNumberOfEmrWordList));
         setActivePage(pageNumberOfEmrWordList);
-    }, [pageNumberOfEmrWordList]);
+    }, [dispatch, pageNumberOfEmrWordList]);
 
     useEffect(() => {
         setTotalItemsCount(totalRecordCount);
